@@ -1,0 +1,103 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#versioning
+summary: >-
+  The CDR runs the strictest published lifecycle discipline of any energy data regime we have
+  catalogued. Versioning is two-level and negotiated per request, obligations are dated in a public
+  Future Dated Obligations schedule, endpoint versions are formally marked obsolete and retired on
+  published dates, and every data holder must expose a machine-readable status and planned-outage
+  endpoint that recipients can poll.
+versioning:
+  scheme: two-level - a semantic version for the standards document plus an integer version per endpoint
+  current: 1.36.0
+  released: '2025-12-04'
+  docs: https://consumerdatastandardsaustralia.github.io/standards/#versioning
+  request_negotiation:
+    x-v: the endpoint version the client requests (positive integer, mandatory)
+    x-min-v: the minimum acceptable version; the holder responds with the highest supported version between x-min-v and x-v
+  response: the served version is echoed in the x-v response header
+  errors:
+  - urn:au-cds:error:cds-all:Header/InvalidVersion
+  - urn:au-cds:error:cds-all:Header/UnsupportedVersion
+  releases: https://github.com/ConsumerDataStandardsAustralia/standards/releases
+deprecation:
+  policy_url: https://consumerdatastandardsaustralia.github.io/standards/#future-dated-obligations
+  endpoint_version_schedule: https://consumerdatastandardsaustralia.github.io/standards/#endpoint-version-schedule
+  mechanism: >-
+    Endpoint versions are marked "Obsolete versions:" in the endpoint documentation and are retired on
+    dates published in the Endpoint Version Schedule. Behavioural changes are announced ahead of time
+    in the Future Dated Obligations table, which pairs each obligation with a binding effective date.
+  sunset_header: false
+  rfc8594: false
+  note: >-
+    The CDR does not use RFC 8594 Sunset / Deprecation response headers. Deprecation is expressed
+    out-of-band as dated regulatory obligation plus per-endpoint version retirement, which is stronger
+    in practice - the dates are binding on all 84 energy data holders simultaneously.
+  recent_dated_obligations:
+  - date: '2025-03-17'
+    change: Participants MUST only support BCP 195 recommended ciphers.
+  - date: '2025-05-12'
+    change: Data holders MUST report on all applicable error codes (Get Metrics v5).
+  - date: '2025-05-12'
+    change: Refresh tokens MUST be issued with an exp equal to the sharing duration authorised by the consumer.
+  - date: '2025-05-12'
+    change: Data holders SHALL only support Authorization Code Flow; data recipients SHALL only send authorisation requests using Authorization Code Flow. The OIDC Hybrid Flow is retired.
+  - date: '2025-07-14'
+    change: Binding consumer-experience standards for data recipients on the presentation of amending-consent invitations.
+  historic:
+  - date: '2022-11-01'
+    change: Standardised error codes became mandatory; participants MAY deprecate custom error codes.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in the six OpenAPI documents in this repo carries `deprecated: true`. Retirement in the
+  CDR happens at the endpoint-version level (x-v), not by removing the operation.
+sla:
+  availability_target: 99.5% per month
+  applies_to: data holders and secondary data holders, on both authenticated and unauthenticated endpoints
+  docs: https://consumerdatastandardsaustralia.github.io/standards/#availability-requirements
+  definition: >-
+    A period of unavailability is any period when any API endpoint defined in the standard is unable
+    to reliably provide a successful response to an appropriately constructed request.
+  planned_outages:
+    excluded_from_target: true
+    requirements:
+    - Commensurate in length and frequency to the data holder's other primary digital channels.
+    - Published to data recipient software products with at least one week lead time for normal outages.
+    - May occur without notification if the change resolves a critical service or security issue.
+  performance: see rate-limits/cdr-energy-rate-limits.yml
+  relief: >-
+    Data holders may obtain relief from the non-functional requirements during DDoS or equivalent
+    attacks, traffic floods from a misbehaving data recipient, or where physical or financial harm is
+    identified.
+status:
+  central_status_page: none
+  central_status_page_note: >-
+    There is no single status page for the regime. The CDR instead mandates a machine-readable status
+    surface at every data holder, which is a rare example of a regulator requiring a public status API.
+  mandated_endpoints:
+  - operation: getStatus
+    path: /cds-au/v1/discovery/status
+    spec: openapi/cdr-common-openapi.json
+    authentication: none
+    docs: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+    live_example: examples/cdr-energy-discovery-status-response-example.json
+    verified: 'HTTP 200, {"data":{"status":"OK", ...}} from a registered brand on 2026-07-27'
+  - operation: getOutages
+    path: /cds-au/v1/discovery/outages
+    spec: openapi/cdr-common-openapi.json
+    authentication: none
+    live_example: examples/cdr-energy-discovery-outages-response-example.json
+    verified: HTTP 200 on 2026-07-27
+  - operation: getDataHolderStatuses
+    path: /cdr-register/v1/{industry}/data-holders/status
+    spec: openapi/cdr-register-openapi.json
+    description: The CDR Register's own view of every data holder's status, ecosystem-wide.
+    authentication: none
+  reporting:
+    operation: getMetrics
+    path: /cds-au/v1/admin/metrics
+    spec: openapi/cdr-admin-openapi.json
+    description: >-
+      Availability, performance, invocation, error and rejection statistics reported by every data
+      holder to the ACCC. Compliance is measured, not self-declared.
+changelog: changelog/cdr-energy-changelog.yml

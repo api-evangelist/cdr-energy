@@ -1,0 +1,147 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#authorisation-scopes
+docs: https://consumerdatastandardsaustralia.github.io/standards/#authorisation-scopes
+notes: >-
+  The six OpenAPI documents in this repo declare no components.securitySchemes - the Consumer Data
+  Standards keep the security model in a separate normative Security Profile section rather than in
+  the API definitions - so the mechanical derive pass produced nothing. Every scope below was read
+  from the published Authorisation Scopes tables in the standards. Scopes are requested by an
+  accredited data recipient in the authorisation request and are granted by the consumer as part of a
+  time-bounded, revocable consent; the data holder maps them to the CDR consumer-facing data cluster
+  and permission language.
+operation_mapping_provenance: derived
+operation_mapping_note: >-
+  Scope names, display names, data clusters and descriptions below are verbatim from the published
+  standards. The `operations:` list on each scope is DERIVED - it maps the published data cluster and
+  permission language onto the operationIds in this repo's OpenAPI files. The standards do not
+  publish a per-endpoint required-scope table for the energy endpoints; the exception is
+  admin:metrics.basic:read, which the Get Metrics endpoint documentation names explicitly. Treat the
+  operation lists as our reading of the contract, not as a normative DSB statement.
+schemes:
+- name: CDR consumer authorisation (data holder)
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    profile: FAPI 1.0 Advanced
+    pushed_authorization_request: required
+    pkce: required (S256)
+    client_authentication: private_key_jwt
+    discovery: <data-holder>/.well-known/openid-configuration
+    note: >-
+      Authorisation and token endpoints are per data holder; there are 84 registered energy brands.
+      Discover them via the CDR Register data holder brands endpoint.
+- name: CDR Register OpenID Provider
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://secure.api.cdr.gov.au/idp/connect/token
+    issuer: https://api.cdr.gov.au/idp
+    client_authentication: private_key_jwt
+    sender_constrained: true
+    source: well-known/cdr-energy-register-openid-configuration.json
+scopes:
+- scope: openid
+  category: OpenID Connect
+  description: Mandatory OIDC scope; requests an ID token for the consumer authorisation.
+- scope: profile
+  category: OpenID Connect
+  description: Standard OIDC profile scope supported by the CDR federation.
+- scope: cdr-register:read
+  category: Register
+  description: >-
+    Read access to CDR Register endpoints for accredited data recipients, obtained through the
+    Register's own OpenID Provider using client_credentials and private_key_jwt.
+  flows: [clientCredentials]
+  source: well-known/cdr-energy-register-openid-configuration.json
+- scope: admin:metrics.basic:read
+  category: Admin
+  description: >-
+    Scope used by the ACCC to call a data holder's GET /admin/metrics reporting endpoint.
+  operations: [getMetrics]
+- scope: common:customer.basic:read
+  category: Common
+  name: Basic Customer Data
+  description: >-
+    Access to personally identifiable information about the customer. For retail customers this is
+    information about the customer themselves; for business customers it implies the name of a
+    specific user plus information about the business. Includes name and occupation for individuals,
+    or name, business numbers and industry code for organisations.
+  operations: [getCustomer]
+- scope: common:customer.detail:read
+  category: Common
+  name: Detailed Customer Data
+  description: >-
+    More detailed information about the customer - everything in Basic Customer Data plus phone,
+    email and address information.
+  operations: [getCustomerDetail]
+- scope: energy:accounts.basic:read
+  category: Energy
+  name: Basic Energy Account Data
+  data_cluster: Accounts and plans
+  description: >-
+    Basic information about the customer's energy accounts with retailers - simple energy account
+    information, basic plan information and the service points that are part of the account. Does not
+    include detailed account information such as tailored plans, electricity contract details or
+    discounts.
+  operations: [listEnergyAccounts, getEnergyAccountBalance, listEnergyAccountBalancesBulk, listEnergyAccountBalancesSpecificAccounts]
+- scope: energy:accounts.detail:read
+  category: Energy
+  name: Detailed Energy Account Data
+  data_cluster: Account and plan details
+  description: >-
+    Detailed information about the customer's energy accounts. Additional authorisation on top of
+    Basic Energy Account Data - includes tailored tariff information and charges included in the
+    account or plan. Does not include usage data.
+  operations: [getEnergyAccountDetail]
+- scope: energy:accounts.paymentschedule:read
+  category: Energy
+  name: Energy Regular Payments Data
+  description: >-
+    Payment schedules for energy accounts, including direct debit or credit based scheduled payments
+    and manual payments.
+  operations: [getEnergyAccountPaymentSchedule]
+- scope: energy:accounts.concessions:read
+  category: Energy
+  name: Energy Concession Data
+  description: Details of any concessions applied to a customer's energy account.
+  operations: [getEnergyAccountConcessions]
+- scope: energy:billing:read
+  category: Energy
+  name: Energy Billing Data
+  description: Billing and invoice data for a customer's energy account.
+  operations: [getEnergyAccountInvoices, listEnergyAccountInvoicesBulk, listEnergyInvoicesForSpecificAccounts, getBillingForEnergyAccount, listEnergyAccountBillingBulk, listEnergyAccountBillingForSpecificAccounts]
+- scope: energy:electricity.servicepoints.basic:read
+  category: Energy
+  name: Basic Service Point Data
+  description: >-
+    Basic standing data for the customer's service points, including the National Meter Identifier
+    (NMI). Does not include detailed service point information such as location or meter attributes.
+  operations: [listElectricityServicePoints, listElectricityServicePointsSR]
+- scope: energy:electricity.servicepoints.detail:read
+  category: Energy
+  name: Detailed Service Point Data
+  description: >-
+    Detailed information about the customer's service point connection. Additional authorisation on
+    top of Basic Service Point Data - includes account identifiers and meter information. Does not
+    include meter usage data.
+  operations: [getElectricityServicePointDetail, getElectricityServicePointDetailSR]
+- scope: energy:electricity.usage:read
+  category: Energy
+  name: Electricity Usage Data
+  description: >-
+    Electricity usage data for service points, including basic and interval meter reads. Additional
+    authorisation on top of Basic Service Point Data.
+  operations: [getElectricityServicePointUsage, listElectricityUsageBulk, listElectricityUsageForServicePoints, getElectricityServicePointUsageSR, listElectricityUsageForServicePointsSR]
+- scope: energy:electricity.der:read
+  category: Energy
+  name: Distributed Energy Resource Data
+  description: >-
+    Data about distributed energy resources for service points, as available in AEMO's DER Register.
+    Additional authorisation on top of Basic Service Point Data.
+  operations: [getElectricityDERForServicePoint, listElectricityDERBulk, listElectricityDERForSpecificServicePoints, getElectricityDERForServicePointSR, listElectricityDERForSpecificServicePointsSR]
+unauthenticated_operations:
+  note: >-
+    These operations are part of the mandated contract but sit outside the consent model entirely -
+    no scope, no token, no accreditation.
+  operations: [listEnergyPlans, getEnergyPlanDetail, getStatus, getOutages, getDataHolderBrands, getDataHolderBrandsSummary, getDataHolderStatuses, getDataRecipients, getDataRecipientsStatuses, getSoftwareProductsStatuses, getRegisterJwks, getRegisterOpenIdProviderConfig]

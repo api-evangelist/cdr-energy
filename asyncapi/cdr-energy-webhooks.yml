@@ -1,0 +1,55 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#security-profile
+spec_type: none
+asyncapi_published: false
+summary: >-
+  The Consumer Data Standards publish no AsyncAPI document and the energy data contract is entirely
+  request/response - there is no event stream, no push of usage or billing data, and no subscription
+  model. There is exactly one server-to-server callback in the regime: CDR Arrangement Revocation.
+  When a consent (a "CDR Arrangement") is withdrawn, the party that learns of it calls the other
+  party's revocation endpoint. It is a real webhook in shape - an unsolicited, authenticated POST to
+  a URL the receiver advertises - so it is captured here rather than dropped.
+webhooks:
+- name: cdr-arrangement-revocation-to-data-recipient
+  direction: data holder calls data recipient
+  method: POST
+  endpoint_advertised_as: revocation_uri (in the Software Statement Assertion) / <recipient_base_uri>/arrangements/revoke
+  content_type: application/x-www-form-urlencoded
+  authentication: Bearer token issued to the data holder, plus mutual TLS
+  payload_field: cdr_arrangement_jwt
+  payload_format: signed JWT carrying the cdr_arrangement_id
+  description: >-
+    Notifies the accredited data recipient that a consumer has revoked the sharing arrangement, so
+    the recipient must stop collecting and begin its deletion/de-identification obligations.
+  required: true
+  required_note: revocation_uri is a Required claim in the SSA, so every registered software product must expose this endpoint.
+- name: cdr-arrangement-revocation-to-data-holder
+  direction: data recipient calls data holder
+  method: POST
+  endpoint_advertised_as: cdr_arrangement_revocation_endpoint (in the data holder's OpenID Provider metadata)
+  content_type: application/x-www-form-urlencoded
+  authentication: private_key_jwt client authentication plus mutual TLS
+  payload_field: cdr_arrangement_id
+  description: >-
+    Notifies the data holder that the arrangement has been withdrawn on the recipient side, so the
+    holder revokes the associated tokens and updates the consumer's dashboard.
+  required: true
+related_errors:
+- urn:au-cds:error:cds-all:Authorisation/InvalidArrangement
+- urn:au-cds:error:cds-all:Authorisation/RevokedConsent
+- urn:au-cds:error:cds-all:Authorisation/InvalidConsent
+polling_alternatives:
+  note: >-
+    Where other regimes would push events, the CDR mandates pollable state instead - a machine
+    readable status and planned-outage endpoint at every data holder, and register-wide participant
+    status endpoints.
+  endpoints:
+  - openapi/cdr-common-openapi.json#getStatus
+  - openapi/cdr-common-openapi.json#getOutages
+  - openapi/cdr-register-openapi.json#getDataHolderStatuses
+  - openapi/cdr-register-openapi.json#getDataRecipientsStatuses
+  - openapi/cdr-register-openapi.json#getSoftwareProductsStatuses
+not_fabricated: >-
+  No AsyncAPI document exists for the CDR. This file records the real callback surface only; no
+  channels, messages or bindings have been invented.

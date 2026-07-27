@@ -2,23 +2,21 @@ aid: cdr-energy
 url: https://raw.githubusercontent.com/api-evangelist/cdr-energy/refs/heads/main/apis.yml
 name: Consumer Data Right (Energy)
 kind: company
-description: >-
-  The Consumer Data Right (CDR) is Australia's statutory consumer data-sharing regime, created under
-  Part IVD of the Competition and Consumer Act 2010 and extended from banking into electricity by the
-  Consumer Data Right (Energy Sector) Designation 2020. It is run by three bodies: the ACCC as lead
-  regulator and operator of the CDR Register, the OAIC as privacy regulator, and the Treasury Data
-  Standards Body, which writes the binding Consumer Data Standards. In energy the regime obliges
-  electricity retailers to expose plans, accounts, billing, invoices, payment schedules, concessions,
-  service points, interval usage and DER data through one identical, versioned API contract, with AEMO
-  acting as the Secondary Data Holder gateway for NMI standing data, metering data and the DER register.
-  Unlike almost every other energy-sector data mandate, this one is verifiably implemented rather than
-  merely announced: the public CDR Register listed 84 energy data holder brands with live public base
-  URIs when probed on 2026-07-27, and 53 of those base URIs returned standards-conformant product data
-  anonymously on the first request. Its API posture is a clean two-speed split — genuinely open,
-  unauthenticated market data (retail plan and tariff reference data, plus the participant register
-  itself) sitting alongside consumer data that is closed behind ACCC accreditation, mutual TLS,
-  FAPI-grade OAuth 2.0 / OpenID Connect and explicit, revocable consumer consent. Home market Australia.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
+description: 'The Consumer Data Right (CDR) is Australia''s statutory consumer data-sharing regime, created under
+  Part IVD of the Competition and Consumer Act 2010 and extended from banking into electricity by the Consumer Data
+  Right (Energy Sector) Designation 2020. It is run by three bodies: the ACCC as lead regulator and operator of
+  the CDR Register, the OAIC as privacy regulator, and the Treasury Data Standards Body, which writes the binding
+  Consumer Data Standards. In energy the regime obliges electricity retailers to expose plans, accounts, billing,
+  invoices, payment schedules, concessions, service points, interval usage and DER data through one identical, versioned
+  API contract, with AEMO acting as the Secondary Data Holder gateway for NMI standing data, metering data and the
+  DER register. Unlike almost every other energy-sector data mandate, this one is verifiably implemented rather
+  than merely announced: the public CDR Register listed 84 energy data holder brands with live public base URIs
+  when probed on 2026-07-27, and 53 of those base URIs returned standards-conformant product data anonymously on
+  the first request. Its API posture is a clean two-speed split — genuinely open, unauthenticated market data (retail
+  plan and tariff reference data, plus the participant register itself) sitting alongside consumer data that is
+  closed behind ACCC accreditation, mutual TLS, FAPI-grade OAuth 2.0 / OpenID Connect and explicit, revocable consumer
+  consent. Home market Australia.'
+image: https://raw.githubusercontent.com/ConsumerDataRight/mock-data-holder/main/Assets/cdr-logo.png
 tags:
 - Energy
 - Australia
@@ -38,14 +36,12 @@ specificationVersion: '0.19'
 apis:
 - aid: cdr-energy:cdr-register-api
   name: CDR Register API
-  description: >-
-    The ACCC-operated Consumer Data Right Register, the ecosystem's source of truth for who is allowed
-    to participate. Unauthenticated endpoints return the energy data holder brand summary (84 brands with
-    their live public base URIs), data holder statuses, accredited data recipients and software product
-    statuses; they were all served anonymously over the open internet on 2026-07-27 with only an x-v
-    version header. Authenticated endpoints issue Software Statement Assertions to accredited data
-    recipients using mutual TLS and private_key_jwt client credentials against the Register's own
-    OpenID Provider.
+  description: The ACCC-operated Consumer Data Right Register, the ecosystem's source of truth for who is allowed
+    to participate. Unauthenticated endpoints return the energy data holder brand summary (84 brands with their
+    live public base URIs), data holder statuses, accredited data recipients and software product statuses; they
+    were all served anonymously over the open internet on 2026-07-27 with only an x-v version header. Authenticated
+    endpoints issue Software Statement Assertions to accredited data recipients using mutual TLS and private_key_jwt
+    client credentials against the Register's own OpenID Provider.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
   baseURL: https://api.cdr.gov.au/cdr-register/v1
   tags:
@@ -64,17 +60,19 @@ apis:
     url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
   - type: GitHubRepository
     url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: Overlay
+    url: overlays/cdr-energy-register-overlay.yaml
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
 - aid: cdr-energy:cdr-energy-api
   name: CDR Energy API
-  description: >-
-    The mandated energy data contract that every designated Australian electricity retailer must implement
-    identically. Eighteen paths covering generic plan reference data, electricity service points, interval
-    usage, distributed energy resources, accounts, balances, invoices, billing, payment schedules and
-    concessions. The two /energy/plans endpoints are public product reference data and require no
-    authentication; every other endpoint requires an accredited data recipient, mutual TLS and a
-    consumer-authorised OAuth 2.0 / OpenID Connect token. There is no single base URL — each of the 84
-    registered energy data holder brands publishes its own base URI through the CDR Register, and 53 of
-    them answered GET /cds-au/v1/energy/plans anonymously when probed on 2026-07-27.
+  description: The mandated energy data contract that every designated Australian electricity retailer must implement
+    identically. Eighteen paths covering generic plan reference data, electricity service points, interval usage,
+    distributed energy resources, accounts, balances, invoices, billing, payment schedules and concessions. The
+    two /energy/plans endpoints are public product reference data and require no authentication; every other endpoint
+    requires an accredited data recipient, mutual TLS and a consumer-authorised OAuth 2.0 / OpenID Connect token.
+    There is no single base URL — each of the 84 registered energy data holder brands publishes its own base URI
+    through the CDR Register, and 53 of them answered GET /cds-au/v1/energy/plans anonymously when probed on 2026-07-27.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
   tags:
   - Energy
@@ -98,15 +96,20 @@ apis:
     url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
   - type: GitHubRepository
     url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Overlay
+    url: overlays/cdr-energy-energy-overlay.yaml
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
 - aid: cdr-energy:cdr-energy-secondary-data-holder-api
   name: CDR Energy Secondary Data Holder API
-  description: >-
-    The gateway contract AEMO implements as the CDR Secondary Data Holder for energy. Retailers are the
-    primary data holders for the customer relationship, but the physical data — NMI standing data, meter
-    and interval usage records, and the distributed energy resources register — lives with AEMO, so the
-    standards define a separate six-operation server-to-server API that retailers call on the consumer's
-    behalf. This is the piece of machinery that has no banking equivalent, and it is why energy needed a
-    shared-responsibility model rather than a straight copy of the banking contract.
+  description: The gateway contract AEMO implements as the CDR Secondary Data Holder for energy. Retailers are the
+    primary data holders for the customer relationship, but the physical data — NMI standing data, meter and interval
+    usage records, and the distributed energy resources register — lives with AEMO, so the standards define a separate
+    six-operation server-to-server API that retailers call on the consumer's behalf. This is the piece of machinery
+    that has no banking equivalent, and it is why energy needed a shared-responsibility model rather than a straight
+    copy of the banking contract.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
   tags:
   - Energy
@@ -121,14 +124,14 @@ apis:
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
   - type: Documentation
     url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Overlay
+    url: overlays/cdr-energy-energy-sdh-overlay.yaml
 - aid: cdr-energy:cdr-common-api
   name: CDR Common API
-  description: >-
-    The cross-sector endpoints every CDR data holder must expose regardless of industry — GET
-    /common/customer and /common/customer/detail for the consented customer's identity, and the
-    unauthenticated /discovery/status and /discovery/outages endpoints that let the ecosystem see whether
-    a data holder is up and when it plans to be down. The discovery pair is a rare example of a regulator
-    mandating a public status API.
+  description: The cross-sector endpoints every CDR data holder must expose regardless of industry — GET /common/customer
+    and /common/customer/detail for the consented customer's identity, and the unauthenticated /discovery/status
+    and /discovery/outages endpoints that let the ecosystem see whether a data holder is up and when it plans to
+    be down. The discovery pair is a rare example of a regulator mandating a public status API.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
   tags:
   - Common
@@ -140,14 +143,16 @@ apis:
     url: openapi/cdr-common-openapi.json
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: Overlay
+    url: overlays/cdr-energy-common-overlay.yaml
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
 - aid: cdr-energy:cdr-dynamic-client-registration-api
   name: CDR Dynamic Client Registration API
-  description: >-
-    The onboarding contract. Rather than a developer portal issuing keys, an accredited data recipient
-    presents a Software Statement Assertion obtained from the CDR Register and self-registers with each
-    data holder over mutual TLS, then manages or deletes that registration. This is how a developer
-    actually "gets keys" in the CDR — machine-to-machine, gated on accreditation, with no human approval
-    step at the data holder.
+  description: The onboarding contract. Rather than a developer portal issuing keys, an accredited data recipient
+    presents a Software Statement Assertion obtained from the CDR Register and self-registers with each data holder
+    over mutual TLS, then manages or deletes that registration. This is how a developer actually "gets keys" in
+    the CDR — machine-to-machine, gated on accreditation, with no human approval step at the data holder.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
   tags:
   - Onboarding
@@ -159,14 +164,14 @@ apis:
     url: openapi/cdr-dcr-openapi.json
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: Overlay
+    url: overlays/cdr-energy-dcr-overlay.yaml
 - aid: cdr-energy:cdr-admin-api
   name: CDR Admin API
-  description: >-
-    The mandated reporting surface every data holder must expose to the ACCC — GET /admin/metrics returns
-    availability, performance, invocation, error and rejection statistics, and POST /admin/register/metadata
-    forces a metadata refresh. A regulator that requires the industry to publish its own operational
-    telemetry through an API is unusual, and it is the mechanism that makes CDR compliance measurable
-    rather than self-declared.
+  description: The mandated reporting surface every data holder must expose to the ACCC — GET /admin/metrics returns
+    availability, performance, invocation, error and rejection statistics, and POST /admin/register/metadata forces
+    a metadata refresh. A regulator that requires the industry to publish its own operational telemetry through
+    an API is unusual, and it is the mechanism that makes CDR compliance measurable rather than self-declared.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
   tags:
   - Admin
@@ -178,7 +183,11 @@ apis:
     url: openapi/cdr-admin-openapi.json
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+  - type: Overlay
+    url: overlays/cdr-energy-admin-overlay.yaml
 common:
+- type: DomainSecurity
+  url: security/cdr-energy-domain-security.yml
 - type: Website
   url: https://www.cdr.gov.au/
 - type: DeveloperPortal
@@ -203,6 +212,66 @@ common:
   url: https://github.com/ConsumerDataStandardsAustralia/standards-maintenance
 - type: Blog
   url: https://dsb.gov.au/news-and-announcements
+- type: Authentication
+  url: authentication/cdr-energy-authentication.yml
+- type: OAuthScopes
+  url: scopes/cdr-energy-scopes.yml
+- type: Conventions
+  url: conventions/cdr-energy-conventions.yml
+- type: ErrorCatalog
+  url: errors/cdr-energy-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/cdr-energy-lifecycle.yml
+- type: StatusPage
+  url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  name: Mandated per-data-holder /discovery/status and /discovery/outages endpoints
+- type: Deprecation
+  url: https://consumerdatastandardsaustralia.github.io/standards/#future-dated-obligations
+- type: ChangeLog
+  url: changelog/cdr-energy-changelog.yml
+- type: ChangeLog
+  url: https://github.com/ConsumerDataStandardsAustralia/standards/releases
+- type: RateLimits
+  url: rate-limits/cdr-energy-rate-limits.yml
+- type: Conformance
+  url: conformance/cdr-energy-conformance.yml
+- type: Compliance
+  url: https://consumerdatastandardsaustralia.github.io/standards-testing/
+- type: Packages
+  url: packages/cdr-energy-packages.yml
+- type: SDKs
+  url: packages/cdr-energy-packages.yml
+- type: CLI
+  url: cli/cdr-energy-cli.yml
+- type: Sandbox
+  url: sandbox/cdr-energy-sandbox.yml
+- type: Sandbox
+  url: https://cdrsandbox.gov.au/
+- type: WellKnown
+  url: well-known/cdr-energy-well-known.yml
+- type: MCPServer
+  url: mcp/cdr-energy-mcp.yml
+  name: Candidate MCP tool surface derived from OpenAPI (no published server)
+- type: LLMsTxt
+  url: llms/cdr-energy-llms.txt
+- type: DataModel
+  url: data-model/cdr-energy-data-model.yml
+- type: Examples
+  url: examples/_index.yml
+- type: Webhooks
+  url: asyncapi/cdr-energy-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Postman
+  url: https://www.postman.com/winter-shadow-541400/workspace/dsb-schema-tests
+- type: GettingStarted
+  url: https://consumerdatastandardsaustralia.github.io/standards/#introduction
+- type: Roadmap
+  url: https://github.com/ConsumerDataStandardsAustralia/standards-maintenance
+- type: BlogRSS
+  url: https://dsb.gov.au/news-and-announcements
+- type: GitHubOrganization
+  url: https://github.com/ConsumerDataRight
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

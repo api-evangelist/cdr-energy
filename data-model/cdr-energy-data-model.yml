@@ -1,0 +1,163 @@
+generated: '2026-07-27'
+method: derived
+source: openapi/cdr-energy-openapi.json, openapi/cdr-energy-sdh-openapi.json, openapi/cdr-common-openapi.json, openapi/cdr-register-openapi.json
+docs: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+summary: >-
+  Derived from the $ref graph and the id-bearing fields in the Consumer Data Standards energy schemas.
+  The energy model has a distinctive split that banking does not: the commercial entities (customer,
+  account, plan, invoice, billing, concession, payment schedule) belong to the retailer as primary
+  data holder, while the physical entities (service point, meter, register, DER) belong to AEMO as the
+  secondary data holder and are fetched through the shared-responsibility Secondary Data Holder API.
+  The service point is the join between the two halves.
+entities:
+- name: Customer
+  api: openapi/cdr-common-openapi.json
+  schemas: [CommonPerson, CommonPersonDetailV2, CommonOrganisation, CommonOrganisationDetailV2]
+  operations: [getCustomer, getCustomerDetail]
+  id_field: null
+  note: The consented customer. Not addressable by id; there is exactly one per consent.
+- name: EnergyAccount
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyAccountBaseV2, EnergyAccountV2, EnergyAccountDetailV4]
+  id_field: accountId
+  id_schema: EnergyAccountId
+  operations: [listEnergyAccounts, getEnergyAccountDetail]
+  domain: retailer (primary data holder)
+- name: EnergyPlan
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyPlan, EnergyPlanDetailV3, EnergyPlanContractV3, EnergyPlanContractFullV3]
+  id_field: planId
+  id_schema: EnergyPlanId
+  operations: [listEnergyPlans, getEnergyPlanDetail]
+  domain: retailer
+  access: unauthenticated - generic product reference data
+- name: EnergyServicePoint
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyServicePointV2, EnergyServicePointDetailV2]
+  id_field: servicePointId
+  id_schema: EnergyServicePointId
+  natural_key: nationalMeteringId (NMI)
+  operations: [listElectricityServicePoints, getElectricityServicePointDetail, listElectricityServicePointsSR, getElectricityServicePointDetailSR]
+  domain: AEMO (secondary data holder), surfaced through the retailer
+- name: EnergyUsageRead
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyUsageListResponse]
+  id_field: null
+  parent: EnergyServicePoint
+  operations: [getElectricityServicePointUsage, listElectricityUsageBulk, listElectricityUsageForServicePoints, getElectricityServicePointUsageSR, listElectricityUsageForServicePointsSR]
+  domain: AEMO
+- name: EnergyDER
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyDerListResponse, EnergyDerDetailResponse]
+  parent: EnergyServicePoint
+  operations: [getElectricityDERForServicePoint, listElectricityDERBulk, listElectricityDERForSpecificServicePoints, getElectricityDERForServicePointSR, listElectricityDERForSpecificServicePointsSR]
+  domain: AEMO DER Register
+- name: EnergyBalance
+  api: openapi/cdr-energy-openapi.json
+  parent: EnergyAccount
+  operations: [getEnergyAccountBalance, listEnergyAccountBalancesBulk, listEnergyAccountBalancesSpecificAccounts]
+- name: EnergyInvoice
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyInvoice, EnergyInvoiceAccountCharges, EnergyInvoiceElectricityUsageCharges, EnergyInvoiceGasUsageCharges]
+  id_field: invoiceNumber
+  parent: EnergyAccount
+  operations: [getEnergyAccountInvoices, listEnergyAccountInvoicesBulk, listEnergyInvoicesForSpecificAccounts]
+- name: EnergyBillingTransaction
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyBillingTransactionV3, EnergyBillingUsageTransactionV2, EnergyBillingDemandTransactionV3, EnergyBillingOnceOffTransaction, EnergyBillingOtherTransaction, EnergyBillingPaymentTransaction]
+  parent: EnergyAccount
+  operations: [getBillingForEnergyAccount, listEnergyAccountBillingBulk, listEnergyAccountBillingForSpecificAccounts]
+- name: EnergyPaymentSchedule
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyPaymentSchedule]
+  parent: EnergyAccount
+  operations: [getEnergyAccountPaymentSchedule]
+- name: EnergyConcession
+  api: openapi/cdr-energy-openapi.json
+  schemas: [EnergyConcession]
+  parent: EnergyAccount
+  operations: [getEnergyAccountConcessions]
+- name: DataHolderBrand
+  api: openapi/cdr-register-openapi.json
+  id_field: dataHolderBrandId
+  operations: [getDataHolderBrands, getDataHolderBrandsSummary, getDataHolderStatuses]
+  note: Carries publicBaseUri - the only way to resolve a base URL for the Energy API.
+  live_example: examples/cdr-energy-register-data-holder-brands-summary-example.json
+- name: DataRecipientSoftwareProduct
+  api: openapi/cdr-register-openapi.json
+  id_field: softwareProductId
+  operations: [getDataRecipients, getDataRecipientsStatuses, getSoftwareProductsStatuses, getSoftwareStatementAssertion]
+- name: ClientRegistration
+  api: openapi/cdr-dcr-openapi.json
+  id_field: ClientId
+  operations: [postClientRegistration, getClientRegistration, putClientRegistration, deleteClientRegistration]
+relationships:
+- from: EnergyAccount
+  to: EnergyPlan
+  type: has_many
+  via: plans[].planOverview / planId
+- from: EnergyAccount
+  to: EnergyServicePoint
+  type: has_many
+  via: plans[].servicePointIds
+- from: EnergyAccount
+  to: EnergyBalance
+  type: has_one
+  via: accountId
+- from: EnergyAccount
+  to: EnergyInvoice
+  type: has_many
+  via: accountId
+- from: EnergyAccount
+  to: EnergyBillingTransaction
+  type: has_many
+  via: accountId
+- from: EnergyAccount
+  to: EnergyPaymentSchedule
+  type: has_many
+  via: accountId
+- from: EnergyAccount
+  to: EnergyConcession
+  type: has_many
+  via: accountId
+- from: EnergyServicePoint
+  to: EnergyUsageRead
+  type: has_many
+  via: servicePointId
+- from: EnergyServicePoint
+  to: EnergyDER
+  type: has_many
+  via: servicePointId
+- from: EnergyServicePointDetail
+  to: Meter
+  type: has_many
+  via: meters[].meterId
+- from: Meter
+  to: Register
+  type: has_many
+  via: registers[].registerId
+- from: EnergyInvoice
+  to: EnergyServicePoint
+  type: belongs_to
+  via: servicePoints[]
+- from: DataHolderBrand
+  to: EnergyPlan
+  type: has_many
+  via: publicBaseUri + GET /energy/plans
+- from: ClientRegistration
+  to: DataRecipientSoftwareProduct
+  type: belongs_to
+  via: software_id (SSA claim)
+identifier_semantics:
+  see: conventions/cdr-energy-conventions.yml
+  rules:
+  - IDs are arbitrary and unparseable; the field name `id` is never used.
+  - IDs are pairwise per data recipient software product and per authorising customer, so they cannot be correlated across recipients.
+  - The NMI (nationalMeteringId) is the one meaningful natural key in the model, and it belongs to the AEMO/physical half.
+shared_responsibility:
+  note: >-
+    Service point, usage and DER data are requested by the accredited data recipient from the
+    retailer, and the retailer in turn calls AEMO's Secondary Data Holder API with the
+    x-cds-arrangement header. The recipient never talks to AEMO directly.
+  primary_spec: openapi/cdr-energy-openapi.json
+  secondary_spec: openapi/cdr-energy-sdh-openapi.json

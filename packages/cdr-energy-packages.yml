@@ -1,0 +1,83 @@
+generated: '2026-07-27'
+method: searched
+source: npm registry, NuGet, and the ConsumerDataStandardsAustralia / ConsumerDataRight GitHub organisations
+notes: >-
+  The Consumer Data Right is a regulatory contract, not a commercial API product, so there is no
+  vendor SDK team. The first-party libraries below are published by the Treasury Data Standards Body
+  (npm scope @cds-au, maintainer npm-dsb) and by the ACCC's participant tooling programme (NuGet,
+  GitHub org ConsumerDataRight). Probes of PyPI (consumer-data-right, cdr-au, consumerdatastandards),
+  Maven Central, RubyGems, Packagist, crates.io and pkg.go.dev found no first-party client library.
+packages:
+- language: javascript
+  registry: npm
+  name: '@cds-au/holder-sdk'
+  version: 2.3.0
+  url: https://www.npmjs.com/package/@cds-au/holder-sdk
+  install: npm install @cds-au/holder-sdk
+  license: ISC
+  official: true
+  publisher: Data Standards Body (npm-dsb)
+  source_code: https://github.com/ConsumerDataStandardsAustralia/js-holder-sdk
+  description: >-
+    NodeJS/Express middleware for data holders that handles the CDR boilerplate - header validation
+    (x-v / x-min-v), endpoint version negotiation, authorisation scope checks and standards-conformant
+    error generation using the ResponseErrorListV2 envelope.
+- language: javascript
+  registry: npm
+  name: '@cds-au/testdata'
+  version: 1.8.0
+  url: https://www.npmjs.com/package/@cds-au/testdata
+  install: npm install -g @cds-au/testdata
+  license: MIT
+  official: true
+  publisher: Data Standards Body (npm-dsb)
+  source_code: https://github.com/ConsumerDataStandardsAustralia/testdata-cli
+  bin: testdata
+  description: >-
+    CLI and library for generating manufactured banking and energy test data that conforms to the
+    Consumer Data Standards payloads, for seeding a mock data holder.
+- language: javascript
+  registry: npm
+  name: '@cds-au/testdocs'
+  version: 1.0.0
+  url: https://www.npmjs.com/package/@cds-au/testdocs
+  install: npm install -g @cds-au/testdocs
+  license: MIT
+  official: true
+  publisher: Data Standards Body (npm-dsb)
+  bin: testdocs
+  description: Tooling for rendering the CDR conformance test-case documentation set.
+- language: csharp
+  registry: nuget
+  name: ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+  version: 3.1.0
+  url: https://www.nuget.org/packages/ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+  install: dotnet add package ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+  official: true
+  publisher: ACCC (ConsumerDataRight)
+  source_code: https://github.com/ConsumerDataRight/mock-solution-test-automation
+  description: Shared test-automation library used across the ACCC CDR mock solutions.
+- language: typescript
+  registry: npm
+  name: '@types/consumer-data-standards'
+  version: 7.4.0
+  url: https://www.npmjs.com/package/@types/consumer-data-standards
+  install: npm install --save-dev @types/consumer-data-standards
+  license: MIT
+  official: false
+  publisher: DefinitelyTyped
+  description: >-
+    Community TypeScript type definitions for the Consumer Data Standards payloads. Not published by
+    the DSB or ACCC, but widely used and generated from the same standards.
+reference_implementations:
+  note: >-
+    Not packages, but the first-party runnable implementations participants build against. Catalogued
+    in sandbox/cdr-energy-sandbox.yml.
+  repositories:
+  - https://github.com/ConsumerDataRight/mock-data-holder-energy
+  - https://github.com/ConsumerDataRight/mock-register
+  - https://github.com/ConsumerDataRight/mock-data-recipient
+  - https://github.com/ConsumerDataRight/authorisation-server
+  - https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-nodejs
+  - https://github.com/ConsumerDataStandardsAustralia/ADR-Gateway

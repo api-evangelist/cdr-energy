@@ -1,0 +1,119 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#security-profile
+docs: https://consumerdatastandardsaustralia.github.io/standards/#security-profile
+legacy_docs: https://consumerdatastandardsaustralia.github.io/infosec/
+notes: >-
+  The mechanical derive pass (derive-authentication.py) found nothing: none of the six Consumer Data
+  Standards OpenAPI documents declares components.securitySchemes. That is not an absence of a
+  security model - the CDR keeps its security model in a separate normative Security Profile that all
+  six APIs inherit, which is why the specs carry Authorization, x-fapi-auth-date,
+  x-fapi-customer-ip-address and x-cds-client-headers request headers but no scheme objects. This
+  profile was read from the published Security Profile section of the standards and from the CDR
+  Register's live OpenID Provider metadata.
+summary:
+  types: [oauth2, openIdConnect, mutualTLS, http]
+  oauth2_flows: [authorizationCode, clientCredentials]
+  profile: FAPI 1.0 Advanced
+  accreditation_required: true
+  spec_declared: false
+access_model:
+  open:
+    description: >-
+      No credential of any kind. Product reference data and ecosystem discovery.
+    operations: [listEnergyPlans, getEnergyPlanDetail, getStatus, getOutages, getDataHolderBrands, getDataHolderBrandsSummary, getDataHolderStatuses, getDataRecipients, getDataRecipientsStatuses, getSoftwareProductsStatuses, getRegisterJwks, getRegisterOpenIdProviderConfig]
+    verified: >-
+      53 of 84 registered energy data holder brands answered GET /cds-au/v1/energy/plans anonymously
+      on 2026-07-27; the CDR Register brand summary answered anonymously with only an x-v header.
+  gated:
+    description: >-
+      Every consumer-data endpoint. Requires ACCC accreditation as a Data Recipient, a registered
+      software product, mutual TLS with a CDR-issued client certificate, and a consumer-authorised
+      access token bound to that certificate.
+    operations_note: all remaining operations across the Energy, Common, Secondary Data Holder, DCR and Admin APIs
+schemes:
+- name: CDR consumer authorisation
+  type: oauth2
+  flow: authorizationCode
+  profile: FAPI 1.0 Advanced (FAPI-1.0-Advanced)
+  requirements:
+  - Data Holders MUST support FAPI 1.0 Advanced Profile.
+  - Data Holders MUST support Authorization Code Flow; response_type MUST be `code`.
+  - From 12 May 2025 Data Recipient Software Products SHALL only send authorisation requests using Authorization Code Flow (the OIDC Hybrid Flow is retired).
+  - Pushed Authorisation Requests (RFC 9126) - data holder metadata sets require_pushed_authorization_requests true.
+  - PKCE (RFC 7636) with code_challenge_method S256.
+  - Request object signed with PS256 or ES256.
+  - Access and refresh tokens are mutual-TLS sender-constrained (tls_client_certificate_bound_access_tokens true).
+  - Refresh tokens MUST be issued with an exp equal to the sharing duration the consumer authorised (from 12 May 2025).
+  discovery: <data-holder-base>/.well-known/openid-configuration
+  discovery_note: >-
+    Per-brand. Data holder OpenID Provider metadata additionally MUST include
+    cdr_arrangement_revocation_endpoint. Discover the 84 energy brands via the CDR Register.
+  scopes: scopes/cdr-energy-scopes.yml
+- name: Client authentication (data recipient to data holder / register)
+  type: oauth2
+  method: private_key_jwt
+  requirements:
+  - Data Holders and the CDR Register MUST authenticate Data Recipient Software Products using Private Key JWT Client Authentication.
+  - Client assertion JWT signed with PS256 or ES256.
+  - The PKI Mutual TLS OAuth Client Authentication Method (tls_client_auth) SHALL NOT be used for client authentication.
+  - Data Recipient Software Products MUST authenticate Data Holders and the CDR Register using self-signed JWT client assertion or private_key_jwt.
+  - When authenticating the CDR Register, client_id MUST be `cdr-register`.
+- name: Transport security
+  type: mutualTLS
+  requirements:
+  - All back-channel communication between Data Recipient and Data Holder systems MUST incorporate MTLS as part of the TLS handshake.
+  - MTLS Holder of Key binds issued tokens to the client certificate (RFC 8705).
+  - Client certificates are issued, managed and revoked by the CDR Register PKI.
+  - Participants MUST only support BCP 195 recommended ciphers (from 17 March 2025).
+- name: CDR Register OpenID Provider
+  type: oauth2
+  flow: clientCredentials
+  issuer: https://api.cdr.gov.au/idp
+  token_endpoint: https://secure.api.cdr.gov.au/idp/connect/token
+  jwks_uri: https://api.cdr.gov.au/idp/.well-known/openid-configuration/jwks
+  token_endpoint_auth_methods_supported: [private_key_jwt]
+  token_endpoint_auth_signing_alg_values_supported: [PS256, ES256]
+  id_token_signing_alg_values_supported: [PS256]
+  code_challenge_methods_supported: [plain, S256]
+  tls_client_certificate_bound_access_tokens: true
+  scopes_supported: [cdr-register:read]
+  source: well-known/cdr-energy-register-openid-configuration.json
+  live_probe:
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+    status: 200
+    date: '2026-07-27'
+- name: Bearer token
+  type: http
+  scheme: bearer
+  in: header
+  parameter: Authorization
+  source: 'Authorization header parameter declared on 5 operations across openapi/*.json'
+  note: >-
+    The Authorization header carries the consumer-authorised, certificate-bound access token. It is
+    the only credential visible in the OpenAPI documents.
+onboarding:
+  model: >-
+    There is no developer portal that issues keys. A prospective data recipient applies to the ACCC
+    for accreditation, registers a software product on the CDR Register, obtains a Software Statement
+    Assertion (SSA) from the Register, then self-registers with each data holder over mutual TLS
+    using Dynamic Client Registration.
+  steps:
+  - Apply for and obtain ACCC accreditation as a Data Recipient.
+  - Register a software product and obtain PKI client certificates from the CDR Register.
+  - Authenticate to the Register OpenID Provider with client_credentials + private_key_jwt for scope cdr-register:read.
+  - GET the Software Statement Assertion (getSoftwareStatementAssertion).
+  - POST the SSA to each data holder's /register endpoint (postClientRegistration) over MTLS.
+  - Manage or delete that registration (getClientRegistration / putClientRegistration / deleteClientRegistration).
+  spec: openapi/cdr-dcr-openapi.json
+  ssa_claims: [iss, iat, exp, jti, legal_entity_id, legal_entity_name, org_id, org_name, client_name, client_description, client_uri, redirect_uris, sector_identifier_uri, logo_uri, tos_uri, policy_uri, jwks_uri, revocation_uri, recipient_base_uri, software_id, software_roles, scope]
+consent:
+  model: >-
+    Consumer consent is explicit, scoped, time-bounded and revocable. Consent is expressed to the
+    consumer in standardised data cluster and permission language rather than raw scope strings, and
+    is represented server to server as a CDR Arrangement identified by a cdr_arrangement_id.
+  revocation:
+    data_holder_endpoint: cdr_arrangement_revocation_endpoint (advertised in data holder OIDC metadata)
+    data_recipient_endpoint: revocation_uri / arrangements/revoke (advertised in the SSA)
+    note: Either party may revoke; see asyncapi/cdr-energy-webhooks.yml for the callback direction.
+  error_codes: [urn:au-cds:error:cds-all:Authorisation/RevokedConsent, urn:au-cds:error:cds-all:Authorisation/InvalidConsent, urn:au-cds:error:cds-all:Authorisation/InvalidArrangement, urn:au-cds:error:cds-all:Authorisation/AdrStatusNotActive]

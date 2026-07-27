@@ -1,0 +1,150 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#security-profile
+derived_from: openapi/*.json
+notes: >-
+  The Consumer Data Right is itself a standard, so conformance runs in two directions: which
+  cross-cutting industry standards the CDR builds on, and how conformance to the CDR is proven.
+  Assertions marked evidence "standards" are quoted normative requirements; assertions marked
+  evidence "openapi" were derived from the six specification documents in this repo.
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749)
+  conforms: true
+  evidence: standards - Authorization Code Flow and client_credentials are both normative
+- id: oidc
+  name: OpenID Connect Core 1.0
+  conforms: true
+  evidence: standards - the CDR Federation is an OIDC federation; data holders are OpenID Providers
+- id: oidc-discovery
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: >-
+    live - https://api.cdr.gov.au/idp/.well-known/openid-configuration returned 200 on 2026-07-27;
+    data holders MUST publish OpenID Provider Metadata at their own well-known endpoint
+- id: fapi-1.0-advanced
+  name: FAPI 1.0 Advanced Profile
+  conforms: true
+  evidence: standards - "Data Holders MUST support FAPI 1.0 Advanced Profile"
+- id: rfc9126-par
+  name: OAuth 2.0 Pushed Authorization Requests
+  conforms: true
+  evidence: standards - data holder metadata sets require_pushed_authorization_requests true
+- id: rfc7636-pkce
+  name: Proof Key for Code Exchange
+  conforms: true
+  evidence: standards - code_challenge_method S256
+- id: rfc8705-mtls
+  name: OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens
+  conforms: true
+  evidence: standards - tls_client_certificate_bound_access_tokens true, MTLS Holder of Key
+- id: private-key-jwt
+  name: private_key_jwt client authentication (OIDC Core section 9)
+  conforms: true
+  evidence: standards - mandated for data holders and the CDR Register; tls_client_auth explicitly excluded
+- id: rfc7517-jwks
+  name: JSON Web Key Set
+  conforms: true
+  evidence: live - well-known/cdr-energy-register-jwks.json fetched 200 on 2026-07-27
+- id: rfc7591-dcr
+  name: OAuth 2.0 Dynamic Client Registration
+  conforms: true
+  evidence: openapi - openapi/cdr-dcr-openapi.json, POST /register with a Software Statement Assertion
+- id: rfc7592-dcr-management
+  name: OAuth 2.0 Dynamic Client Registration Management
+  conforms: true
+  evidence: openapi - GET/PUT/DELETE /register/{ClientId}
+- id: fapi-ciba
+  name: FAPI Client Initiated Backchannel Authentication
+  conforms: partial
+  evidence: standards - CIBA MAY be supported by data holders; it is optional, not mandated
+- id: openapi-3
+  name: OpenAPI 3.0.3
+  conforms: true
+  evidence: openapi - all six specification documents declare openapi 3.0.3
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    openapi - errors use the CDR's own ResponseErrorListV2 envelope with application/json, not
+    application/problem+json. The CDR publishes an equivalent normative error code registry instead.
+- id: json-api
+  name: JSON:API
+  conforms: false
+  evidence: openapi - the CDR data/links/meta envelope resembles JSON:API but is its own specification
+- id: rfc4122-uuid
+  name: UUID
+  conforms: true
+  evidence: standards - x-fapi-interaction-id MUST be an RFC 4122 UUID
+- id: rfc3339-datetime
+  name: Date and Time on the Internet
+  conforms: true
+  evidence: standards - DateTimeString / DateString common field types are RFC 3339 based
+- id: bcp195-tls
+  name: BCP 195 recommended TLS ciphers
+  conforms: true
+  evidence: standards - mandatory for all participants from 17 March 2025
+- id: rfc8594-sunset
+  name: RFC 8594 Sunset header
+  conforms: false
+  evidence: >-
+    standards - deprecation is expressed as dated regulatory obligation plus endpoint version
+    retirement, not as Sunset/Deprecation response headers
+- id: rfc9116-security-txt
+  name: security.txt
+  conforms: false
+  evidence: live - no /.well-known/security.txt found on api.cdr.gov.au or the DSB hosts on 2026-07-27
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: >-
+    no AsyncAPI document is published. The only event surface is the CDR Arrangement Revocation
+    callback, captured in asyncapi/cdr-energy-webhooks.yml
+- id: fhir-r4
+  name: FHIR R4
+  conforms: false
+  evidence: not applicable - energy sector
+regulatory_compliance:
+  regime: Australian Consumer Data Right
+  legal_basis:
+  - Competition and Consumer Act 2010 (Cth) Part IVD
+  - Consumer Data Right (Energy Sector) Designation 2020
+  - Competition and Consumer (Consumer Data Right) Rules
+  - Privacy Safeguards (CDR Privacy Safeguards 1-13)
+  regulators:
+  - name: ACCC
+    role: lead regulator, accreditation, operator of the CDR Register
+  - name: OAIC
+    role: privacy regulator
+  - name: Treasury Data Standards Body
+    role: writes the binding Consumer Data Standards
+  compliance_is_measured: true
+  measurement: >-
+    Every data holder must expose GET /admin/metrics reporting availability, performance, invocation,
+    error and rejection statistics to the ACCC. This is the mechanism that makes CDR compliance
+    measurable rather than self-declared.
+  accreditation: >-
+    Access to consumer data requires ACCC accreditation as a Data Recipient plus a registered
+    software product on the CDR Register. There is no self-service signup.
+conformance_testing:
+  test_case_catalogue: https://consumerdatastandardsaustralia.github.io/standards-testing/
+  repository: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  postman: https://www.postman.com/winter-shadow-541400/workspace/dsb-schema-tests
+  validation_prototype: https://github.com/ConsumerDataStandardsAustralia/validation-prototype
+  sandbox: https://cdrsandbox.gov.au/
+  note: >-
+    Test cases carry stable identifiers (for example T.EAR.0002) and are cross-linked between the DSB
+    Postman collections and the published test documentation.
+live_conformance_probe:
+  date: '2026-07-27'
+  method: >-
+    Every publicBaseUri in the CDR Register energy data holder brand summary was called anonymously at
+    <base>/cds-au/v1/energy/plans?page-size=2 with an x-v header.
+  registered_brands: 84
+  responded_200: 53
+  responded_404: 31
+  note: >-
+    The 404s are not necessarily non-compliance - several brands serve the public endpoints under a
+    different holder path, and the standards permit a distinct holder path for unauthenticated
+    endpoints. What the probe does establish is that a majority of the designated energy retailers
+    serve standards-conformant product reference data over the open internet with no credential.

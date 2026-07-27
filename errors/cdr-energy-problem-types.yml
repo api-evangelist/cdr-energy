@@ -1,0 +1,507 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#error-codes
+docs: https://consumerdatastandardsaustralia.github.io/standards/#error-codes
+format: cdr-error-code-registry
+rfc9457: false
+notes: 'The Consumer Data Standards publish a normative, machine-readable error code registry with URN-style
+  codes rather than RFC 9457 problem+json. Every error is returned in the ResponseErrorListV2 envelope
+  - { "errors": [ { "code", "title", "detail", "meta" } ] } - with application/json as the media type.
+  Standardised error codes became mandatory from 1 November 2022, and from May 2025 data holders must
+  report on all applicable error codes through GET /admin/metrics. The codes below were read from the
+  published registry; the source_operations bindings were derived from the 4xx/5xx response descriptions
+  in this repo''s six OpenAPI documents, which link each response to its mandated error codes.'
+envelope:
+  schema: ResponseErrorListV2
+  media_type: application/json
+  shape: '{ "errors": [ { "code": "urn:au-cds:error:...", "title": "...", "detail": "...", "meta": { ...
+    } } ] }'
+  required:
+  - errors
+  fields:
+    code: The standardised URN error code, or an application-specific code where no standard code applies.
+    title: Short human-readable summary, matching the registry title.
+    detail: Error-specific detail. The registry states what SHOULD be placed here per code (field name,
+      header name, resource ID, arrangement ID, maximum page count).
+    meta: Optional additional machine-readable context.
+extensibility: Application-specific error codes MAY be supplied in the code field where no standardised
+  code applies. From 1 November 2022 participants MAY deprecate any custom error codes they previously
+  defined.
+problems:
+- code: urn:au-cds:error:cds-all:Field/Invalid
+  title: Invalid Field
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: Applies when the value of the URL parameter or request body parameter is an invalid type
+    or the value violates the field's constraints as defined by the interface contract.For example, is-owned
+    is a Boolean but a DateString value is provided.The error detail SHOULD be the parameter name of the
+    invalid field. The error detail MAY include further details explaining the valid format.This error
+    code MUST be supported for unauthenticated and authenticated APIs.
+  source_operations:
+  - openapi/cdr-admin-openapi.json#getMetrics
+  - openapi/cdr-admin-openapi.json#metadataUpdate
+  - openapi/cdr-common-openapi.json#getCustomer
+  - openapi/cdr-common-openapi.json#getCustomerDetail
+  - openapi/cdr-common-openapi.json#getOutages
+  - openapi/cdr-common-openapi.json#getStatus
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#getEnergyPlanDetail
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Field/InvalidDateTime
+  title: Invalid Date
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: An invalid date is provided. For example, a future date value is expected, but a date in
+    past or current date is supplied. Applies to DateTimeString, DateString, and TimeString field types.The
+    error detail SHOULD be the parameter name of the invalid date field. The error detail MAY include
+    further details explaining the expected date value.This error code MUST be supported for unauthenticated
+    and authenticated APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Field/InvalidPageSize
+  title: Invalid Page Size
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: The value provided in the page-size pagination field is greater than the maximum allowed
+    by the CDR Data Standards (page-size > 1000).This error code MUST be supported for unauthenticated
+    and authenticated APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Field/Missing
+  title: Missing Required Field
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: The request is missing a mandatory field required for the API. It MAY be a missing query
+    parameter or missing field in the request payload. This error code can be used, where a more specific
+    validation error is not applicable.The error detail SHOULD be the parameter name of the missing field.This
+    error code MUST be supported for unauthenticated and authenticated APIs.
+  source_operations:
+  - openapi/cdr-admin-openapi.json#getMetrics
+  - openapi/cdr-admin-openapi.json#metadataUpdate
+  - openapi/cdr-common-openapi.json#getCustomer
+  - openapi/cdr-common-openapi.json#getCustomerDetail
+  - openapi/cdr-common-openapi.json#getOutages
+  - openapi/cdr-common-openapi.json#getStatus
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#getEnergyPlanDetail
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Header/Invalid
+  title: Invalid Header
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: Applies when a HTTP Header is provided but the value provided is an invalid type or violates
+    the field type constraints as defined in the CDR Data Standards.The error detail SHOULD be the HTTP
+    header name. The error detail MAY include further details explaining the valid format.This error code
+    SHOULD be supported for unauthenticated and authenticated APIs.
+- code: urn:au-cds:error:cds-all:Header/InvalidVersion
+  title: Invalid Version
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: A request is made for a version that is not a PositiveInteger.For example:x-min-v, x-v
+    or x-<HID>-v are not Integers (e.g. x-min-v=foo, x-v=bar, x-ACME-v=cheese)x-min-v, x-v or x-<HID>-v
+    are not positive-value Integers (they are an Integer but <= 0)This error code MUST be supported for
+    unauthenticated and authenticated APIs.If the version header is a PositiveInteger but is not a version
+    supported by the Data Holder, the Unsupported Version code applies.
+  source_operations:
+  - openapi/cdr-admin-openapi.json#getMetrics
+  - openapi/cdr-admin-openapi.json#metadataUpdate
+  - openapi/cdr-common-openapi.json#getCustomer
+  - openapi/cdr-common-openapi.json#getCustomerDetail
+  - openapi/cdr-common-openapi.json#getOutages
+  - openapi/cdr-common-openapi.json#getStatus
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#getEnergyPlanDetail
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Header/Missing
+  title: Missing Required Header
+  http_status: '400'
+  group: 400 Bad Request Errors
+  description: A required HTTP header has not been provided.The error detail SHOULD be the HTTP header
+    name.This error code SHOULD be supported for unauthenticated and authenticated APIs.
+- code: urn:au-cds:error:cds-all:Authorisation/AdrStatusNotActive
+  title: ADR Status Is Not Active
+  http_status: '403'
+  group: 403 (Forbidden) Errors
+  description: The ADR or the ADR's software product is not "active".The error detail SHOULD contain the
+    current status of the ADR software product.
+- code: urn:au-cds:error:cds-all:Authorisation/InvalidConsent
+  title: Consent Is Invalid
+  http_status: '403'
+  group: 403 (Forbidden) Errors
+  description: The authorised consumer's consent is not associated to the resource requested, is insufficient
+    to execute the resource or is in a status that prevents the resource being executed.For example, if
+    consent is awaiting authorisation of a secondary account holder.The error detail SHOULD be a description
+    of the status of consent without revealing sensitive information.This error code SHOULD be supported
+    for authenticated APIs.
+- code: urn:au-cds:error:cds-all:Authorisation/RevokedConsent
+  title: Consent Is Revoked
+  http_status: '403'
+  group: 403 (Forbidden) Errors
+  description: The consumer's consent is no longer authorised (for example revoked or expired) and the
+    requested resource will not be provided.This error code SHOULD be supported for authenticated APIs.
+- code: urn:au-cds:error:cds-all:Resource/Invalid
+  title: Invalid Resource
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested resource identifier is permanently unavailable. No subsequent request for
+    the resource will be successful. Applies when the resource ID is provided in the URI.The error detail
+    is the resource ID of the resource being requested.This error code MUST be supported for unauthenticated
+    and authenticated APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getEnergyPlanDetail
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Resource/NotFound
+  title: Resource Not Found
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested resource URL is not an API endpoint defined by the CDR Data Standards and
+    it is not a URL recognised by the Data Holder or Data Recipient Software Product.
+- code: urn:au-cds:error:cds-all:Resource/NotImplemented
+  title: Resource Not Implemented
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested resource URL is a valid API endpoint defined by the CDR Data Standards, but
+    it is not implemented or not currently supported.This error code SHOULD be supported for unimplemented
+    APIs.
+- code: urn:au-cds:error:cds-all:Resource/Unavailable
+  title: Unavailable Resource
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested resource identifier is temporarily unavailable. Subsequent requests for the
+    resource may be successful. Applies when the resource ID is provided in the URI.The error detail is
+    the resource ID of the resource being requested.This error code MUST be supported for unauthenticated
+    and authenticated APIs.
+- code: urn:au-cds:error:cds-banking:Authorisation/InvalidBankingAccount
+  title: Invalid Banking Account
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested bank account is permanently unavailable. No subsequent request for the account
+    will be successful. Applies when the account ID is provided in the URI.The error detail is the account
+    ID of the resource being requested.This error code MUST be supported for authenticated APIs.
+- code: urn:au-cds:error:cds-banking:Authorisation/UnavailableBankingAccount
+  title: Unavailable Banking Account
+  http_status: '404'
+  group: 404 (Not Found) Errors
+  description: The requested bank account is temporarily unavailable. Subsequent requests for the account
+    may be successful. Applies when the account ID is provided in the URI.The error detail is the account
+    ID of the resource being requested.This error code MUST be supported for authenticated APIs.
+- code: urn:au-cds:error:cds-energy:Authorisation/InvalidEnergyAccount
+  title: Invalid Energy Account
+  http_status: 404 or 422
+  group: 404 (Not Found) Errors
+  description: The requested energy account is permanently unavailable. No subsequent request for the
+    account will be successful. Applies when the account ID is provided in the URI.The error detail is
+    the account ID of the resource being requested.This error code MUST be supported for authenticated
+    APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+  status_note: Returned as 404 when the identifier is supplied in the request path, and as 422 when supplied
+    in a request body (the bulk POST operations).
+- code: urn:au-cds:error:cds-energy:Authorisation/InvalidServicePoint
+  title: Invalid Service Point
+  http_status: 404 or 422
+  group: 404 (Not Found) Errors
+  description: The requested service point is permanently unavailable. No subsequent request for the service
+    point will be successful. Applies when the service point is provided in the URI.The error detail is
+    the service point ID of the resource being requested.This error code MUST be supported for authenticated
+    APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+  status_note: Returned as 404 when the identifier is supplied in the request path, and as 422 when supplied
+    in a request body (the bulk POST operations).
+- code: urn:au-cds:error:cds-energy:Authorisation/UnavailableEnergyAccount
+  title: Unavailable Energy Account
+  http_status: 404 or 422
+  group: 404 (Not Found) Errors
+  description: The requested energy account is temporarily unavailable. Subsequent requests for the account
+    may be successful. Applies when the account ID is provided in the URI.The error detail is the account
+    ID of the resource being requested.This error code MUST be supported for authenticated APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+  status_note: Returned as 404 when the identifier is supplied in the request path, and as 422 when supplied
+    in a request body (the bulk POST operations).
+- code: urn:au-cds:error:cds-energy:Authorisation/UnavailableServicePoint
+  title: Unavailable Service Point
+  http_status: 404 or 422
+  group: 404 (Not Found) Errors
+  description: The requested service point is temporarily unavailable. Subsequent requests for the service
+    point may be successful. Applies when the service point ID is provided in the URI.The error detail
+    is the service point ID of the resource being requested.This error code MUST be supported for authenticated
+    APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+  status_note: Returned as 404 when the identifier is supplied in the request path, and as 422 when supplied
+    in a request body (the bulk POST operations).
+- code: urn:au-cds:error:cds-register:Field/InvalidBrand
+  title: Invalid Brand
+  http_status: '404'
+  group: CDR Register Errors
+  description: The brand provided to get the Data Recipient Software Product software statement assertion
+    is invalid. Applies to the dataRecipientBrandId path parameter for CDR Register APIs.
+- code: urn:au-cds:error:cds-register:Field/InvalidIndustry
+  title: Invalid Industry
+  http_status: '404'
+  group: CDR Register Errors
+  description: The industry requested in the path to get Data Recipient Software Product or Data Holder
+    metadata is invalid / does not exist and cannot be found. Applies to the industry path parameter for
+    CDR Register APIs.
+- code: urn:au-cds:error:cds-register:Field/InvalidSoftwareProduct
+  title: Invalid Software Product
+  http_status: '404'
+  group: CDR Register Errors
+  description: The software product requested to get the Data Recipient Software Product software statement
+    assertion is invalid or cannot be found. Applies to the softwareProductId path parameter.
+- code: urn:au-cds:error:cds-all:Header/UnsupportedVersion
+  title: Unsupported Version
+  http_status: '406'
+  group: 406 (Not Acceptable) Errors
+  description: A request is made for a version that is lower than the minimum version or greater than
+    maximum version the Data Holder supports for the requested endpoint.The error detail MAY include the
+    minimum and maximum versions the Data Holder supports.This error code MUST be supported for unauthenticated
+    and authenticated APIs.
+  source_operations:
+  - openapi/cdr-admin-openapi.json#getMetrics
+  - openapi/cdr-admin-openapi.json#metadataUpdate
+  - openapi/cdr-common-openapi.json#getCustomer
+  - openapi/cdr-common-openapi.json#getCustomerDetail
+  - openapi/cdr-common-openapi.json#getOutages
+  - openapi/cdr-common-openapi.json#getStatus
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityDERForServicePoint
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointDetail
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountBalance
+  - openapi/cdr-energy-openapi.json#getEnergyAccountConcessions
+  - openapi/cdr-energy-openapi.json#getEnergyAccountDetail
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#getEnergyAccountPaymentSchedule
+  - openapi/cdr-energy-openapi.json#getEnergyPlanDetail
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityDERForServicePointSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointDetailSR
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:Authorisation/InvalidArrangement
+  title: Invalid Consent Arrangement
+  http_status: '422'
+  group: 422 (Unprocessable Entity) Errors
+  description: The arrangement being executed has previously been revoked and no further action will be
+    taken.The error detail is the CDR Arrangement ID of the being executed.This error code MUST be supported
+    for the Data Recipient Software Product and Data Holder CDR Arrangement Revocation endpoint.
+- code: urn:au-cds:error:cds-all:Field/InvalidPage
+  title: Invalid Page
+  http_status: '422'
+  group: 422 (Unprocessable Entity) Errors
+  description: The page being requested it out of of range. For example, the valid pagination range is
+    5 pages and the client requested page=10).The error detail SHOULD be the maximum number of pages that
+    are available.This error code MUST be supported for unauthenticated and authenticated APIs.
+  source_operations:
+  - openapi/cdr-energy-openapi.json#getBillingForEnergyAccount
+  - openapi/cdr-energy-openapi.json#getElectricityServicePointUsage
+  - openapi/cdr-energy-openapi.json#getEnergyAccountInvoices
+  - openapi/cdr-energy-openapi.json#listElectricityDERBulk
+  - openapi/cdr-energy-openapi.json#listElectricityDERForSpecificServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityServicePoints
+  - openapi/cdr-energy-openapi.json#listElectricityUsageBulk
+  - openapi/cdr-energy-openapi.json#listElectricityUsageForServicePoints
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBalancesSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccountBillingForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyAccountInvoicesBulk
+  - openapi/cdr-energy-openapi.json#listEnergyAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyInvoicesForSpecificAccounts
+  - openapi/cdr-energy-openapi.json#listEnergyPlans
+  - openapi/cdr-energy-sdh-openapi.json#getElectricityServicePointUsageSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityDERForSpecificServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityServicePointsSR
+  - openapi/cdr-energy-sdh-openapi.json#listElectricityUsageForServicePointsSR
+  binding: derived from OpenAPI 4xx/5xx response descriptions
+- code: urn:au-cds:error:cds-all:GeneralError/Expected
+  title: Expected Error Encountered
+  http_status: 4xx
+  group: General Errors
+  description: An error code that can be used, when an expected error occurs that is otherwise not covered
+    by a more specific error.The error detail SHOULD be populated with a meaningful error description,
+    without revealing sensitive information.An application specific error code MAY be provided. The MetaError
+    » urn MUST be populated with the standard CDR error code.
+- code: urn:au-cds:error:cds-all:Service/Unavailable
+  title: Service Unavailable
+  http_status: '503'
+  group: General Errors
+  description: A request is made but the API unavailable as due to an outage.The error detail MAY describe
+    whether the outage is scheduled or unexpected and whether it is fully unavailable or partially unavailable.
+- code: urn:au-cds:error:cds-all:GeneralError/Unexpected
+  title: Unexpected Error Encountered
+  http_status: 5xx
+  group: General Errors
+  description: An error code that can be used, when an unexpected error occurs.The error detail SHOULD
+    be populated with a meaningful error description, without revealing sensitive information.An application
+    specific error code MAY be provided. The MetaError » urn MUST be populated with the standard CDR error
+    code.

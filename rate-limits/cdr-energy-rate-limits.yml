@@ -1,0 +1,100 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#non-functional-requirements
+docs: https://consumerdatastandardsaustralia.github.io/standards/#traffic-thresholds
+summary: >-
+  The CDR publishes its rate limits as binding non-functional requirements rather than as a
+  commercial plan. Calls in excess of the traffic thresholds below may be freely throttled or
+  rejected by a data holder with no impact on that holder's regulated performance or availability
+  obligations. Thresholds scale with the number of active authorisations a data holder carries.
+metrics:
+- Number of sessions per day - individual sessions initiated in a calendar day. A session is the life span of a unique access token.
+- Transactions Per Second (TPS) - concurrent transactions each second.
+- Number of calls - endpoint calls initiated for a specified duration.
+rate_limits:
+- scope: customer-present and authorisation traffic
+  sessions_per_day: unlimited
+  limit_count: 10
+  limit_unit: TPS
+  limit_per: customer
+- scope: customer-present and authorisation traffic
+  limit_count: 50
+  limit_unit: TPS
+  limit_per: data recipient software product
+- scope: unattended traffic (low traffic periods)
+  limit_count: 20
+  limit_unit: sessions per day
+  limit_per: customer, per data recipient software product
+- scope: unattended traffic (low traffic periods)
+  limit_count: 100
+  limit_unit: calls per session
+- scope: unattended traffic (low traffic periods)
+  limit_count: 5
+  limit_unit: TPS
+  limit_per: session
+- scope: unattended traffic (low traffic periods)
+  limit_count: 50
+  limit_unit: TPS
+  limit_per: data recipient software product
+- scope: unattended traffic (high traffic periods)
+  limit_count: null
+  limit_unit: best effort only
+secure_traffic_peak_tps_by_active_authorisations:
+- active_authorisations: 0-10000
+  peak_tps: 150
+- active_authorisations: 10001-20000
+  peak_tps: 200
+- active_authorisations: 20001-30000
+  peak_tps: 250
+- active_authorisations: 30001-40000
+  peak_tps: 300
+- active_authorisations: 40001-50000
+  peak_tps: 350
+- active_authorisations: 50001-60000
+  peak_tps: 400
+- active_authorisations: '>60000'
+  peak_tps: see the published Traffic Thresholds table for the continuing scale
+  note: The published table continues to scale beyond 60,000 active authorisations.
+performance_requirements:
+  rule: 95% of calls per hour responded to within the nominated threshold for the endpoint tier
+  tiers:
+  - tier: Unauthenticated
+    response_time_ms: 1500
+    applies_to: all unauthenticated endpoints not otherwise given a separate threshold
+  - tier: High Priority
+    response_time_ms: 1000
+    applies_to: all InfoSec endpoints and other high-priority calls
+  - tier: Low Priority
+    response_time_ms: 1500
+    applies_to: customer-present calls to the standard resource endpoints
+  - tier: Unattended
+    response_time_ms: 4000
+    applies_to: unattended calls to the standard resource endpoints
+  - tier: Large Payload
+    response_time_ms: 6000
+    applies_to: bulk endpoints
+  - tier: Secondary Request
+    response_time_ms: 1000
+    response_time_ms_secondary_data_holder: 1500
+    applies_to: customer-present shared-responsibility calls (energy service points, usage, DER)
+  - tier: Large Secondary Request
+    response_time_ms: 1500
+    response_time_ms_secondary_data_holder: 4500
+    applies_to: unattended shared-responsibility calls
+throttling_behaviour:
+  429: >-
+    Distributed denial of service or equivalent attack, and significant traffic increases from a
+    poorly designed or misbehaving data recipient software product, should return 429 Too Many
+    Requests.
+  403: >-
+    Where the data holder identifies potential for physical or financial harm or abuse, 403 Forbidden
+    should be returned.
+  headers: >-
+    The standards define no RateLimit-* or Retry-After response header conventions; throttling is
+    signalled by status code only.
+reporting:
+  mechanism: GET /admin/metrics (openapi/cdr-admin-openapi.json#getMetrics)
+  note: >-
+    Compliance with these thresholds is not self-declared - data holders must report availability,
+    performance, invocation, error and rejection statistics to the ACCC through the mandated Admin
+    API.

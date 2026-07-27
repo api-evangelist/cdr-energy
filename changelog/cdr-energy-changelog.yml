@@ -1,0 +1,62 @@
+generated: '2026-07-27'
+method: searched
+source: https://github.com/ConsumerDataStandardsAustralia/standards/releases
+docs: https://consumerdatastandardsaustralia.github.io/standards/#version-delta
+announcements: https://dsb.gov.au/news-and-announcements
+maintenance: https://github.com/ConsumerDataStandardsAustralia/standards-maintenance
+scheme: semantic versioning on the standards document; each release is a tagged GitHub release
+current_version: 1.36.0
+current_version_released: '2025-12-04'
+notes: >-
+  The Consumer Data Standards change through a public, minuted process: maintenance iterations and
+  numbered Data Standards Chair Decisions, consulted in the standards-maintenance repository, then
+  baselined into a tagged release with a rendered Version Delta in the standards document. A binding
+  effective date is attached to each obligation separately from the release date, so "published" and
+  "in force" are deliberately different things - see lifecycle/cdr-energy-lifecycle.yml.
+entries:
+- version: 1.36.0
+  date: '2025-12-04'
+  highlights: Changes from Decision 376 (White label brand arrangements).
+  breaking: false
+- version: 1.35.1
+  date: '2025-10-08'
+  highlights: Changes from Decision 377 (amendments to the certificate management section).
+  breaking: false
+- version: 1.35.0
+  date: '2025-07-29'
+  highlights: >-
+    Decision 364 (Maintenance Iteration 22), Decision 367 (incorporating the March 2025 Rules
+    amendment including non-bank lending and BNPL), Decision 369 (Redirect to App), and Decision 370
+    (amendment of the Decision 338 obligation date).
+  breaking: false
+- version: 1.34.1
+  date: '2025-04-11'
+  highlights: Update to the candidate standards for the banking and non-bank lending sector.
+  breaking: false
+- version: 1.34.0
+  date: '2025-03-13'
+  highlights: >-
+    Decision 338 (updates to banking products and accounts) and Decision 361 (Energy Last Consumer
+    Change Date).
+  breaking: false
+  energy_impact: true
+- version: 1.33.1
+  date: '2025-03-06'
+  highlights: Changes from the OpenAPI spec refactoring - the point at which the machine-readable specs in this repo took their current shape.
+  breaking: false
+- version: 1.33.0
+  date: '2024-12-18'
+  highlights: Decision 356 (Maintenance Iteration 21) and Decision 350 (August 2024 Rules - standards impacts).
+  breaking: false
+- version: 1.32.0
+  date: '2024-10-21'
+  highlights: Maintenance Iteration 20.
+  breaking: false
+- version: 1.31.0
+  date: '2024-07-03'
+  highlights: Maintenance Iteration 19.
+  breaking: false
+- version: 1.30.0
+  date: '2024-04-24'
+  highlights: Maintenance Iteration 18.
+  breaking: false

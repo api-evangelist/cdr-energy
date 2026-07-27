@@ -1,0 +1,157 @@
+generated: '2026-07-27'
+method: searched
+source: https://consumerdatastandardsaustralia.github.io/standards/#high-level-standards
+derived_from: openapi/*.json
+summary: >-
+  The Consumer Data Standards are unusually explicit about cross-cutting semantics - versioning,
+  headers, pagination, ID permanence, error envelope and non-functional requirements are all
+  normative and identical across all 84 energy data holders. That uniformity is the whole point of
+  the regime: one contract, many implementations.
+uri_structure:
+  pattern: 'https://<holder-path>/cds-au/<version>/(<industry>|<HID>)/<resource>'
+  version_segment: v1
+  industry_segment: energy | banking | common | admin | discovery
+  example: https://publiccdr.globirdenergy.com.au/cds-au/v1/energy/plans
+  note: >-
+    The holder path is chosen by each data holder, which is why there is no single base URL for the
+    Energy API. All authenticated endpoints must live under the same holder path; unauthenticated
+    endpoints may use a different one.
+versioning:
+  scheme: two-level - standards-level semantic version plus a per-endpoint integer version
+  standards_version: 1.36.0
+  request_headers:
+    x-v: Version of the endpoint requested by the client. Positive integer. Mandatory on all endpoints.
+    x-min-v: Minimum endpoint version the client will accept. The holder responds with the highest supported version between x-min-v and x-v.
+  response_headers:
+    x-v: The payload version the endpoint actually responded with. Mandatory on 200.
+  negotiation_errors:
+  - urn:au-cds:error:cds-all:Header/InvalidVersion
+  - urn:au-cds:error:cds-all:Header/UnsupportedVersion
+  see: lifecycle/cdr-energy-lifecycle.yml
+headers:
+  request:
+  - name: x-v
+    required: mandatory
+    used_by: 42 operations
+  - name: x-min-v
+    required: optional
+    used_by: 42 operations
+  - name: x-fapi-interaction-id
+    required: optional
+    description: RFC 4122 UUID used as a correlation id. If provided the data holder MUST play it back; if absent the holder MUST generate one.
+    used_by: 29 operations
+  - name: x-fapi-auth-date
+    required: conditional
+    description: The time the customer last logged in to the data recipient, in HTTP-date format. Required for customer-present calls.
+    used_by: 23 operations
+  - name: x-fapi-customer-ip-address
+    required: conditional
+    description: The customer's original IP address if the customer is currently logged in to the data recipient. Presence indicates a customer-present call.
+    used_by: 23 operations
+  - name: x-cds-client-headers
+    required: conditional
+    description: The customer's original standard HTTP headers, base64 encoded. Mandatory for customer-present calls.
+    used_by: 23 operations
+  - name: x-cds-arrangement
+    required: conditional
+    description: The CDR arrangement identifier, used on Secondary Data Holder (shared responsibility) requests.
+    used_by: 6 operations
+  - name: Authorization
+    required: conditional
+    description: Bearer token - the consumer-authorised, certificate-bound access token.
+    used_by: 5 operations
+  - name: If-None-Match
+    required: optional
+    description: Conditional request support on CDR Register endpoints; pairs with the Etag response header and HTTP 304.
+    used_by: 5 operations
+  response:
+  - name: x-v
+    description: The payload version responded with.
+  - name: x-fapi-interaction-id
+    description: Correlation id, mandatory on 200, 400, 406 and 422.
+  - name: Etag
+    description: Entity tag on CDR Register discovery endpoints, enabling 304 Not Modified.
+  - name: WWW-Authenticate
+    description: Returned by the Dynamic Client Registration endpoints on 401.
+request_tracing:
+  header: x-fapi-interaction-id
+  format: RFC 4122 UUID
+  behaviour: client-supplied value is echoed; otherwise the data holder generates and returns one
+  present_on: [200, 400, 406, 422]
+pagination:
+  style: page-number
+  request_params:
+    page: Page of results to request. Integer, default 1.
+    page-size: Page size to request. Integer, default 25, maximum 1000.
+  response_envelope:
+    meta:
+      totalRecords: total number of records in the full set
+      totalPages: total number of pages
+    links:
+      self: current page
+      first: first page
+      prev: previous page (omitted on the first page)
+      next: next page (omitted on the last page)
+      last: last page
+  errors:
+  - urn:au-cds:error:cds-all:Field/InvalidPageSize
+  - urn:au-cds:error:cds-all:Field/InvalidPage
+  note: >-
+    Filtering and pagination are applied independently. Endpoints that normally return less than one
+    page may omit pagination entirely.
+  worked_example: examples/cdr-energy-plans-response-example.json
+response_envelope:
+  shape: '{ "data": {...}, "links": {...}, "meta": {...} }'
+  data: the resource or resource list
+  links: self plus pagination links where applicable
+  meta: totalRecords / totalPages where paginated
+  content_type: application/json
+  charset: UTF-8 only - any other character set MUST return 406
+error_envelope:
+  schema: ResponseErrorListV2
+  shape: '{ "errors": [ { "code": "...", "title": "...", "detail": "...", "meta": {...} } ] }'
+  code_format: 'urn:au-cds:error:<sector>:<class>/<subclass>'
+  rfc9457: false
+  rfc9457_note: >-
+    The CDR predates and does not use application/problem+json. It defines its own normative,
+    machine-readable error code registry instead - see errors/cdr-energy-problem-types.yml.
+  custom_codes: >-
+    Application-specific error codes MAY be provided in the code field where no standardised code
+    applies. From 1 November 2022 participants MAY deprecate any custom error codes.
+id_permanence:
+  rules:
+  - Resource IDs MUST be entirely arbitrary with no inherent meaning and MUST NOT be parseable.
+  - IDs MUST be immutable across sessions and consents.
+  - IDs MUST NOT be transferable across Data Recipient Software Products - two recipients get different IDs for the same underlying resource.
+  - IDs MUST NOT be transferable between different customers for the same recipient - a joint account yields a different ID per authorising customer.
+  - The field name `id` MUST NEVER be used; ID fields are meaningfully named (planId, accountId, servicePointId).
+  effect: >-
+    Identifiers are pairwise-pseudonymous by design, so they cannot be used to correlate a consumer
+    across recipients. This is a privacy control expressed as an API convention.
+idempotency:
+  supported: false
+  note: >-
+    The Consumer Data Standards define no idempotency key. The energy contract is read-only apart
+    from the DCR registration operations and POST /admin/register/metadata; the three POST operations
+    in the Energy and Secondary Data Holder APIs are query-by-body reads (bulk fetch for a supplied
+    list of accounts or service points), not state changes, so there is no retry-safety hazard to
+    key. No Idempotency-Key parameter appears in any of the six OpenAPI documents.
+caching:
+  conditional_requests: CDR Register discovery endpoints support Etag / If-None-Match with 304 Not Modified
+  data_latency: >-
+    No fixed latency requirement. Data presented via API endpoints must be commensurate with the data
+    presented through the holder's other primary digital channels. A data holder making Shared
+    Responsibility Data Requests to the secondary data holder may cache the result briefly to absorb
+    duplicate recipient calls.
+rate_limiting:
+  see: rate-limits/cdr-energy-rate-limits.yml
+  signalling: >-
+    Excess traffic may be throttled or rejected freely. Denial-of-service or misbehaving-recipient
+    conditions should return 429 Too Many Requests; potential physical or financial harm should
+    return 403 Forbidden. The standards define no RateLimit-* response headers.
+authentication:
+  see: authentication/cdr-energy-authentication.yml
+errors:
+  see: errors/cdr-energy-problem-types.yml
+lifecycle:
+  see: lifecycle/cdr-energy-lifecycle.yml

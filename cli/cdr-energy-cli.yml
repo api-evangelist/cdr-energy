@@ -1,0 +1,36 @@
+generated: '2026-07-27'
+method: searched
+source: https://github.com/ConsumerDataStandardsAustralia/testdata-cli and the npm registry
+notes: >-
+  There is no CLI for calling the CDR APIs - consumer data access is gated on ACCC accreditation and
+  mutual TLS, so there is nothing a developer laptop can call without a client certificate. What the
+  Data Standards Body does ship is a first-party CLI for the other half of the problem: manufacturing
+  standards-conformant banking and energy test data to seed a mock data holder, and rendering the
+  conformance test documentation.
+clis:
+- name: testdata
+  package: '@cds-au/testdata'
+  version: 1.8.0
+  official: true
+  publisher: Data Standards Body
+  install:
+  - npm install -g @cds-au/testdata
+  - npx @cds-au/testdata
+  source_code: https://github.com/ConsumerDataStandardsAustralia/testdata-cli
+  registry: https://www.npmjs.com/package/@cds-au/testdata
+  purpose: >-
+    Generate manufactured CDR test data (customers, energy accounts, service points, usage, plans,
+    banking accounts and transactions) that validates against the Consumer Data Standards payload
+    schemas, for loading into a mock data holder.
+- name: testdocs
+  package: '@cds-au/testdocs'
+  version: 1.0.0
+  official: true
+  publisher: Data Standards Body
+  install:
+  - npm install -g @cds-au/testdocs
+  registry: https://www.npmjs.com/package/@cds-au/testdocs
+  purpose: Build and present the CDR conformance test-case documentation set.
+related:
+  conformance_test_suite: https://consumerdatastandardsaustralia.github.io/standards-testing/
+  postman: https://www.postman.com/winter-shadow-541400/workspace/dsb-schema-tests

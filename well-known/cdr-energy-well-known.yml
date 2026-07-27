@@ -1,0 +1,62 @@
+generated: '2026-07-27'
+method: searched
+source: live probes of the CDR Register host and the CDR public web/doc hosts on 2026-07-27
+notes: >-
+  The Consumer Data Right has no single API host - the CDR Register (api.cdr.gov.au) is the only
+  centrally operated API host, and every data holder runs its own. The Register's OpenID Provider
+  discovery document is published at a non-root path (/idp/.well-known/openid-configuration) rather
+  than at the host root, so a root-level probe misses it. Both live documents below were fetched
+  anonymously and saved verbatim.
+hosts:
+- host: https://api.cdr.gov.au
+  role: CDR Register (ACCC)
+  documents:
+  - path: /idp/.well-known/openid-configuration
+    status: 200
+    file: cdr-energy-register-openid-configuration.json
+    standard: OpenID Connect Discovery 1.0
+  - path: /idp/.well-known/openid-configuration/jwks
+    status: 200
+    file: cdr-energy-register-jwks.json
+    standard: RFC 7517 JSON Web Key Set
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://consumerdatastandardsaustralia.github.io
+  role: Data Standards Body standards + developer portal (GitHub Pages)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /standards/llms.txt
+    status: 404
+- host: https://dsb.gov.au
+  role: Data Standards Body corporate site
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /llms.txt
+    status: 404
+- host: https://www.cdr.gov.au
+  role: ACCC / Treasury consumer + participant site
+  documents:
+  - path: /.well-known/security.txt
+    status: 0
+    note: host did not complete a TCP/TLS connection from the probe network; not a recorded 404
+data_holder_well_known:
+  note: >-
+    Per the CDR Security Profile every data holder MUST publish its own OpenID Provider Metadata at
+    <holder>/.well-known/openid-configuration, including the CDR-specific
+    cdr_arrangement_revocation_endpoint and require_pushed_authorization_requests. Those are per-brand
+    endpoints, discoverable through the CDR Register's data holder brands endpoint, not a single URL.
+  discovery: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands
+  spec: https://consumerdatastandardsaustralia.github.io/standards/#security-profile
+security_txt: none found

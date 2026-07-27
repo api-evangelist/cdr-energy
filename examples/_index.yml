@@ -1,0 +1,53 @@
+generated: '2026-07-27'
+method: searched
+source: live anonymous requests against production CDR endpoints on 2026-07-27
+description: >-
+  Verbatim, unedited responses captured from live production Consumer Data Right endpoints. Every file
+  here is a real HTTP 200 body; nothing is synthesised. The energy plan payloads come from GloBird
+  Energy's registered public base URI, which is one of the 53 of 84 registered energy data holder
+  brands that answered GET /cds-au/v1/energy/plans anonymously when the whole register was probed on
+  2026-07-27.
+examples:
+- file: cdr-energy-plans-response-example.json
+  api: openapi/cdr-energy-openapi.json
+  operation: listEnergyPlans
+  request: GET https://publiccdr.globirdenergy.com.au/cds-au/v1/energy/plans?page-size=2
+  headers:
+    x-v: '1'
+  status: 200
+  notes: >-
+    Shows the standard CDR envelope - data / links / meta - with meta.totalRecords 433 and
+    meta.totalPages 217, and the self / next / last pagination links.
+- file: cdr-energy-plan-detail-response-example.json
+  api: openapi/cdr-energy-openapi.json
+  operation: getEnergyPlanDetail
+  request: GET https://publiccdr.globirdenergy.com.au/cds-au/v1/energy/plans/GLO1152441MRG1%40EME
+  headers:
+    x-v: '3'
+  status: 200
+- file: cdr-energy-discovery-status-response-example.json
+  api: openapi/cdr-common-openapi.json
+  operation: getStatus
+  request: GET https://publiccdr.globirdenergy.com.au/cds-au/v1/discovery/status
+  headers:
+    x-v: '1'
+  status: 200
+  notes: The mandated machine-readable data holder status endpoint, returning status OK and updateTime.
+- file: cdr-energy-discovery-outages-response-example.json
+  api: openapi/cdr-common-openapi.json
+  operation: getOutages
+  request: GET https://publiccdr.globirdenergy.com.au/cds-au/v1/discovery/outages
+  headers:
+    x-v: '1'
+  status: 200
+- file: cdr-energy-register-data-holder-brands-summary-example.json
+  api: openapi/cdr-register-openapi.json
+  operation: getDataHolderBrandsSummary
+  request: GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+  headers:
+    x-v: '1'
+  status: 200
+  notes: >-
+    All 84 registered energy data holder brands with their live publicBaseUri values. This is the
+    discovery document that makes the energy sector's per-brand base URLs resolvable - there is no
+    single production base URL for the CDR Energy API, each designated retailer publishes its own.

@@ -1,0 +1,35 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for CDR Dynamic Client Registration API
+  version: 1.0.0
+extends: openapi/cdr-dcr-openapi.json
+x-generated: '2026-07-27'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    x-apievangelist-slug: cdr-energy
+    x-apievangelist-artifacts:
+      authentication: authentication/cdr-energy-authentication.yml
+      scopes: scopes/cdr-energy-scopes.yml
+      conventions: conventions/cdr-energy-conventions.yml
+      errors: errors/cdr-energy-problem-types.yml
+      lifecycle: lifecycle/cdr-energy-lifecycle.yml
+      rate-limits: rate-limits/cdr-energy-rate-limits.yml
+      conformance: conformance/cdr-energy-conformance.yml
+      data-model: data-model/cdr-energy-data-model.yml
+    x-apievangelist-security-profile: FAPI 1.0 Advanced; mutual TLS; private_key_jwt; PAR; PKCE S256
+    x-apievangelist-security-profile-note: The Consumer Data Standards declare no components.securitySchemes
+      in the OpenAPI documents; the security model is normative in a separate Security Profile section
+      that all six APIs inherit.
+    x-apievangelist-error-registry: urn:au-cds:error:* - ResponseErrorListV2 envelope, not RFC 9457
+- target: $.info
+  update:
+    x-apievangelist-base-url-resolution:
+      note: The servers[] entry in this document is a documentation placeholder (example.com). There is
+        no single production base URL.
+      discovery: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+      field: publicBaseUri
+      path_suffix: /cds-au/v1
+      registered_energy_brands: 84
+      answered_anonymously_2026_07_27: 53
