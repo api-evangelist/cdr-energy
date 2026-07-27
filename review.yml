@@ -1,0 +1,455 @@
+aid: cdr-energy
+name: Consumer Data Right (Energy)
+review:
+  question: >-
+    Is the Australian Consumer Data Right, transplanted from banking into energy, an actually
+    implemented API mandate or only a designated obligation on paper?
+  answer: >-
+    Implemented, and verifiable anonymously from outside the ecosystem. The public CDR Register
+    returned 84 energy data holder brands each carrying a live public base URI, and 53 of those
+    base URIs served standards-conformant CDR Energy product reference data on a first, unauthenticated
+    request.
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  tier: regulator
+  homeMarket: Australia
+
+mandate:
+  regime: cdr-energy
+  status: live-implemented
+  statutoryBasis:
+    - name: Competition and Consumer Act 2010 (Cth), Part IVD — Consumer Data Right
+      note: >-
+        Primary legislation creating the CDR. Not fetched directly in this session; cited as the
+        parent Act named by the designation instrument below.
+    - name: Consumer Data Right (Energy Sector) Designation 2020
+      registerId: F2020L00833
+      url: https://www.legislation.gov.au/F2020L00833/asmade/text
+      httpStatus: 200
+      fetched: '2026-07-27'
+      note: >-
+        Verified by fetch. The Federal Register of Legislation returns a page titled
+        "Consumer Data Right (Energy Sector) Designation 2020" at this identifier. This is the
+        instrument that extended the CDR from banking into the energy sector.
+  administeringBodies:
+    - name: ACCC
+      role: Lead regulator; accreditation of data recipients; operator of the CDR Register.
+    - name: OAIC
+      role: Privacy regulator for the CDR privacy safeguards.
+    - name: Data Standards Body (Treasury) / Data Standards Chair
+      role: Author of the binding Consumer Data Standards.
+      url: https://dsb.gov.au/
+      httpStatus: 200
+      note: consumerdatastandards.gov.au (200) redirects to dsb.gov.au.
+  commencementDate: >-
+    NOT VERIFIED BY FETCH in this session. No commencement date is asserted here. The empirical
+    evidence that the obligation is in force is the live register population and the live endpoints
+    recorded below, not a date read off a press release.
+  howVerified:
+    - step: Queried the public CDR Register for energy data holder brands.
+      request: GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+      headers: 'x-v: 1'
+      auth: none
+      httpStatus: 200
+      result: 84 energy data holder brands returned, each with brandName, industries and publicBaseUri.
+      fetched: '2026-07-27'
+    - step: Queried energy data holder legal-entity statuses.
+      request: GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/status
+      headers: 'x-v: 1'
+      auth: none
+      httpStatus: 200
+      fetched: '2026-07-27'
+    - step: Queried accredited data recipients for the energy industry.
+      request: GET https://api.cdr.gov.au/cdr-register/v1/energy/data-recipients
+      headers: 'x-v: 3'
+      auth: none
+      httpStatus: 200
+      result: >-
+        38 accredited data recipient legal entities, 30 ACTIVE, 263 registered software products.
+        Named holders include Yodlee, Basiq, Fiskil, Solar Analytics, ANZ and NAB — i.e. the energy
+        recipient pool is largely the banking recipient pool re-accredited, which is itself a finding
+        about how the transplant worked.
+      fetched: '2026-07-27'
+      versionNote: >-
+        x-v:1 and x-v:2 returned 406 UnsupportedVersion, x-v:4 returned 400 Field/Invalid, x-v:3
+        returned 200. Version negotiation is real and enforced.
+    - step: Probed every one of the 84 registered public base URIs for the mandated public product endpoint.
+      request: GET {publicBaseUri}/cds-au/v1/energy/plans
+      headers: 'x-v: 1'
+      auth: none
+      result: >-
+        53 of 84 returned HTTP 200 with a valid CDR plans payload; 31 returned HTTP 404. Notably the
+        404 set includes the three largest retailers (AGL, Origin Energy, EnergyAustralia) plus Alinta,
+        Red Energy, Momentum, Amber and others — their hosts are unmistakably CDR infrastructure
+        (they answer with access-control-allow-headers "Range,x-v,x-min-v") but do not expose the
+        public product endpoint on the registered public base URI. Product reference data for many of
+        the smaller retailers is instead served from a government-hosted host,
+        https://cdr.energymadeeasy.gov.au/{brand}/cds-au/v1, operated under the AER's Energy Made Easy.
+      fetched: '2026-07-27'
+    - step: Confirmed real payload content, not empty shells.
+      examples:
+        - url: https://cdr.energymadeeasy.gov.au/flow-power/cds-au/v1/energy/plans
+          httpStatus: 200
+          result: 115 total plan records, first plan "Flow Business Happy Hour".
+        - url: https://publiccdr.globirdenergy.com.au/cds-au/v1/energy/plans
+          httpStatus: 200
+          result: 25 plans in first page.
+        - url: https://cdr.diamondenergy.com.au:18101/cds-au/v1/energy/plans
+          httpStatus: 200
+          result: 25 plans in first page.
+        - url: https://cdr.energymadeeasy.gov.au/ampol/cds-au/v1/energy/plans
+          httpStatus: 200
+          result: valid response, 0 plans (registered and conformant but no current public plans).
+      fetched: '2026-07-27'
+    - step: Confirmed the mandated public status/outage endpoints answer anonymously.
+      examples:
+        - url: https://publiccdr.globirdenergy.com.au/cds-au/v1/discovery/status
+          httpStatus: 200
+          result: '{"data":{"status":"OK",...}}'
+        - url: https://publiccdr.globirdenergy.com.au/cds-au/v1/discovery/outages
+          httpStatus: 200
+          result: '{"data":{"outages":[]}}'
+        - url: https://cdr.energymadeeasy.gov.au/flow-power/cds-au/v1/discovery/status
+          httpStatus: 200
+      fetched: '2026-07-27'
+  verdict: >-
+    live-implemented. Not "live-claimed-unverified". Every claim above was read off an anonymous HTTP
+    response, not off a compliance page. This is the only organization in this energy series where the
+    mandate and the implementation could be confirmed with the same tool in the same session.
+
+dataStandard:
+  name: CDR Consumer Data Standards (Energy)
+  version: 1.36.0
+  authority: Data Standards Body / Data Standards Chair (Australian Treasury)
+  binding: true
+  bindingNote: >-
+    These are legally binding standards made under the CDR rules, not a voluntary profile. They are the
+    reason all 84 data holder brands present the same path shapes.
+  otherStandardsPresent:
+    - name: OpenID Connect / OAuth 2.0 with FAPI-grade profile (CDR InfoSec profile)
+      url: https://consumerdatastandardsaustralia.github.io/infosec/
+      httpStatus: 200
+    - name: RFC 7591 Dynamic Client Registration (as profiled by the CDR DCR standard)
+  notPresent:
+    - Green Button / ESPI — no reference found; Australia did not adopt it.
+    - OCPP / OCPI — not in scope of the CDR energy standards.
+    - IEC CIM 61968/61970 — not referenced in the CDR energy standards.
+
+consumerVsMarketData:
+  consumerDataApi: true
+  consumerDataNote: >-
+    Yes, and it is the point of the regime. Eighteen mandated paths cover energy accounts, account
+    detail, balances, invoices, billing, payment schedules, concessions, electricity service points,
+    interval usage and DER. A third party can obtain an individual customer's usage and billing data,
+    but only as an ACCC-accredited data recipient acting under an explicit, expiring, revocable consent.
+  marketDataOpen: true
+  marketDataNote: >-
+    Yes, on two distinct surfaces, both confirmed anonymously. (1) The CDR Register itself is a public
+    API — data holder brands, base URIs, statuses, accredited recipients and software product statuses
+    are all readable with no key. (2) Retail product reference data — the full plan and tariff catalogue
+    for each retailer — is mandated as unauthenticated, and 53 of 84 registered brands served it on
+    request. So the regulator has made both the participant graph and the retail tariff market openly
+    machine-readable while keeping customer data locked behind accreditation.
+  splitFinding: >-
+    The split here is not the usual "open market data, closed consumer data" story. Both sides are
+    genuinely built. What is closed is closed deliberately and by design (consent + accreditation),
+    not by neglect. The one place the split does bite is that the biggest retailers do not answer the
+    public product endpoint on their registered base URI while the smallest ones do — the government
+    ended up hosting product data for the long tail through Energy Made Easy.
+
+accessGate:
+  gate: accredited-only
+  gatedForConsumerData: true
+  gatedForMarketData: false
+  whatADeveloperMustDo: >-
+    To read public data — nothing. Send GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    with an x-v header and you have the whole ecosystem, then hit any data holder's
+    {publicBaseUri}/cds-au/v1/energy/plans for its tariff catalogue. No signup, no key, no terms click-through
+    was encountered. To read a consumer's data — apply to the ACCC for accreditation as a Consumer Data
+    Right accredited data recipient (or operate under the sponsor / CDR representative / trusted adviser
+    pathways), obtain a Software Statement Assertion from the CDR Register, self-register with each data
+    holder via the Dynamic Client Registration API over mutual TLS, and then drive the consumer through
+    an authorisation flow at their own retailer. There is no self-serve developer portal that issues keys;
+    the "portal" is an accreditation process and a machine-to-machine registration API.
+  noSelfServeSignupFound: true
+
+authModel:
+  publicEndpoints:
+    scheme: none
+    note: >-
+      Anonymous HTTPS with a mandatory x-v version request header. Version negotiation is enforced —
+      wrong x-v yields 406 Header/UnsupportedVersion with a urn:au-cds:error:... error code.
+  protectedEndpoints:
+    schemes:
+      - Mutual TLS (client certificates issued within the CDR PKI)
+      - OAuth 2.0 authorization code with PKCE under the CDR InfoSec profile (FAPI lineage)
+      - OpenID Connect for consumer authorisation at the data holder
+      - private_key_jwt client authentication
+      - Certificate-bound access tokens
+      - Dynamic Client Registration via Software Statement Assertion from the CDR Register
+  registerOpenIdConfiguration:
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+    httpStatus: 200
+    fetched: '2026-07-27'
+    fetchedAnonymously: true
+    issuer: https://api.cdr.gov.au/idp
+    tokenEndpoint: https://secure.api.cdr.gov.au/idp/connect/token
+    jwksUri: https://api.cdr.gov.au/idp/.well-known/openid-configuration/jwks
+    grantTypesSupported:
+      - client_credentials
+    tokenEndpointAuthMethodsSupported:
+      - private_key_jwt
+    tokenEndpointAuthSigningAlgValuesSupported:
+      - PS256
+      - ES256
+    idTokenSigningAlgValuesSupported:
+      - PS256
+    codeChallengeMethodsSupported:
+      - plain
+      - S256
+    scopesSupported:
+      - cdr-register:read
+    tlsClientCertificateBoundAccessTokens: true
+  specSecurityGap: >-
+    Worth recording: none of the six mandated OpenAPI documents declare a single entry under
+    components.securitySchemes, and no operation carries a security requirement. The entire auth model
+    lives in a separate normative document (the CDR InfoSec profile). The contracts are byte-identical
+    across 84 implementers and still tell a machine nothing about how to authenticate — a governance
+    gap in an otherwise exemplary mandate.
+
+developerPortal:
+  url: https://consumerdatastandardsaustralia.github.io/standards/
+  httpStatus: 200
+  confirmed: true
+  selfServeKeyIssuance: false
+  note: >-
+    This is a genuine public developer surface — full API reference for every mandated contract,
+    downloadable OpenAPI, error catalogue, change log, versioning rules — not a customer login. It
+    issues documentation, not credentials. www.cdr.gov.au (the consumer-facing programme site) sits
+    behind Akamai and reset the HTTP/2 stream for every non-browser request in this session; the TLS
+    handshake and certificate validated, so the host is live but its body was not retrievable
+    (recorded as blocked, curl exit with no status code).
+  supportingSurfaces:
+    - url: https://cdr-register.github.io/register/
+      httpStatus: 200
+      note: ACCC CDR Register developer documentation.
+    - url: https://dsb.gov.au/consumer-data-right/data-standards
+      httpStatus: 200
+    - url: https://dsb.gov.au/news-and-announcements
+      httpStatus: 200
+    - url: https://consumerdatastandardsaustralia.github.io/infosec/
+      httpStatus: 200
+    - url: https://github.com/ConsumerDataStandardsAustralia
+      httpStatus: 200
+      note: >-
+        24 public repositories including the standards themselves, standards-maintenance (public issue
+        tracker for the binding standards), mock-register, mock-data-holder-java, mock-data-holder-nodejs,
+        accc-mock-data-recipient, accc-authorisation-server, standards-testing and ADR-Gateway. A
+        regulator shipping reference implementations and a conformance suite in the open.
+
+regulatorPosture:
+  publishesBetterApisThanTheIndustry: true
+  evidence: >-
+    The ACCC's own CDR Register is a clean, versioned, anonymously reachable, OpenAPI-described API with
+    enforced version negotiation and a documented error vocabulary. It is better documented and more
+    reliably reachable than the public surfaces of the three largest retailers it regulates, which
+    returned 404 on the mandated public product path. The regulator also publishes the mock data holder,
+    mock register and mock data recipient the industry builds against.
+  publicRegisterOfCompliantParties: true
+  publicRegisterEndpoints:
+    - GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    - GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/status
+    - GET https://api.cdr.gov.au/cdr-register/v1/energy/data-recipients
+    - GET https://api.cdr.gov.au/cdr-register/v1/energy/data-recipients/brands/software-products/status
+  mandatedIndustryReporting: >-
+    The CDR Admin API obliges every data holder to expose GET /admin/metrics returning availability,
+    performance, invocation, average-response, average-TPS, peak-TPS, error, rejection and authorisation
+    metrics to the regulator. Compliance is measured, not self-declared.
+
+replicabilityFinding:
+  question: Was the banking mandate replicable into energy?
+  answer: >-
+    Yes, but not by copy-paste. The statutory machinery transferred intact — same Act, same regulator,
+    same standards body, same register, same InfoSec profile, same DCR onboarding, same Common API,
+    same version-negotiation and error vocabulary. What did not transfer is the data topology: in
+    banking the bank holds everything, in energy the retailer holds the customer relationship but AEMO
+    holds the meter. That forced an entirely new artifact with no banking equivalent — the CDR Energy
+    Secondary Data Holder API, six server-to-server operations by which a retailer fetches NMI standing
+    data, interval usage and DER records from AEMO on the consumer's behalf. The energy accredited
+    recipient pool is also visibly the banking pool re-accredited (Yodlee, Basiq, Fiskil, ANZ, NAB),
+    which suggests the transplant succeeded partly because the demand side already existed.
+
+harvestedArtifacts:
+  sourceHost: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/
+  sourceRepository: https://github.com/ConsumerDataStandardsAustralia/standards
+  fetched: '2026-07-27'
+  allParsedAsJson: true
+  specs:
+    - file: openapi/cdr-energy-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_energy.json
+      httpStatus: 200
+      bytes: 403771
+      openapi: 3.0.3
+      title: CDR Energy API
+      version: 1.36.0
+      paths: 18
+      declaredServer: https://mtls.dh.example.com/cds-au/v1
+      serverNote: The declared server is an example host; real base URIs come from the CDR Register.
+    - file: openapi/cdr-energy-sdh-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_energy_sdh.json
+      httpStatus: 200
+      bytes: 114862
+      openapi: 3.0.3
+      title: CDR Energy Secondary Data Holder API
+      version: 1.36.0
+      paths: 6
+      declaredServer: https://tls.sdh.example.com/cds-au/v1
+      note: This is the AEMO gateway contract.
+    - file: openapi/cdr-common-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_common.json
+      httpStatus: 200
+      bytes: 58667
+      openapi: 3.0.3
+      title: CDR Common API
+      version: 1.36.0
+      paths: 4
+    - file: openapi/cdr-register-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_register.json
+      httpStatus: 200
+      bytes: 79254
+      openapi: 3.0.3
+      title: CDR Register API
+      version: 1.36.0
+      paths: 9
+      declaredServer: https://api.cdr.gov.au
+      note: The only harvested spec whose declared server is a real, live, anonymously reachable host.
+    - file: openapi/cdr-dcr-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_dcr.json
+      httpStatus: 200
+      bytes: 25552
+      openapi: 3.0.3
+      title: CDR Dynamic Client Registration API
+      version: 1.36.0
+      paths: 2
+    - file: openapi/cdr-admin-openapi.json
+      sourceUrl: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_admin.json
+      httpStatus: 200
+      bytes: 90637
+      openapi: 3.0.3
+      title: CDR Admin API
+      version: 1.36.0
+      paths: 2
+  notHarvested:
+    - name: cds_banking.json / cds_banking_non_bank_lending.json / cds_register_banking_non_bank_lending.json
+      reason: Real and available at the same host, but out of scope for an energy provider profile.
+    - name: cds_telco.json
+      reason: >-
+        Real and available. Notable in passing — the same machinery has a third sector contract drafted,
+        which is further evidence of replicability, but out of scope here.
+
+probeLog:
+  - url: https://cdr.gov.au/
+    httpStatus: 301
+    note: redirects to https://www.cdr.gov.au/
+  - url: https://www.cdr.gov.au/
+    httpStatus: blocked
+    note: >-
+      TLS handshake and certificate verification succeeded (Let's Encrypt, Akamai edge), then the
+      HTTP/2 stream was reset with INTERNAL_ERROR for every user agent tried, including HTTP/1.1 and
+      browser UA strings. Live host, bot-protected, body not retrievable.
+  - url: https://consumerdatastandards.gov.au/
+    httpStatus: 200
+    note: redirects to https://dsb.gov.au/
+  - url: https://consumerdatastandardsaustralia.github.io/standards/
+    httpStatus: 200
+  - url: https://api.cdr.gov.au/
+    httpStatus: 404
+    note: No root document; the API is path-scoped under /cdr-register/v1.
+  - url: https://api.cdr.gov.au/.well-known/openid-configuration
+    httpStatus: 404
+    note: The register's OIDC discovery lives at /idp/.well-known/openid-configuration, not the root.
+  - url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+    httpStatus: 200
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands
+    httpStatus: 404
+    note: Authenticated endpoint; not reachable anonymously.
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    httpStatus: 200
+  - url: https://api.cdr.gov.au/cdr-register/v1/all/data-holders/brands/summary
+    httpStatus: 200
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/status
+    httpStatus: 200
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-recipients
+    httpStatus: 200
+    note: with x-v 3; 406 at x-v 1/2/5, 400 at x-v 4.
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-recipients/brands/software-products/status
+    httpStatus: 200
+    note: with x-v 2.
+  - url: https://cdr-register.github.io/register/
+    httpStatus: 200
+  - url: https://dsb.gov.au/consumer-data-right/data-standards
+    httpStatus: 200
+  - url: https://consumerdatastandardsaustralia.github.io/infosec/
+    httpStatus: 200
+  - url: https://www.legislation.gov.au/F2020L00833/asmade/text
+    httpStatus: 200
+  - url: https://www.energymadeeasy.gov.au/
+    httpStatus: 200
+    note: AER consumer price-comparison site; the same domain hosts CDR product endpoints for many small retailers.
+  - url: https://www.aemo.com.au/
+    httpStatus: 200
+    note: Reachable, but AEMO is profiled separately in all/aemo; not duplicated here.
+  - url: https://www.aer.gov.au/
+    httpStatus: blocked
+    note: connection reset for every attempt in this session.
+  - url: https://www.accc.gov.au/by-industry/consumer-data-right
+    httpStatus: 404
+  - url: https://developer.cdr.gov.au/
+    httpStatus: blocked
+    note: no response; no such developer subdomain found.
+  - url: https://api.github.com/repos/ConsumerDataStandardsAustralia/standards
+    httpStatus: 200
+
+subdomainAndWellKnownSweep:
+  probed:
+    - developer.cdr.gov.au — no response
+    - api.cdr.gov.au — live, path-scoped (root 404)
+    - www.cdr.gov.au — live but bot-protected
+    - /.well-known/openid-configuration at api.cdr.gov.au root — 404
+    - /idp/.well-known/openid-configuration at api.cdr.gov.au — 200
+  note: >-
+    No /openapi.json, /swagger.json or /api-docs surface was found on any cdr.gov.au host. The machine
+    contracts are published on the Data Standards Body's GitHub Pages site, not from the API hosts.
+
+sources:
+  - url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    type: APIReference
+    note: Primary evidence — 84 energy data holder brands with live public base URIs, served anonymously.
+  - url: https://consumerdatastandardsaustralia.github.io/standards/
+    type: Documentation
+    note: Full reference for every mandated CDR contract, with downloadable OpenAPI 3.0.3.
+  - url: https://consumerdatastandardsaustralia.github.io/infosec/
+    type: Security
+    note: The CDR information security profile — where the auth model actually lives.
+  - url: https://cdr-register.github.io/register/
+    type: Documentation
+    note: ACCC CDR Register developer documentation.
+  - url: https://dsb.gov.au/
+    type: Website
+    note: Data Standards Body; consumerdatastandards.gov.au redirects here.
+  - url: https://www.legislation.gov.au/F2020L00833/asmade/text
+    type: Documentation
+    note: Consumer Data Right (Energy Sector) Designation 2020.
+  - url: https://github.com/ConsumerDataStandardsAustralia
+    type: GitHubOrganization
+    note: 24 public repositories — standards, mocks, conformance tests, public issue tracker.
+
+actions:
+  apisYmlCreated: true
+  openapiHarvested: true
+  specsCount: 6
+  fabricated: none
+  omissions: >-
+    No per-retailer implementation was profiled here; the 84 data holder brands are the industry, not
+    this organization. AEMO already exists as all/aemo and was not duplicated. Banking, non-bank lending
+    and telco CDS specs were deliberately left unharvested as out of scope.
