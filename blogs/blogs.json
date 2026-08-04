@@ -1,0 +1,14 @@
+{
+  "repo": "cdr-energy",
+  "feeds": [
+    {
+      "source": "https://github.com/ConsumerDataStandardsAustralia/standards-maintenance",
+      "feed_url": "https://github.com/ConsumerDataStandardsAustralia/standards-maintenance",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-08-01T15:49:00Z"
+}
