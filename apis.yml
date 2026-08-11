@@ -186,6 +186,8 @@ apis:
   - type: Overlay
     url: overlays/cdr-energy-admin-overlay.yaml
 common:
+- type: IssueTracker
+  url: https://github.com/ConsumerDataStandardsAustralia/register/issues
 - type: DomainSecurity
   url: security/cdr-energy-domain-security.yml
 - type: Website
