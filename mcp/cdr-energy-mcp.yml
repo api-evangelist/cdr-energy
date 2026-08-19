@@ -5,18 +5,16 @@ source: openapi/cdr-energy-openapi.json, openapi/cdr-register-openapi.json, open
 searched:
   date: '2026-07-27'
   result: none
-  detail: >-
-    No official or community MCP server exists for the Consumer Data Right. Neither the Data Standards
-    Body (ConsumerDataStandardsAustralia) nor the ACCC (ConsumerDataRight) GitHub organisation
-    publishes one, there is no @cds-au MCP package on npm, and no CDR entry appears in the MCP
-    registries. No /.well-known/oauth-protected-resource or MCP endpoint responded on any CDR host.
-notes: >-
-  This is a derived candidate, not a published server. Only the unauthenticated slice of the CDR is a
-  realistic MCP surface today: energy product reference data and ecosystem discovery, both of which
-  answer anonymously in production. The consumer-data operations are deliberately excluded from the
-  candidate tool list - they require ACCC accreditation, mutual TLS with a CDR-issued client
-  certificate, and an explicit, revocable consumer consent, which is not a contract an agent can
-  satisfy on its own behalf and should not be papered over with a tool definition.
+  detail: No official or community MCP server exists for the Consumer Data Right. Neither the Data Standards
+    Body (ConsumerDataStandardsAustralia) nor the ACCC (ConsumerDataRight) GitHub organisation publishes
+    one, there is no @cds-au MCP package on npm, and no CDR entry appears in the MCP registries. No /.well-known/oauth-protected-resource
+    or MCP endpoint responded on any CDR host.
+notes: 'This is a derived candidate, not a published server. Only the unauthenticated slice of the CDR
+  is a realistic MCP surface today: energy product reference data and ecosystem discovery, both of which
+  answer anonymously in production. The consumer-data operations are deliberately excluded from the candidate
+  tool list - they require ACCC accreditation, mutual TLS with a CDR-issued client certificate, and an
+  explicit, revocable consumer consent, which is not a contract an agent can satisfy on its own behalf
+  and should not be papered over with a tool definition.'
 server:
   name: cdr-energy
   transport: http
@@ -24,17 +22,20 @@ server:
   status: not published
 tools:
 - name: list_energy_plans
-  description: List the generic energy plans a retailer offers, filterable by type, fuel type, effective window, updated-since and brand.
+  description: List the generic energy plans a retailer offers, filterable by type, fuel type, effective
+    window, updated-since and brand.
   source_operation: openapi/cdr-energy-openapi.json#listEnergyPlans
   authentication: none
   input_schema_source: parameters of GET /energy/plans
 - name: get_energy_plan_detail
-  description: Get the full detail of one generic energy plan, including tariffs, discounts, incentives, fees, eligibility and solar feed-in.
+  description: Get the full detail of one generic energy plan, including tariffs, discounts, incentives,
+    fees, eligibility and solar feed-in.
   source_operation: openapi/cdr-energy-openapi.json#getEnergyPlanDetail
   authentication: none
   input_schema_source: path parameter planId of GET /energy/plans/{planId}
 - name: list_energy_data_holder_brands
-  description: List every registered energy data holder brand with its live public base URI, so a plan lookup can be resolved to a host.
+  description: List every registered energy data holder brand with its live public base URI, so a plan
+    lookup can be resolved to a host.
   source_operation: openapi/cdr-register-openapi.json#getDataHolderBrandsSummary
   authentication: none
   input_schema_source: path parameter industry of GET /cdr-register/v1/{industry}/data-holders/brands/summary
@@ -43,7 +44,8 @@ tools:
   source_operation: openapi/cdr-register-openapi.json#getDataHolderStatuses
   authentication: none
 - name: get_data_holder_status
-  description: Check whether a specific data holder is currently available, from its own mandated status endpoint.
+  description: Check whether a specific data holder is currently available, from its own mandated status
+    endpoint.
   source_operation: openapi/cdr-common-openapi.json#getStatus
   authentication: none
 - name: get_data_holder_outages
@@ -51,15 +53,49 @@ tools:
   source_operation: openapi/cdr-common-openapi.json#getOutages
   authentication: none
 excluded_from_candidate:
-  reason: >-
-    Gated on ACCC accreditation, mutual TLS and consumer consent. An MCP server for these would have
-    to be run by an accredited data recipient inside its own consent framework, not offered as a
+  reason: Gated on ACCC accreditation, mutual TLS and consumer consent. An MCP server for these would
+    have to be run by an accredited data recipient inside its own consent framework, not offered as a
     public tool surface.
-  operations: [getCustomer, getCustomerDetail, listEnergyAccounts, getEnergyAccountDetail, getEnergyAccountBalance, listEnergyAccountBalancesBulk, listEnergyAccountBalancesSpecificAccounts, getEnergyAccountPaymentSchedule, getEnergyAccountConcessions, getEnergyAccountInvoices, listEnergyAccountInvoicesBulk, listEnergyInvoicesForSpecificAccounts, getBillingForEnergyAccount, listEnergyAccountBillingBulk, listEnergyAccountBillingForSpecificAccounts, listElectricityServicePoints, getElectricityServicePointDetail, getElectricityServicePointUsage, listElectricityUsageBulk, listElectricityUsageForServicePoints, getElectricityDERForServicePoint, listElectricityDERBulk, listElectricityDERForSpecificServicePoints, postClientRegistration, getClientRegistration, putClientRegistration, deleteClientRegistration, metadataUpdate, getMetrics, getSoftwareStatementAssertion]
+  operations:
+  - getCustomer
+  - getCustomerDetail
+  - listEnergyAccounts
+  - getEnergyAccountDetail
+  - getEnergyAccountBalance
+  - listEnergyAccountBalancesBulk
+  - listEnergyAccountBalancesSpecificAccounts
+  - getEnergyAccountPaymentSchedule
+  - getEnergyAccountConcessions
+  - getEnergyAccountInvoices
+  - listEnergyAccountInvoicesBulk
+  - listEnergyInvoicesForSpecificAccounts
+  - getBillingForEnergyAccount
+  - listEnergyAccountBillingBulk
+  - listEnergyAccountBillingForSpecificAccounts
+  - listElectricityServicePoints
+  - getElectricityServicePointDetail
+  - getElectricityServicePointUsage
+  - listElectricityUsageBulk
+  - listElectricityUsageForServicePoints
+  - getElectricityDERForServicePoint
+  - listElectricityDERBulk
+  - listElectricityDERForSpecificServicePoints
+  - postClientRegistration
+  - getClientRegistration
+  - putClientRegistration
+  - deleteClientRegistration
+  - metadataUpdate
+  - getMetrics
+  - getSoftwareStatementAssertion
 tool_crosswalk:
   emitted: false
-  reason: >-
-    A crosswalk is only informative where an MCP or GraphQL surface diverges from the REST contract.
-    There is no published MCP server and no GraphQL endpoint for the CDR, so every candidate tool
-    above maps one-to-one onto a single OpenAPI operationId already named in its source_operation
-    field. Emitting a separate crosswalk would add no information.
+  reason: A crosswalk is only informative where an MCP or GraphQL surface diverges from the REST contract.
+    There is no published MCP server and no GraphQL endpoint for the CDR, so every candidate tool above
+    maps one-to-one onto a single OpenAPI operationId already named in its source_operation field. Emitting
+    a separate crosswalk would add no information.
+deployment:
+  mode: none
+  verified: derived
+  tools: 6
+  checked: '2026-08-12'
+  source: catalog MCP census

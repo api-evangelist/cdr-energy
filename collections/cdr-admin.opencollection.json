@@ -1,0 +1,72 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CDR Admin API",
+    "version": "1.36.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Data Holder Admin",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Metadata Update",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mtls.dh.example.com/cds-au/v1/admin/register/metadata",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Indicate that a critical update to the metadata for Accredited Data Recipients has been made and should be obtained."
+        },
+        {
+          "info": {
+            "name": "Get Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mtls.dh.example.com/cds-au/v1/admin/metrics",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "period",
+                "value": "",
+                "type": "query",
+                "description": "The period of metrics to be requested. Values can be `CURRENT` (meaning metrics for current period, dependent on the metric type), `HISTORIC` (meaning metrics for previous period, depending on the metric type) or `ALL`. If absent the default is `ALL`."
+              }
+            ]
+          },
+          "docs": "This endpoint allows the ACCC to obtain operational statistics from the Data Holder (at the Data Holder Brand level) on the operation of their CDR compliant implementation. The statistics obtainable from this endpoint are determined by the non-functional requirements for the CDR regime.\n\nThis endpoint is not required to be implemented by the Australian Energy Market Operator, the Australian Energy Regulator or the Department of State administered by the Minister of Victoria administering the Nat"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

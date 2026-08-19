@@ -1,0 +1,815 @@
+{
+  "item": [
+    {
+      "id": "d8b89f2c-1167-4a26-8a0b-565bb60db124",
+      "name": "Data Holder Client Registration",
+      "description": {
+        "content": "Data Holder Client Registration endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0e14b505-3b35-49b4-b697-0ae5d764cd59",
+          "name": "Register Data Recipient oAuth Client",
+          "request": {
+            "name": "Register Data Recipient oAuth Client",
+            "description": {
+              "content": "Register a client using a CDR Register issued Software Statement Assertion. \n\nThis endpoint does not require [CORS](#cors).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "register"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/jwt"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<JWT>"
+            }
+          },
+          "response": [
+            {
+              "id": "76ea3921-2875-415a-83ac-ab9239b106e9",
+              "name": "Client registration success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"client_description\": \"A mock software product\",\n  \"client_id\": \"2cfefa98-7d4a-4bcb-95da-47063b84d410\",\n  \"client_name\": \"Mock Software\",\n  \"client_uri\": \"https://adr.example.com\",\n  \"grant_types\": [\n    \"client_credentials\",\n    \"authorization_code\",\n    \"refresh_token\"\n  ],\n  \"id_token_signed_response_alg\": \"ES256\",\n  \"jwks_uri\": \"https://adr.example.com/jwks\",\n  \"logo_uri\": \"https://adr.example.com/logos/logo1.png\",\n  \"org_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C8\",\n  \"org_name\": \"Mock Company Brand\",\n  \"redirect_uris\": [\n    \"https://adr.example.com/redirects/redirect1\",\n    \"https://adr.example.com/redirects/redirect2\"\n  ],\n  \"request_object_signing_alg\": \"ES256\",\n  \"response_types\": [\n    \"code id_token\",\n    \"code\"\n  ],\n  \"scope\": \"openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration\",\n  \"software_id\": \"740C368F-ECF9-4D29-A2EA-0514A66B0CDE\",\n  \"software_statement\": \"string\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"ES256\",\n  \"client_id_issued_at\": 1574398833,\n  \"legal_entity_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C7\",\n  \"legal_entity_name\": \"Mock Company Pty Ltd.\",\n  \"sector_identifier_uri\": \"https://adr.example.com/sector_identifier.json\",\n  \"tos_uri\": \"https://adr.example.com/tos.html\",\n  \"policy_uri\": \"https://adr.example.com/policy.html\",\n  \"revocation_uri\": \"https://adr.example.com/revocation\",\n  \"recipient_base_uri\": \"https://adr.example.com\",\n  \"application_type\": \"web\",\n  \"id_token_encrypted_response_alg\": \"RSA-OAEP\",\n  \"id_token_encrypted_response_enc\": \"A256GCM\",\n  \"authorization_signed_response_alg\": \"PS256\",\n  \"authorization_encrypted_response_alg\": \"RSA-OAEP\",\n  \"authorization_encrypted_response_enc\": \"A128CBC-HS256\",\n  \"software_roles\": \"data-recipient-software-product\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4eaca24f-99ed-4a0d-abf5-24db584648f5",
+              "name": "Request failed due to client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid_client_metadata\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "36cca4c9-8607-48b6-9cf0-4313f0f8efd8",
+          "name": "Delete Data Recipient oAuth Client Registration",
+          "request": {
+            "name": "Delete Data Recipient oAuth Client Registration",
+            "description": {
+              "content": "Delete a Client Registration for a given Client ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "register",
+                ":ClientId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ClientId",
+                  "description": "(Required) The client ID issued by the target Data Holder."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d6e076c5-9699-4dce-96f2-b570f7ac51e8",
+              "name": "Client deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "78e71729-2892-4a1e-8e60-d4edbed8d735",
+              "name": "Request failed due to unknown or invalid Client or invalid access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The Response Header Field as per **[[RFC6750]](#nref-RFC6750)**.",
+                  "key": "WWW-Authenticate",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6a028aae-01d3-47b6-a90f-dacb86919ec1",
+              "name": "The client does not have permission to read, update or delete the Client",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "07e68fb1-b364-47a4-9c57-ed0acf86b251",
+              "name": "Method Not Allowed. The requested method is unsupported",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6669b0b3-61b8-438c-8207-c13a79cce85b",
+          "name": "Get oAuth Client Registration",
+          "request": {
+            "name": "Get oAuth Client Registration",
+            "description": {
+              "content": "Get a Client Registration for a given Client ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "register",
+                ":ClientId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ClientId",
+                  "description": "(Required) The client ID issued by the target Data Holder."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1a80eaa8-a8e1-482c-bf3c-05f0b49a8912",
+              "name": "Client registration retrieval success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"client_description\": \"A mock software product\",\n  \"client_id\": \"2cfefa98-7d4a-4bcb-95da-47063b84d410\",\n  \"client_name\": \"Mock Software\",\n  \"client_uri\": \"https://adr.example.com\",\n  \"grant_types\": [\n    \"client_credentials\",\n    \"authorization_code\",\n    \"refresh_token\"\n  ],\n  \"id_token_signed_response_alg\": \"ES256\",\n  \"jwks_uri\": \"https://adr.example.com/jwks\",\n  \"logo_uri\": \"https://adr.example.com/logos/logo1.png\",\n  \"org_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C8\",\n  \"org_name\": \"Mock Company Brand\",\n  \"redirect_uris\": [\n    \"https://adr.example.com/redirects/redirect1\",\n    \"https://adr.example.com/redirects/redirect2\"\n  ],\n  \"request_object_signing_alg\": \"PS256\",\n  \"response_types\": [\n    \"code id_token\",\n    \"code id_token\"\n  ],\n  \"scope\": \"openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration\",\n  \"software_id\": \"740C368F-ECF9-4D29-A2EA-0514A66B0CDE\",\n  \"software_statement\": \"string\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"PS256\",\n  \"client_id_issued_at\": 1574398833,\n  \"legal_entity_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C7\",\n  \"legal_entity_name\": \"Mock Company Pty Ltd.\",\n  \"sector_identifier_uri\": \"https://adr.example.com/sector_identifier.json\",\n  \"tos_uri\": \"https://adr.example.com/tos.html\",\n  \"policy_uri\": \"https://adr.example.com/policy.html\",\n  \"revocation_uri\": \"https://adr.example.com/revocation\",\n  \"recipient_base_uri\": \"https://adr.example.com\",\n  \"application_type\": \"web\",\n  \"id_token_encrypted_response_alg\": \"RSA-OAEP\",\n  \"id_token_encrypted_response_enc\": \"A256GCM\",\n  \"authorization_signed_response_alg\": \"PS256\",\n  \"authorization_encrypted_response_alg\": \"RSA-OAEP\",\n  \"authorization_encrypted_response_enc\": \"A128CBC-HS256\",\n  \"software_roles\": \"data-recipient-software-product\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7fa3539a-b06d-49aa-96df-ef77d629bac7",
+              "name": "Request failed due to unknown or invalid Client or invalid access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The Response Header Field as per **[[RFC6750]](#nref-RFC6750)**.",
+                  "key": "WWW-Authenticate",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4888f3c6-9d74-47bd-9f80-eb31707a18d4",
+              "name": "The client does not have permission to read, update or delete the Client",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5c8d3e82-0c65-47a2-a4b8-a9b0b592ccf9",
+          "name": "Update Data Recipient Registration",
+          "request": {
+            "name": "Update Data Recipient Registration",
+            "description": {
+              "content": "Update a Client Registration for a given Client ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "register",
+                ":ClientId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "ClientId",
+                  "description": "(Required) The client ID issued by the target Data Holder."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/jwt"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<JWT>"
+            }
+          },
+          "response": [
+            {
+              "id": "fb70c897-1961-4a63-b8c7-9391196c7596",
+              "name": "Client registration update success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"client_description\": \"A mock software product\",\n  \"client_id\": \"2cfefa98-7d4a-4bcb-95da-47063b84d410\",\n  \"client_name\": \"Mock Software\",\n  \"client_uri\": \"https://adr.example.com\",\n  \"grant_types\": [\n    \"client_credentials\",\n    \"authorization_code\",\n    \"refresh_token\"\n  ],\n  \"id_token_signed_response_alg\": \"ES256\",\n  \"jwks_uri\": \"https://adr.example.com/jwks\",\n  \"logo_uri\": \"https://adr.example.com/logos/logo1.png\",\n  \"org_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C8\",\n  \"org_name\": \"Mock Company Brand\",\n  \"redirect_uris\": [\n    \"https://adr.example.com/redirects/redirect1\",\n    \"https://adr.example.com/redirects/redirect2\"\n  ],\n  \"request_object_signing_alg\": \"PS256\",\n  \"response_types\": [\n    \"code id_token\",\n    \"code id_token\"\n  ],\n  \"scope\": \"openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration\",\n  \"software_id\": \"740C368F-ECF9-4D29-A2EA-0514A66B0CDE\",\n  \"software_statement\": \"string\",\n  \"token_endpoint_auth_method\": \"private_key_jwt\",\n  \"token_endpoint_auth_signing_alg\": \"PS256\",\n  \"client_id_issued_at\": 1574398833,\n  \"legal_entity_id\": \"3B0B0A7B-3E7B-4A2C-9497-E357A71D07C7\",\n  \"legal_entity_name\": \"Mock Company Pty Ltd.\",\n  \"sector_identifier_uri\": \"https://adr.example.com/sector_identifier.json\",\n  \"tos_uri\": \"https://adr.example.com/tos.html\",\n  \"policy_uri\": \"https://adr.example.com/policy.html\",\n  \"revocation_uri\": \"https://adr.example.com/revocation\",\n  \"recipient_base_uri\": \"https://adr.example.com\",\n  \"application_type\": \"web\",\n  \"id_token_encrypted_response_alg\": \"RSA-OAEP\",\n  \"id_token_encrypted_response_enc\": \"A256GCM\",\n  \"authorization_signed_response_alg\": \"PS256\",\n  \"authorization_encrypted_response_alg\": \"RSA-OAEP\",\n  \"authorization_encrypted_response_enc\": \"A128CBC-HS256\",\n  \"software_roles\": \"data-recipient-software-product\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc80c2c1-45fb-4b1c-b32a-5e5d89fbb132",
+              "name": "Request failed due to client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"invalid_client_metadata\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bd8d5c3b-4626-4ab5-a508-1bf3e35b4e2b",
+              "name": "Request failed due to unknown or invalid Client or invalid access token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "The Response Header Field as per **[[RFC6750]](#nref-RFC6750)**.",
+                  "key": "WWW-Authenticate",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "277a0a82-298a-47f9-890e-cf8a12a51fb2",
+              "name": "The client does not have permission to read, update or delete the Client",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "register",
+                    ":ClientId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "ClientId",
+                      "description": "(Required) The client ID issued by the target Data Holder."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.",
+                    "key": "Authorization",
+                    "value": "string"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://mtls.dh.example.com/cds-au/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "321d5829-84e5-4360-b8f2-d74cb65565fd",
+    "name": "CDR Dynamic Client Registration API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Specifications for Dynamic Client Registration endpoints applicable to all data holders (except secondary data holders).\n\nContact Support:\n Name: Data Standards Body\n Email: contact@dsb.gov.au",
+      "type": "text/plain"
+    }
+  }
+}

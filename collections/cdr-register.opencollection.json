@@ -1,0 +1,317 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CDR Register API",
+    "version": "1.36.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Register Operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get OpenId Provider Config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/idp/.well-known/openid-configuration"
+          },
+          "docs": "Endpoint used by participants to discover the CDR Register OpenID configuration and obtain information needed to interact with it, including its OAuth 2.0 endpoint locations.\n\nThis endpoint does not require [CORS](#cors)."
+        },
+        {
+          "info": {
+            "name": "Get JWKS",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/jwks"
+          },
+          "docs": "JWKS endpoint containing the public keys used by the CDR Register to validate the signature of issued SSAs and authenticate outbound calls to participants in the CDR.\n\nThis endpoint does not require [CORS](#cors)."
+        },
+        {
+          "info": {
+            "name": "Get Software Statement Assertion (SSA)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-recipients/brands/:dataRecipientBrandId/software-products/:softwareProductId/ssa",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "Filters the response to participants associated with an industry."
+              },
+              {
+                "name": "dataRecipientBrandId",
+                "value": "",
+                "type": "path",
+                "description": "Unique id for the Accredited Data Recipient Brand that the Software Product is associated with in the CDR Register."
+              },
+              {
+                "name": "softwareProductId",
+                "value": "",
+                "type": "path",
+                "description": "Unique id for the Accredited Data Recipient Software Product in the CDR Register."
+              }
+            ]
+          },
+          "docs": "Get a Software Statement Assertion (SSA) for a software product on the CDR Register to be used for Dynamic Client Registration with a Data Holder Brand.\n\nObsolete versions: [v1](includes/obsolete/get-software-statement-assertion-v1.html), [v2](includes/obsolete/get-software-statement-assertion-v2.html), [v3](includes/obsolete/get-software-statement-assertion-v3.html)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Register Data Holder discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Data Holder Brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-holders/brands",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              },
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "The industry the participant is retrieving data for (Banking, etc.)"
+              },
+              {
+                "name": "updated-since",
+                "value": "",
+                "type": "query",
+                "description": "Query filter returns results updated since the specified date-time."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of results to request (standard pagination)."
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Page size to request. Default is 25 (standard pagination)."
+              }
+            ]
+          },
+          "docs": "Allows Data Recipients to discover Data Holder Brands available in the CDR ecosystem.\n\nObsolete versions: [v1](includes/obsolete/get-data-holder-brands-v1.html), [v2](includes/obsolete/get-data-holder-brands-v2.html)."
+        },
+        {
+          "info": {
+            "name": "Get Data Holder Brands Summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-holders/brands/summary",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "If-None-Match",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "The industry the participant is retrieving data for (Banking, etc.)"
+              }
+            ]
+          },
+          "docs": "Endpoint used by participants to discover public details of Data Holder Brands from the CDR Register.\n\nObsolete versions: [v1](includes/obsolete/get-data-holder-brands-summary-v1.html)."
+        },
+        {
+          "info": {
+            "name": "Get Data Holder Statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-holders/status",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "If-None-Match",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "The industry the participant is retrieving data for (Banking, etc.)"
+              }
+            ]
+          },
+          "docs": "Endpoint used by participants to discover the statuses for Data Holders from the CDR Register.\n\nObsolete versions: [v1](includes/obsolete/get-data-holder-statuses-v1.html)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Register Data Recipient discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Software Products Statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-recipients/brands/software-products/status",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "If-None-Match",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "Filters the response to participants associated with an industry."
+              }
+            ]
+          },
+          "docs": "Endpoint used by participants to discover the statuses for software products from the CDR Register.\n\nObsolete versions: [v1](includes/obsolete/get-software-product-statuses-v1.html), [v2](includes/obsolete/get-software-product-statuses-v2.html)."
+        },
+        {
+          "info": {
+            "name": "Get Data Recipients Statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-recipients/status",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "If-None-Match",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "Filters the response to participants associated with an industry."
+              }
+            ]
+          },
+          "docs": "Endpoint used by participants to discover the statuses for Data Recipients from the CDR Register.\n\nObsolete versions: [v1](includes/obsolete/get-data-recipient-statuses-v1.html), [v2](includes/obsolete/get-data-recipient-statuses-v2.html)."
+        },
+        {
+          "info": {
+            "name": "Get Data Recipients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.cdr.gov.au/cdr-register/v1/:industry/data-recipients",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "If-None-Match",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "industry",
+                "value": "",
+                "type": "path",
+                "description": "Filters the response to participants associated with an industry."
+              }
+            ]
+          },
+          "docs": "Endpoint used by participants to discover data recipients and associated brands and software products, available in the CDR ecosystem.\n\nObsolete versions: [v2](includes/obsolete/get-data-recipients-v2.html), [v3](includes/obsolete/get-data-recipients-v3.html)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

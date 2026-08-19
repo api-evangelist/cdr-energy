@@ -1,0 +1,104 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CDR Dynamic Client Registration API",
+    "version": "1.36.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Data Holder Client Registration",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Register Data Recipient oAuth Client",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mtls.dh.example.com/cds-au/v1/register"
+          },
+          "docs": "Register a client using a CDR Register issued Software Statement Assertion. \n\nThis endpoint does not require [CORS](#cors)."
+        },
+        {
+          "info": {
+            "name": "Get oAuth Client Registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mtls.dh.example.com/cds-au/v1/register/:ClientId",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "path",
+                "description": "The client ID issued by the target Data Holder."
+              }
+            ]
+          },
+          "docs": "Get a Client Registration for a given Client ID."
+        },
+        {
+          "info": {
+            "name": "Update Data Recipient Registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mtls.dh.example.com/cds-au/v1/register/:ClientId",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "path",
+                "description": "The client ID issued by the target Data Holder."
+              }
+            ]
+          },
+          "docs": "Update a Client Registration for a given Client ID."
+        },
+        {
+          "info": {
+            "name": "Delete Data Recipient oAuth Client Registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mtls.dh.example.com/cds-au/v1/register/:ClientId",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "ClientId",
+                "value": "",
+                "type": "path",
+                "description": "The client ID issued by the target Data Holder."
+              }
+            ]
+          },
+          "docs": "Delete a Client Registration for a given Client ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

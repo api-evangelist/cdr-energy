@@ -1,0 +1,334 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "CDR Energy Secondary Data Holder API",
+    "version": "1.36.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Electricity Service Points (SR)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Service Points (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of results to request (standard pagination)."
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Page size to request. Default is 25 (standard pagination)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Obtain a list of service points owned by the customer that has authorised the current session.\n\nOther Versions: [v1](includes/obsolete/get-service-points-SR-v1.html)."
+        },
+        {
+          "info": {
+            "name": "Get Service Point Detail (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints/:servicePointId",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "servicePointId",
+                "value": "",
+                "type": "path",
+                "description": "The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+              }
+            ]
+          },
+          "docs": "Obtain detailed standing information for a specific service point that is owned by the customer that has authorised the current session.\n\nOther Versions: [v1](includes/obsolete/get-service-point-detail-SR-v1.html)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Electricity Usage (SR)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Usage For Service Point (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints/:servicePointId/usage",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "servicePointId",
+                "value": "",
+                "type": "path",
+                "description": "The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+              },
+              {
+                "name": "oldest-date",
+                "value": "",
+                "type": "query",
+                "description": "Constrain the request to records with effective date at or after this date. If absent defaults to _newest-date_ minus 24 months. Format is aligned to DateString common type."
+              },
+              {
+                "name": "newest-date",
+                "value": "",
+                "type": "query",
+                "description": "Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type."
+              },
+              {
+                "name": "interval-reads",
+                "value": "",
+                "type": "query",
+                "description": "Type of interval reads. Any one of the valid values for this field can be supplied. If absent defaults to `NONE`."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of results to request (standard pagination)."
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Page size to request. Default is 25 (standard pagination)."
+              }
+            ]
+          },
+          "docs": "Obtain a list of electricity usage data from a particular service point."
+        },
+        {
+          "info": {
+            "name": "Get Usage For Specific Service Points (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints/usage",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "oldest-date",
+                "value": "",
+                "type": "query",
+                "description": "Constrain the request to records with effective date at or after this date. If absent defaults to _newest-date_ minus 24 months. Format is aligned to DateString common type."
+              },
+              {
+                "name": "newest-date",
+                "value": "",
+                "type": "query",
+                "description": "Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type."
+              },
+              {
+                "name": "interval-reads",
+                "value": "",
+                "type": "query",
+                "description": "Type of interval reads. Any one of the valid values for this field can be supplied. If absent defaults to `NONE`."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of results to request (standard pagination)."
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Page size to request. Default is 25 (standard pagination)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Obtain the electricity usage data for a specific set of service points."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Distributed Energy Resources (SR)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get DER For Service Point (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints/:servicePointId/der",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "servicePointId",
+                "value": "",
+                "type": "path",
+                "description": "The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+              }
+            ]
+          },
+          "docs": "Obtain a list of DER data from a particular service point."
+        },
+        {
+          "info": {
+            "name": "Get DER For Specific Service Points (SR)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://tls.sdh.example.com/cds-au/v1/secondary/energy/electricity/servicepoints/der",
+            "headers": [
+              {
+                "name": "x-v",
+                "value": ""
+              },
+              {
+                "name": "x-min-v",
+                "value": ""
+              },
+              {
+                "name": "x-fapi-interaction-id",
+                "value": ""
+              },
+              {
+                "name": "x-cds-arrangement",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of results to request (standard pagination)."
+              },
+              {
+                "name": "page-size",
+                "value": "",
+                "type": "query",
+                "description": "Page size to request. Default is 25 (standard pagination)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Obtain DER data for a specific set of service points."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

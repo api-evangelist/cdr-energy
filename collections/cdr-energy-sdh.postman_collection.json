@@ -1,0 +1,2715 @@
+{
+  "item": [
+    {
+      "id": "d9e19ddc-40ff-4147-bb73-145124c8e1d2",
+      "name": "Electricity Service Points (SR)",
+      "description": {
+        "content": "Electricity Service Point (SR) endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "76634333-2eb2-4a24-8bc9-aa7064b00c03",
+          "name": "Get Service Points (SR)",
+          "request": {
+            "name": "Get Service Points (SR)",
+            "description": {
+              "content": "Obtain a list of service points owned by the customer that has authorised the current session.\n\nOther Versions: [v1](includes/obsolete/get-service-points-SR-v1.html).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page of results to request (standard pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page-size",
+                  "value": "<integer>",
+                  "description": "Page size to request. Default is 25 (standard pagination)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"servicePointIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"meta\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "29cb0c09-0aa7-4236-a4f1-3cfda2ade2d9",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"servicePoints\": [\n      {\n        \"jurisdictionCode\": \"QLD\",\n        \"lastUpdateDateTime\": \"string\",\n        \"nationalMeteringId\": \"string\",\n        \"servicePointClassification\": \"SMALL\",\n        \"servicePointId\": \"<string>\",\n        \"servicePointStatus\": \"ACTIVE\",\n        \"validFromDate\": \"string\",\n        \"isGenerator\": false,\n        \"lastConsumerChangeDate\": \"string\",\n        \"consumerProfile\": {\n          \"classification\": \"RESIDENTIAL\",\n          \"threshold\": \"LOW\"\n        }\n      },\n      {\n        \"jurisdictionCode\": \"ALL\",\n        \"lastUpdateDateTime\": \"string\",\n        \"nationalMeteringId\": \"string\",\n        \"servicePointClassification\": \"WHOLESALE\",\n        \"servicePointId\": \"<string>\",\n        \"servicePointStatus\": \"OFF_MARKET\",\n        \"validFromDate\": \"string\",\n        \"isGenerator\": false,\n        \"lastConsumerChangeDate\": \"string\",\n        \"consumerProfile\": {\n          \"classification\": \"RESIDENTIAL\",\n          \"threshold\": \"MEDIUM\"\n        }\n      }\n    ]\n  },\n  \"links\": {\n    \"self\": \"string\",\n    \"first\": \"string\",\n    \"prev\": \"string\",\n    \"next\": \"string\",\n    \"last\": \"string\"\n  },\n  \"meta\": {\n    \"totalPages\": 6364,\n    \"totalRecords\": 624\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4120e382-ad99-4bda-9429-8e3e80b59df3",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c6dce0a-b6ad-4587-aafe-b2514cf90a2d",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e3e1245a-11bf-44cf-84c0-e1840906385e",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "09bd8140-e44d-4b2c-876e-7904014c9d72",
+          "name": "Get Service Point Detail (SR)",
+          "request": {
+            "name": "Get Service Point Detail (SR)",
+            "description": {
+              "content": "Obtain detailed standing information for a specific service point that is owned by the customer that has authorised the current session.\n\nOther Versions: [v1](includes/obsolete/get-service-point-detail-SR-v1.html).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints",
+                ":servicePointId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "servicePointId",
+                  "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4d2cf783-b9bd-4f8b-ad14-0f17f948a45a",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"distributionLossFactor\": {\n      \"code\": \"string\",\n      \"description\": \"string\",\n      \"lossValue\": \"string\"\n    },\n    \"jurisdictionCode\": \"TAS\",\n    \"lastUpdateDateTime\": \"string\",\n    \"location\": {\n      \"addressUType\": \"simple\",\n      \"simple\": {\n        \"addressLine1\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"city\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"state\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"mailingName\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"addressLine2\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"addressLine3\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postcode\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"country\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"paf\": {\n        \"localityName\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postcode\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"state\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"dpid\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"thoroughfareNumber1\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"thoroughfareNumber1Suffix\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"thoroughfareNumber2\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"thoroughfareNumber2Suffix\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"flatUnitType\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"flatUnitNumber\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"floorLevelType\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"floorLevelNumber\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"lotNumber\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"buildingName1\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"buildingName2\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"streetName\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"streetType\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"streetSuffix\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postalDeliveryType\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postalDeliveryNumber\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postalDeliveryNumberPrefix\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"postalDeliveryNumberSuffix\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    \"nationalMeteringId\": \"string\",\n    \"relatedParticipants\": [\n      {\n        \"party\": \"string\",\n        \"role\": \"DRSP\"\n      },\n      {\n        \"party\": \"string\",\n        \"role\": \"DRSP\"\n      }\n    ],\n    \"servicePointClassification\": \"SMALL\",\n    \"servicePointId\": \"<string>\",\n    \"servicePointStatus\": \"EXTINCT\",\n    \"validFromDate\": \"string\",\n    \"isGenerator\": false,\n    \"lastConsumerChangeDate\": \"string\",\n    \"consumerProfile\": {\n      \"classification\": \"RESIDENTIAL\",\n      \"threshold\": \"MEDIUM\"\n    },\n    \"meters\": [\n      {\n        \"meterId\": \"string\",\n        \"specifications\": {\n          \"installationType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"manufacturer\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"model\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"readType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"nextScheduledReadDate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"registers\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      },\n      {\n        \"meterId\": \"string\",\n        \"specifications\": {\n          \"installationType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"status\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"manufacturer\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"model\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"readType\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"nextScheduledReadDate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"registers\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      }\n    ]\n  },\n  \"links\": {\n    \"self\": \"string\"\n  },\n  \"meta\": \"<object>\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5041e354-1f8c-4384-a036-58a68fac0240",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6a81129b-4bce-4554-8ed2-bcc371917dcb",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[404 - Unavailable Service Point](#error-404-unavailable-service-point)</li><li>[404 - Invalid Service Point](#error-404-invalid-service-point)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5a42a488-1be5-4ed4-85b8-954525479e63",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "5a9d373f-b1e6-4691-8082-328922db0db2",
+      "name": "Electricity Usage (SR)",
+      "description": {
+        "content": "Electricity Usage (SR) endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "160c7346-f822-4ecb-a1fd-eb00acec4e19",
+          "name": "Get Usage For Service Point (SR)",
+          "request": {
+            "name": "Get Usage For Service Point (SR)",
+            "description": {
+              "content": "Obtain a list of electricity usage data from a particular service point.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints",
+                ":servicePointId",
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "oldest-date",
+                  "value": "<string>",
+                  "description": "Constrain the request to records with effective date at or after this date. If absent defaults to _newest-date_ minus 24 months. Format is aligned to DateString common type."
+                },
+                {
+                  "disabled": false,
+                  "key": "newest-date",
+                  "value": "<string>",
+                  "description": "Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type."
+                },
+                {
+                  "disabled": false,
+                  "key": "interval-reads",
+                  "value": "NONE",
+                  "description": "Type of interval reads. Any one of the valid values for this field can be supplied. If absent defaults to `NONE`."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page of results to request (standard pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page-size",
+                  "value": "<integer>",
+                  "description": "Page size to request. Default is 25 (standard pagination)."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "servicePointId",
+                  "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "65158b09-361a-4e7c-abe2-3f5f86ecee9d",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"reads\": [\n      {\n        \"readStartDate\": \"string\",\n        \"readUType\": \"intervalRead\",\n        \"registerSuffix\": \"string\",\n        \"servicePointId\": \"<string>\",\n        \"registerId\": \"string\",\n        \"meterId\": \"string\",\n        \"controlledLoad\": true,\n        \"readEndDate\": \"string\",\n        \"unitOfMeasure\": \"string\",\n        \"basicRead\": {\n          \"value\": 3381.886487561222,\n          \"quality\": \"ACTUAL\"\n        },\n        \"intervalRead\": {\n          \"aggregateValue\": 9069.015107236353,\n          \"readIntervalLength\": 84,\n          \"intervalReads\": [\n            8054.706534392426,\n            5152.551556337448\n          ],\n          \"readQualities\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      },\n      {\n        \"readStartDate\": \"string\",\n        \"readUType\": \"intervalRead\",\n        \"registerSuffix\": \"string\",\n        \"servicePointId\": \"<string>\",\n        \"registerId\": \"string\",\n        \"meterId\": \"string\",\n        \"controlledLoad\": false,\n        \"readEndDate\": \"string\",\n        \"unitOfMeasure\": \"string\",\n        \"basicRead\": {\n          \"value\": 9579.35666056257,\n          \"quality\": \"ACTUAL\"\n        },\n        \"intervalRead\": {\n          \"aggregateValue\": 2627.107502725227,\n          \"readIntervalLength\": 9533,\n          \"intervalReads\": [\n            6666.443296419213,\n            2042.502787593039\n          ],\n          \"readQualities\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      }\n    ]\n  },\n  \"links\": {\n    \"self\": \"string\",\n    \"first\": \"string\",\n    \"prev\": \"string\",\n    \"next\": \"string\",\n    \"last\": \"string\"\n  },\n  \"meta\": {\n    \"totalPages\": 8074,\n    \"totalRecords\": 5323\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1c24f78-1692-4c0b-bad3-0c7cd067e70a",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Date](#error-400-field-invalid-date-time)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9606585c-d1ec-47a7-b703-43126e692392",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[404 - Unavailable Service Point](#error-404-unavailable-service-point)</li><li>[404 - Invalid Service Point](#error-404-invalid-service-point)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "95ed4e25-e146-4440-8c61-2a6c9110566b",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62b3807a-5437-440e-a0e5-155f237f4dc0",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "21e1718d-c548-4879-8bee-6e8c21e89ef0",
+          "name": "Get Usage For Specific Service Points (SR)",
+          "request": {
+            "name": "Get Usage For Specific Service Points (SR)",
+            "description": {
+              "content": "Obtain the electricity usage data for a specific set of service points.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints",
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "oldest-date",
+                  "value": "<string>",
+                  "description": "Constrain the request to records with effective date at or after this date. If absent defaults to _newest-date_ minus 24 months. Format is aligned to DateString common type."
+                },
+                {
+                  "disabled": false,
+                  "key": "newest-date",
+                  "value": "<string>",
+                  "description": "Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type."
+                },
+                {
+                  "disabled": false,
+                  "key": "interval-reads",
+                  "value": "NONE",
+                  "description": "Type of interval reads. Any one of the valid values for this field can be supplied. If absent defaults to `NONE`."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page of results to request (standard pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page-size",
+                  "value": "<integer>",
+                  "description": "Page size to request. Default is 25 (standard pagination)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"servicePointIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"meta\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b625c367-24f5-4119-b9bd-c4023d613dde",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"reads\": [\n      {\n        \"readStartDate\": \"string\",\n        \"readUType\": \"basicRead\",\n        \"registerSuffix\": \"string\",\n        \"servicePointId\": \"<string>\",\n        \"registerId\": \"string\",\n        \"meterId\": \"string\",\n        \"controlledLoad\": true,\n        \"readEndDate\": \"string\",\n        \"unitOfMeasure\": \"string\",\n        \"basicRead\": {\n          \"value\": 6664.231252688538,\n          \"quality\": \"ACTUAL\"\n        },\n        \"intervalRead\": {\n          \"aggregateValue\": 8215.50378903177,\n          \"readIntervalLength\": 8194,\n          \"intervalReads\": [\n            7381.533613244673,\n            9966.464436806573\n          ],\n          \"readQualities\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      },\n      {\n        \"readStartDate\": \"string\",\n        \"readUType\": \"basicRead\",\n        \"registerSuffix\": \"string\",\n        \"servicePointId\": \"<string>\",\n        \"registerId\": \"string\",\n        \"meterId\": \"string\",\n        \"controlledLoad\": true,\n        \"readEndDate\": \"string\",\n        \"unitOfMeasure\": \"string\",\n        \"basicRead\": {\n          \"value\": 7625.651717484371,\n          \"quality\": \"ACTUAL\"\n        },\n        \"intervalRead\": {\n          \"aggregateValue\": 3211.0021162489465,\n          \"readIntervalLength\": 9746,\n          \"intervalReads\": [\n            4420.41105261019,\n            4510.366018602629\n          ],\n          \"readQualities\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        }\n      }\n    ]\n  },\n  \"links\": {\n    \"self\": \"string\",\n    \"first\": \"string\",\n    \"prev\": \"string\",\n    \"next\": \"string\",\n    \"last\": \"string\"\n  },\n  \"meta\": {\n    \"totalPages\": 531,\n    \"totalRecords\": 5666\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "262bc5d0-7306-48c0-9583-ca8c5518ae83",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Date](#error-400-field-invalid-date-time)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1633752a-d0a2-4b57-b730-6225975bc564",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "899b6f3b-b1c0-4962-9c53-726f9960623d",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[422 - Invalid Page](#error-422-field-invalid-page)</li><li>[422 - Unavailable Service Point](#error-422-unavailable-service-point)</li><li>[422 - Invalid Service Point](#error-422-invalid-service-point)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "oldest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "newest-date",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "interval-reads",
+                      "value": "NONE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "7ecbf4fa-41e8-4140-ac9b-5ac1843dc5d2",
+      "name": "Distributed Energy Resources (SR)",
+      "description": {
+        "content": "Distributed Energy Resource (SR) endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "05c09353-05c2-41f7-9f01-1b6362dc6bed",
+          "name": "Get DER For Service Point (SR)",
+          "request": {
+            "name": "Get DER For Service Point (SR)",
+            "description": {
+              "content": "Obtain a list of DER data from a particular service point.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints",
+                ":servicePointId",
+                "der"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "servicePointId",
+                  "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "02ccedb7-3e29-4360-b282-29b5b2481a24",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"acConnections\": [\n      {\n        \"commissioningDate\": \"string\",\n        \"connectionIdentifier\": 1299.092562352947,\n        \"count\": 8832,\n        \"derDevices\": [\n          {\n            \"count\": 8098,\n            \"deviceIdentifier\": 8954.240663039674,\n            \"nominalRatedCapacity\": 8827.93793673907,\n            \"type\": \"SOLAR_PV\",\n            \"manufacturer\": \"string\",\n            \"modelNumber\": \"string\",\n            \"status\": \"DECOMMISSIONED\",\n            \"subtype\": \"string\",\n            \"nominalStorageCapacity\": 3119.4394710459396\n          },\n          {\n            \"count\": 9255,\n            \"deviceIdentifier\": 797.8736084994409,\n            \"nominalRatedCapacity\": 3267.2033899191956,\n            \"type\": \"OTHER\",\n            \"manufacturer\": \"string\",\n            \"modelNumber\": \"string\",\n            \"status\": \"INACTIVE\",\n            \"subtype\": \"string\",\n            \"nominalStorageCapacity\": 5311.830934831917\n          }\n        ],\n        \"status\": \"ACTIVE\",\n        \"equipmentType\": \"OTHER\",\n        \"manufacturerName\": \"string\",\n        \"inverterSeries\": \"string\",\n        \"inverterModelNumber\": \"string\",\n        \"inverterDeviceCapacity\": 1252.162061959149\n      },\n      {\n        \"commissioningDate\": \"string\",\n        \"connectionIdentifier\": 9919.728630297115,\n        \"count\": 6427,\n        \"derDevices\": [\n          {\n            \"count\": 7699,\n            \"deviceIdentifier\": 1951.4933627056296,\n            \"nominalRatedCapacity\": 3499.9304250641426,\n            \"type\": \"SOLAR_PV\",\n            \"manufacturer\": \"string\",\n            \"modelNumber\": \"string\",\n            \"status\": \"ACTIVE\",\n            \"subtype\": \"string\",\n            \"nominalStorageCapacity\": 773.2319282032296\n          },\n          {\n            \"count\": 4623,\n            \"deviceIdentifier\": 4294.3978796238325,\n            \"nominalRatedCapacity\": 3392.750722013673,\n            \"type\": \"FOSSIL\",\n            \"manufacturer\": \"string\",\n            \"modelNumber\": \"string\",\n            \"status\": \"INACTIVE\",\n            \"subtype\": \"string\",\n            \"nominalStorageCapacity\": 4384.314961674508\n          }\n        ],\n        \"status\": \"INACTIVE\",\n        \"equipmentType\": \"OTHER\",\n        \"manufacturerName\": \"string\",\n        \"inverterSeries\": \"string\",\n        \"inverterModelNumber\": \"string\",\n        \"inverterDeviceCapacity\": 9425.640414884427\n      }\n    ],\n    \"approvedCapacity\": 1764.6359000315892,\n    \"availablePhasesCount\": 2,\n    \"installedPhasesCount\": 2,\n    \"islandableInstallation\": true,\n    \"servicePointId\": \"<string>\",\n    \"hasCentralProtectionControl\": false,\n    \"protectionMode\": {\n      \"exportLimitKva\": 8677.643622091804,\n      \"underFrequencyProtection\": 5496.637916419051,\n      \"underFrequencyProtectionDelay\": 4900.70474806937,\n      \"overFrequencyProtection\": 4748.2241481159845,\n      \"overFrequencyProtectionDelay\": 3636.474768235103,\n      \"underVoltageProtection\": 9115.670804060353,\n      \"underVoltageProtectionDelay\": 3285.762382004026,\n      \"overVoltageProtection\": 8103.0449183002665,\n      \"overVoltageProtectionDelay\": 2749.612926646233,\n      \"sustainedOverVoltage\": 8206.588069776175,\n      \"sustainedOverVoltageDelay\": 899.5093029525425,\n      \"frequencyRateOfChange\": 2171.522412592972,\n      \"voltageVectorShift\": 4674.864943337715,\n      \"interTripScheme\": \"string\",\n      \"neutralVoltageDisplacement\": 7873.581515932815\n    }\n  },\n  \"links\": {\n    \"self\": \"string\"\n  },\n  \"meta\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bd89fe7b-8405-4470-8dfc-a32c5f99add5",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "001fd82f-e4ef-4bcb-ae21-6223a4dad12c",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[404 - Unavailable Service Point](#error-404-unavailable-service-point)</li><li>[404 - Invalid Service Point](#error-404-invalid-service-point)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b23a2bd6-3136-4dc1-b2bd-16ace8631bf0",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    ":servicePointId",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "servicePointId",
+                      "description": "(Required) The independent ID of the service point, known in the industry as the NMI. The _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "60d6ce7d-eae8-4507-a8a1-f8f258841828",
+          "name": "Get DER For Specific Service Points (SR)",
+          "request": {
+            "name": "Get DER For Specific Service Points (SR)",
+            "description": {
+              "content": "Obtain DER data for a specific set of service points.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "secondary",
+                "energy",
+                "electricity",
+                "servicepoints",
+                "der"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page of results to request (standard pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page-size",
+                  "value": "<integer>",
+                  "description": "Page size to request. Default is 25 (standard pagination)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                "key": "x-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                "key": "x-min-v",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                "key": "x-fapi-interaction-id",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                "key": "x-cds-arrangement",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"servicePointIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  \"meta\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "221dc1cd-9cff-401e-8ec6-2fd1f7f442ad",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) The [payload version](#response-headers) that the endpoint has responded with.",
+                  "key": "x-v",
+                  "value": "string"
+                },
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"derRecords\": [\n      {\n        \"acConnections\": [\n          {\n            \"commissioningDate\": \"string\",\n            \"connectionIdentifier\": 1254.0026816481043,\n            \"count\": 5924,\n            \"derDevices\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"status\": \"DECOMMISSIONED\",\n            \"equipmentType\": \"OTHER\",\n            \"manufacturerName\": \"string\",\n            \"inverterSeries\": \"string\",\n            \"inverterModelNumber\": \"string\",\n            \"inverterDeviceCapacity\": 6724.190118523483\n          },\n          {\n            \"commissioningDate\": \"string\",\n            \"connectionIdentifier\": 1400.1275291629045,\n            \"count\": 7796,\n            \"derDevices\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"status\": \"DECOMMISSIONED\",\n            \"equipmentType\": \"OTHER\",\n            \"manufacturerName\": \"string\",\n            \"inverterSeries\": \"string\",\n            \"inverterModelNumber\": \"string\",\n            \"inverterDeviceCapacity\": 869.7609827556596\n          }\n        ],\n        \"approvedCapacity\": 3658.972855327459,\n        \"availablePhasesCount\": 0,\n        \"installedPhasesCount\": 1,\n        \"islandableInstallation\": false,\n        \"servicePointId\": \"<string>\",\n        \"hasCentralProtectionControl\": false,\n        \"protectionMode\": {\n          \"exportLimitKva\": 4865.782262319786,\n          \"underFrequencyProtection\": 1040.2691663922049,\n          \"underFrequencyProtectionDelay\": 7194.947516395688,\n          \"overFrequencyProtection\": 1925.2816508788285,\n          \"overFrequencyProtectionDelay\": 4743.575271038249,\n          \"underVoltageProtection\": 7086.2394328835935,\n          \"underVoltageProtectionDelay\": 8648.156398928679,\n          \"overVoltageProtection\": 243.40164883717597,\n          \"overVoltageProtectionDelay\": 600.8506722443263,\n          \"sustainedOverVoltage\": 2760.2341710685996,\n          \"sustainedOverVoltageDelay\": 4158.580550188872,\n          \"frequencyRateOfChange\": 3314.195493068145,\n          \"voltageVectorShift\": 6289.337574498879,\n          \"interTripScheme\": \"string\",\n          \"neutralVoltageDisplacement\": 3467.6444696737176\n        }\n      },\n      {\n        \"acConnections\": [\n          {\n            \"commissioningDate\": \"string\",\n            \"connectionIdentifier\": 5006.071557889891,\n            \"count\": 8827,\n            \"derDevices\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"status\": \"INACTIVE\",\n            \"equipmentType\": \"OTHER\",\n            \"manufacturerName\": \"string\",\n            \"inverterSeries\": \"string\",\n            \"inverterModelNumber\": \"string\",\n            \"inverterDeviceCapacity\": 4793.4336030623435\n          },\n          {\n            \"commissioningDate\": \"string\",\n            \"connectionIdentifier\": 5417.806081908433,\n            \"count\": 9929,\n            \"derDevices\": [\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            ],\n            \"status\": \"ACTIVE\",\n            \"equipmentType\": \"OTHER\",\n            \"manufacturerName\": \"string\",\n            \"inverterSeries\": \"string\",\n            \"inverterModelNumber\": \"string\",\n            \"inverterDeviceCapacity\": 7270.542931345044\n          }\n        ],\n        \"approvedCapacity\": 4474.063358194387,\n        \"availablePhasesCount\": 0,\n        \"installedPhasesCount\": 1,\n        \"islandableInstallation\": false,\n        \"servicePointId\": \"<string>\",\n        \"hasCentralProtectionControl\": false,\n        \"protectionMode\": {\n          \"exportLimitKva\": 1909.041758311002,\n          \"underFrequencyProtection\": 6935.131081272815,\n          \"underFrequencyProtectionDelay\": 713.8728083924095,\n          \"overFrequencyProtection\": 951.707604904799,\n          \"overFrequencyProtectionDelay\": 230.44778240212338,\n          \"underVoltageProtection\": 8219.544763355054,\n          \"underVoltageProtectionDelay\": 3829.271815052242,\n          \"overVoltageProtection\": 4068.3408255549357,\n          \"overVoltageProtectionDelay\": 9522.052866147367,\n          \"sustainedOverVoltage\": 1870.418017883666,\n          \"sustainedOverVoltageDelay\": 9670.848046990812,\n          \"frequencyRateOfChange\": 9038.745346500737,\n          \"voltageVectorShift\": 6437.5124829982615,\n          \"interTripScheme\": \"string\",\n          \"neutralVoltageDisplacement\": 6222.889549246405\n        }\n      }\n    ]\n  },\n  \"links\": {\n    \"self\": \"string\",\n    \"first\": \"string\",\n    \"prev\": \"string\",\n    \"next\": \"string\",\n    \"last\": \"string\"\n  },\n  \"meta\": {\n    \"totalPages\": 9519,\n    \"totalRecords\": 2822\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f1d70925-15ba-4548-bdf8-a1ce8de862d6",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Missing Required Field](#error-400-field-missing)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc8de2ac-01b6-40e0-8711-476b89e4dca7",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Acceptable",
+              "code": 406,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "425c8341-6a33-4977-99bf-b8ac5e1652f1",
+              "name": "The following error codes **MUST** be supported:<br/><ul class=\"error-code-list\"><li>[422 - Invalid Page](#error-422-field-invalid-page)</li><li>[422 - Unavailable Service Point](#error-422-unavailable-service-point)</li><li>[422 - Invalid Service Point](#error-422-invalid-service-point)</li></ul>",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "secondary",
+                    "energy",
+                    "electricity",
+                    "servicepoints",
+                    "der"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "page-size",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).",
+                    "key": "x-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.",
+                    "key": "x-min-v",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) The _x-fapi-interaction-id_ header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder **MUST** create a unique **[[RFC4122]](#nref-RFC4122)** UUID value for the _x-fapi-interaction-id_ header.",
+                    "key": "x-fapi-interaction-id",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier **MUST** be unique per customer according to the definition of customer in the CDR Federation section of this profile. The _x-cds-arrangement_ should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field **MUST** be populated but AEMO **MUST NOT** seek to validate the consent associated with the arrangement.",
+                    "key": "x-cds-arrangement",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "(Required) An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.",
+                  "key": "x-fapi-interaction-id",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    },\n    {\n      \"code\": \"string\",\n      \"detail\": \"string\",\n      \"title\": \"string\",\n      \"meta\": {\n        \"urn\": \"string\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://tls.sdh.example.com/cds-au/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "5d776108-4ed7-469a-9458-1010e70ff92a",
+    "name": "CDR Energy Secondary Data Holder API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Specifications for resource endpoints applicable to secondary data holders in the Energy sector.\n\nContact Support:\n Name: Data Standards Body\n Email: contact@dsb.gov.au",
+      "type": "text/plain"
+    }
+  }
+}
