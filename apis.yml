@@ -27,6 +27,19 @@ tags:
 - Smart Metering
 - DER
 - Energy Markets
+- Regulations
+- Government
+- Open Data
+tags_raw:
+- Energy
+- Australia
+- Utilities
+- Electricity
+- Consumer Data Right
+- Open Energy
+- Smart Metering
+- DER
+- Energy Markets
 - Regulation
 - Government
 - Open Data
@@ -135,6 +148,11 @@ apis:
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
   tags:
   - Common
+  - Customers
+  - Status
+  - Discovery
+  tags_raw:
+  - Common
   - Customer
   - Status
   - Discovery
@@ -155,6 +173,11 @@ apis:
     the CDR — machine-to-machine, gated on accreditation, with no human approval step at the data holder.
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
   tags:
+  - Onboarding
+  - Registration
+  - Authentication
+  - Accreditation
+  tags_raw:
   - Onboarding
   - Registration
   - OAuth
