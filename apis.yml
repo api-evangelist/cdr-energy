@@ -47,24 +47,16 @@ created: '2026-07-27'
 modified: '2026-07-27'
 specificationVersion: '0.23'
 apis:
-- aid: cdr-energy:cdr-register-api
-  name: CDR Register API
-  description: The ACCC-operated Consumer Data Right Register, the ecosystem's source of truth for who is allowed
-    to participate. Unauthenticated endpoints return the energy data holder brand summary (84 brands with their
-    live public base URIs), data holder statuses, accredited data recipients and software product statuses; they
-    were all served anonymously over the open internet on 2026-07-27 with only an x-v version header. Authenticated
-    endpoints issue Software Statement Assertions to accredited data recipients using mutual TLS and private_key_jwt
-    client credentials against the Register's own OpenID Provider.
+- aid: cdr-energy:cdr-energy-data-holder-admin-api
+  name: Consumer Data Right (Energy) Data Holder Admin API
+  description: Data Holder Admin endpoints
   humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
   baseURL: https://api.cdr.gov.au/cdr-register/v1
   tags:
-  - Register
-  - Discovery
-  - Accreditation
-  - Government
+  - Data Holder Admin
   properties:
   - type: OpenAPI
-    url: openapi/cdr-register-openapi.json
+    url: openapi/cdr-energy-data-holder-admin-api-openapi.yml
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
   - type: Documentation
@@ -73,30 +65,8 @@ apis:
     url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
   - type: GitHubRepository
     url: https://github.com/ConsumerDataStandardsAustralia/register
-  - type: Overlay
-    url: overlays/cdr-energy-register-overlay.yaml
   - type: WellKnown
     url: well-known/cdr-energy-well-known.yml
-- aid: cdr-energy:cdr-energy-api
-  name: CDR Energy API
-  description: The mandated energy data contract that every designated Australian electricity retailer must implement
-    identically. Eighteen paths covering generic plan reference data, electricity service points, interval usage,
-    distributed energy resources, accounts, balances, invoices, billing, payment schedules and concessions. The
-    two /energy/plans endpoints are public product reference data and require no authentication; every other endpoint
-    requires an accredited data recipient, mutual TLS and a consumer-authorised OAuth 2.0 / OpenID Connect token.
-    There is no single base URL — each of the 84 registered energy data holder brands publishes its own base URI
-    through the CDR Register, and 53 of them answered GET /cds-au/v1/energy/plans anonymously when probed on 2026-07-27.
-  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
-  tags:
-  - Energy
-  - Electricity
-  - Usage
-  - Billing
-  - DER
-  - Consumer Data Right
-  properties:
-  - type: OpenAPI
-    url: openapi/cdr-energy-openapi.json
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
   - type: Documentation
@@ -109,106 +79,803 @@ apis:
     url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
   - type: GitHubRepository
     url: https://github.com/ConsumerDataStandardsAustralia/standards
-  - type: Overlay
-    url: overlays/cdr-energy-energy-overlay.yaml
   - type: Examples
     url: examples/_index.yml
   - type: DataModel
     url: data-model/cdr-energy-data-model.yml
-- aid: cdr-energy:cdr-energy-secondary-data-holder-api
-  name: CDR Energy Secondary Data Holder API
-  description: The gateway contract AEMO implements as the CDR Secondary Data Holder for energy. Retailers are the
-    primary data holders for the customer relationship, but the physical data — NMI standing data, meter and interval
-    usage records, and the distributed energy resources register — lives with AEMO, so the standards define a separate
-    six-operation server-to-server API that retailers call on the consumer's behalf. This is the piece of machinery
-    that has no banking equivalent, and it is why energy needed a shared-responsibility model rather than a straight
-    copy of the banking contract.
-  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
-  tags:
-  - Energy
-  - AEMO
-  - Metering
-  - DER
-  - Gateway
-  properties:
-  - type: OpenAPI
-    url: openapi/cdr-energy-sdh-openapi.json
   - type: APIReference
-    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
-  - type: Documentation
-    url: https://consumerdatastandardsaustralia.github.io/standards/
-  - type: Overlay
-    url: overlays/cdr-energy-energy-sdh-overlay.yaml
-- aid: cdr-energy:cdr-common-api
-  name: CDR Common API
-  description: The cross-sector endpoints every CDR data holder must expose regardless of industry — GET /common/customer
-    and /common/customer/detail for the consented customer's identity, and the unauthenticated /discovery/status
-    and /discovery/outages endpoints that let the ecosystem see whether a data holder is up and when it plans to
-    be down. The discovery pair is a rare example of a regulator mandating a public status API.
-  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
-  tags:
-  - Common
-  - Customers
-  - Status
-  - Discovery
-  tags_raw:
-  - Common
-  - Customer
-  - Status
-  - Discovery
-  properties:
-  - type: OpenAPI
-    url: openapi/cdr-common-openapi.json
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
-  - type: Overlay
-    url: overlays/cdr-energy-common-overlay.yaml
   - type: StatusPage
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
-- aid: cdr-energy:cdr-dynamic-client-registration-api
-  name: CDR Dynamic Client Registration API
-  description: The onboarding contract. Rather than a developer portal issuing keys, an accredited data recipient
-    presents a Software Statement Assertion obtained from the CDR Register and self-registers with each data holder
-    over mutual TLS, then manages or deletes that registration. This is how a developer actually "gets keys" in
-    the CDR — machine-to-machine, gated on accreditation, with no human approval step at the data holder.
-  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
-  tags:
-  - Onboarding
-  - Registration
-  - Authentication
-  - Accreditation
-  tags_raw:
-  - Onboarding
-  - Registration
-  - OAuth
-  - Accreditation
-  properties:
-  - type: OpenAPI
-    url: openapi/cdr-dcr-openapi.json
   - type: APIReference
-    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
-  - type: Overlay
-    url: overlays/cdr-energy-dcr-overlay.yaml
-- aid: cdr-energy:cdr-admin-api
-  name: CDR Admin API
-  description: The mandated reporting surface every data holder must expose to the ACCC — GET /admin/metrics returns
-    availability, performance, invocation, error and rejection statistics, and POST /admin/register/metadata forces
-    a metadata refresh. A regulator that requires the industry to publish its own operational telemetry through
-    an API is unusual, and it is the mechanism that makes CDR compliance measurable rather than self-declared.
-  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
-  tags:
-  - Admin
-  - Metrics
-  - Reporting
-  - Compliance
-  properties:
-  - type: OpenAPI
-    url: openapi/cdr-admin-openapi.json
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
-  - type: Overlay
-    url: overlays/cdr-energy-admin-overlay.yaml
+- aid: cdr-energy:cdr-energy-data-holder-client-registration-api
+  name: Consumer Data Right (Energy) Data Holder Client Registration API
+  description: Data Holder Client Registration endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Data Holder Client Registration
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-data-holder-client-registration-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-data-holder-customers-api
+  name: Consumer Data Right (Energy) Data Holder Customers API
+  description: Data Holder Customer endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Data Holder Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-data-holder-customers-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-data-holder-operations-api
+  name: Consumer Data Right (Energy) Data Holder Operations API
+  description: Data Holder Operations endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Data Holder Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-data-holder-operations-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-distributed-energy-resources-api
+  name: Consumer Data Right (Energy) Distributed Energy Resources API
+  description: Distributed Energy Resource endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Distributed Energy Resources
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-distributed-energy-resources-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-distributed-energy-resources-sr-api
+  name: Consumer Data Right (Energy) Distributed Energy Resources (SR) API
+  description: Distributed Energy Resource (SR) endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Distributed Energy Resources (SR)
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-distributed-energy-resources-sr-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-electricity-service-points-api
+  name: Consumer Data Right (Energy) Electricity Service Points API
+  description: Electricity Service Point endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Electricity Service Points
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-electricity-service-points-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-electricity-service-points-sr-api
+  name: Consumer Data Right (Energy) Electricity Service Points (SR) API
+  description: Electricity Service Point (SR) endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Electricity Service Points (SR)
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-electricity-service-points-sr-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-electricity-usage-api
+  name: Consumer Data Right (Energy) Electricity Usage API
+  description: Electricity Usage endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Electricity Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-electricity-usage-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-electricity-usage-sr-api
+  name: Consumer Data Right (Energy) Electricity Usage (SR) API
+  description: Electricity Usage (SR) endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Electricity Usage (SR)
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-electricity-usage-sr-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-energy-account-balances-api
+  name: Consumer Data Right (Energy) Energy Account Balances API
+  description: Energy Account Balance endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Energy Account Balances
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-energy-account-balances-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-energy-account-billing-api
+  name: Consumer Data Right (Energy) Energy Account Billing API
+  description: Energy Account Billing endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Energy Account Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-energy-account-billing-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-energy-accounts-api
+  name: Consumer Data Right (Energy) Energy Accounts API
+  description: Energy Account endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Energy Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-energy-accounts-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-energy-plans-api
+  name: Consumer Data Right (Energy) Energy Plans API
+  description: Energy Plan endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Energy Plans
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-energy-plans-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-register-data-holder-discovery-api
+  name: Consumer Data Right (Energy) Register Data Holder discovery API
+  description: Register Data Holder discovery endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Register Data Holder discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-register-data-holder-discovery-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-register-data-recipient-discovery-api
+  name: Consumer Data Right (Energy) Register Data Recipient discovery API
+  description: Register Data Recipient discovery endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Register Data Recipient discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-register-data-recipient-discovery-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
+- aid: cdr-energy:cdr-energy-register-operations-api
+  name: Consumer Data Right (Energy) Register Operations API
+  description: Register Operations endpoints
+  humanURL: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  baseURL: https://api.cdr.gov.au/cdr-register/v1
+  tags:
+  - Register Operations
+  properties:
+  - type: OpenAPI
+    url: openapi/cdr-energy-register-operations-api-openapi.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-register-api-schemas
+  - type: Documentation
+    url: https://cdr-register.github.io/register/
+  - type: Authentication
+    url: https://api.cdr.gov.au/idp/.well-known/openid-configuration
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/register
+  - type: WellKnown
+    url: well-known/cdr-energy-well-known.yml
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-api-schemas
+  - type: Documentation
+    url: https://consumerdatastandardsaustralia.github.io/standards/
+  - type: Documentation
+    url: https://dsb.gov.au/consumer-data-right/data-standards
+  - type: Sandbox
+    url: https://github.com/ConsumerDataStandardsAustralia/mock-data-holder-java
+  - type: Conformance
+    url: https://github.com/ConsumerDataStandardsAustralia/standards-testing
+  - type: GitHubRepository
+    url: https://github.com/ConsumerDataStandardsAustralia/standards
+  - type: Examples
+    url: examples/_index.yml
+  - type: DataModel
+    url: data-model/cdr-energy-data-model.yml
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-energy-secondary-data-holder-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: StatusPage
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-common-api-schemas
+  - type: APIReference
+    url: >-
+      https://consumerdatastandardsaustralia.github.io/standards/#cdr-dynamic-client-registration-api-schemas
+  - type: APIReference
+    url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
 common:
+- type: Overlay
+  url: overlays/cdr-energy-register-overlay.yaml
+- type: Overlay
+  url: overlays/cdr-energy-energy-overlay.yaml
+- type: Overlay
+  url: overlays/cdr-energy-energy-sdh-overlay.yaml
+- type: Overlay
+  url: overlays/cdr-energy-common-overlay.yaml
+- type: Overlay
+  url: overlays/cdr-energy-dcr-overlay.yaml
+- type: Overlay
+  url: overlays/cdr-energy-admin-overlay.yaml
 - type: IssueTracker
   url: https://github.com/ConsumerDataStandardsAustralia/register/issues
 - type: DomainSecurity
