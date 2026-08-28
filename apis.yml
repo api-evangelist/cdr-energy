@@ -16,6 +16,18 @@ description: 'The Consumer Data Right (CDR) is Australia''s statutory consumer d
   plan and tariff reference data, plus the participant register itself) sitting alongside consumer data that is
   closed behind ACCC accreditation, mutual TLS, FAPI-grade OAuth 2.0 / OpenID Connect and explicit, revocable consumer
   consent. Home market Australia.'
+deliveryModel:
+  model: unknown
+  open_source: unknown
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  - repository-unlicensed
+  generated: '2026-08-28'
+  method: derived
 image: https://raw.githubusercontent.com/ConsumerDataRight/mock-data-holder/main/Assets/cdr-logo.png
 tags:
 - Energy
