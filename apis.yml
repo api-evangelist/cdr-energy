@@ -876,6 +876,9 @@ apis:
   - type: APIReference
     url: https://consumerdatastandardsaustralia.github.io/standards/#cdr-admin-api-schemas
 common:
+- type: CapabilityMap
+  url: capabilities/cdr-energy-capability-edges.yml
+  name: Consumer Data Right (Energy) Business Capability Map
 - type: Overlay
   url: overlays/cdr-energy-register-overlay.yaml
 - type: Overlay
