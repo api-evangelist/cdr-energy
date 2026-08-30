@@ -1,0 +1,343 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: contact@dsb.gov.au
+    name: Data Standards Body
+    url: https://dsb.gov.au/
+  description: Specifications for Register endpoints made available to participants.
+  title: CDR Register Register Operations API
+  version: 1.36.0
+servers:
+- description: Production TLS
+  url: https://api.cdr.gov.au
+tags:
+- description: Register Operations endpoints
+  name: Register Operations
+  x-shortName: Operations
+paths:
+  /idp/.well-known/openid-configuration:
+    get:
+      description: 'Endpoint used by participants to discover the CDR Register OpenID configuration and obtain information needed to interact with it, including its OAuth 2.0 endpoint locations.
+
+
+        This endpoint does not require [CORS](#cors).'
+      operationId: getRegisterOpenIdProviderConfig
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseOpenIDProviderConfigMetadata'
+          description: The OpenID Provider Configuration Metadata values
+      summary: Get OpenId Provider Config
+      tags:
+      - Register Operations
+  /cdr-register/v1/jwks:
+    get:
+      description: 'JWKS endpoint containing the public keys used by the CDR Register to validate the signature of issued SSAs and authenticate outbound calls to participants in the CDR.
+
+
+        This endpoint does not require [CORS](#cors).'
+      operationId: getRegisterJwks
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseJWKS'
+          description: A JSON object that represents a set of JWKs
+      summary: Get JWKS
+      tags:
+      - Register Operations
+  /cdr-register/v1/{industry}/data-recipients/brands/{dataRecipientBrandId}/software-products/{softwareProductId}/ssa:
+    get:
+      description: 'Get a Software Statement Assertion (SSA) for a software product on the CDR Register to be used for Dynamic Client Registration with a Data Holder Brand.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-software-statement-assertion-v1.html), [v2](includes/obsolete/get-software-statement-assertion-v2.html), [v3](includes/obsolete/get-software-statement-assertion-v3.html).'
+      operationId: getSoftwareStatementAssertion
+      parameters:
+      - description: Filters the response to participants associated with an industry.
+        explode: false
+        in: path
+        name: industry
+        required: true
+        schema:
+          $ref: '#/components/schemas/IndustryEnumRecipients'
+        style: simple
+      - description: Version of the API endpoint requested by the client. Must be set to a positive integer. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If the value of [_x-min-v_](#request-headers) is equal to or higher than the value of [_x-v_](#request-headers) then the [_x-min-v_](#request-headers) header should be treated as absent. If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`. See [HTTP Headers](#request-headers).
+        explode: false
+        in: header
+        name: x-v
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Minimum version of the API endpoint requested by the client. Must be set to a positive integer if provided. The endpoint should respond with the highest supported version between [_x-min-v_](#request-headers) and [_x-v_](#request-headers). If all versions requested are not supported then the endpoint **MUST** respond with a `406 Not Acceptable`.
+        explode: false
+        in: header
+        name: x-min-v
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: Unique id for the Accredited Data Recipient Brand that the Software Product is associated with in the CDR Register.
+        explode: false
+        in: path
+        name: dataRecipientBrandId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Unique id for the Accredited Data Recipient Software Product in the CDR Register.
+        explode: false
+        in: path
+        name: softwareProductId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: An Authorisation Token as per **[[RFC6750]](#nref-RFC6750)**.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          type: string
+        style: simple
+        x-cds-type: ExternalRef
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Successful response
+          headers:
+            x-v:
+              description: The [payload version](#response-headers) that the endpoint has responded with.
+              explode: false
+              schema:
+                default: '1'
+                type: string
+              style: simple
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseErrorListV2'
+          description: Missing Required Header / Invalid Version / Invalid Path Parameter
+        '401':
+          description: Invalid Bearer Token
+          headers:
+            WWW-Authenticate:
+              description: The Response Header Field as per **[[RFC6750]](#nref-RFC6750)**.
+              explode: false
+              schema:
+                type: string
+              style: simple
+              x-cds-type: ExternalRef
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseErrorListV2'
+          description: Invalid BrandId
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseErrorListV2'
+          description: Invalid Software Product
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseErrorListV2'
+          description: Unsupported Version
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseErrorListV2'
+          description: SSA validation failed
+      servers:
+      - description: Production MTLS
+        url: https://secure.api.cdr.gov.au
+      summary: Get Software Statement Assertion (SSA)
+      tags:
+      - Register Operations
+      x-version: '4'
+      x-scopes:
+      - cdr-register:read
+components:
+  schemas:
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
+      properties:
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+          type: string
+      type: object
+      x-conditional:
+      - urn
+    ResponseErrorListV2:
+      properties:
+        errors:
+          description: List of errors.
+          items:
+            $ref: '#/components/schemas/ErrorV2'
+          type: array
+      required:
+      - errors
+      type: object
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
+    ResponseOpenIDProviderConfigMetadata:
+      description: Response containing the Open ID Provider Configuration Metadata.
+      properties:
+        issuer:
+          description: URL using the https scheme with no query or fragment component that the CDR Register asserts as its Issuer Identifier.
+          type: string
+          x-cds-type: URIString
+        jwks_uri:
+          description: URL of the CDR Register's JSON Web Key Set **[[JWK]](#nref-JWK)** document. This contains the signing key(s) used to validate access tokens issued from the CDR Register. Note that this differs from the JWKS endpoint used to validate SSAs and CDR Register client authentication.
+          type: string
+          x-cds-type: URIString
+        token_endpoint:
+          description: URL of the CDR Register's OAuth 2.0 Token Endpoint.
+          type: string
+          x-cds-type: URIString
+        claims_supported:
+          description: JSON array containing a list of the Claim Names of the Claims that the CDR Register supplies values for.
+          items:
+            type: string
+          type: array
+        id_token_signing_alg_values_supported:
+          description: JSON array containing a list of the JWS signing algorithms (alg values) supported by the CDR Register for the ID Token to encode the Claims in a JWT. Given the CDR Register does not issue ID tokens, this field can be safely ignored.
+          items:
+            type: string
+          type: array
+        subject_types_supported:
+          description: JSON array containing a list of the Subject Identifier types that the CDR Register supports. Given the CDR Register does not issue ID tokens, this field can be safely ignored.
+          items:
+            type: string
+          type: array
+        code_challenge_methods_supported:
+          description: JSON array containing a list of Proof Key for Code Exchange (PKCE) **[[RFC7636]](#nref-RFC7636)** code challenge methods supported by this authorization server. Given the CDR Register does not support PKCE, this field can be safely ignored.
+          items:
+            type: string
+          type: array
+        scopes_supported:
+          description: JSON array containing a list of the OAuth 2.0 **[[RFC6749]](#nref-RFC6749)** scope values that the CDR Register supports.
+          items:
+            type: string
+          type: array
+        response_types_supported:
+          description: JSON array containing a list of the OAuth 2.0 _response_type_ values that the CDR Register supports.
+          items:
+            type: string
+          type: array
+        grant_types_supported:
+          description: JSON array containing a list of the OAuth 2.0 Grant Type values that the CDR Register supports.
+          items:
+            type: string
+          type: array
+        token_endpoint_auth_methods_supported:
+          description: JSON array containing a list of Client Authentication methods supported by this Token Endpoint.
+          items:
+            type: string
+          type: array
+        tls_client_certificate_bound_access_tokens:
+          description: Boolean value indicating server support for mutual TLS client certificate bound access tokens.
+          type: boolean
+        token_endpoint_auth_signing_alg_values_supported:
+          description: JSON array containing a list of the JWS signing algorithms (_alg_ values) supported by the token endpoint for the signature on the JWT **[[JWT]](#nref-JWT)** used to authenticate the client at the token endpoint for the `private_key_jwt` authentication method.
+          items:
+            type: string
+          type: array
+      required:
+      - claims_supported
+      - code_challenge_methods_supported
+      - grant_types_supported
+      - id_token_signing_alg_values_supported
+      - issuer
+      - jwks_uri
+      - response_types_supported
+      - scopes_supported
+      - subject_types_supported
+      - tls_client_certificate_bound_access_tokens
+      - token_endpoint
+      - token_endpoint_auth_methods_supported
+      - token_endpoint_auth_signing_alg_values_supported
+      type: object
+    IndustryEnumRecipients:
+      enum:
+      - all
+      type: string
+    JWK:
+      description: Object representing a JSON Web Key.
+      properties:
+        alg:
+          description: The _alg_ (algorithm) parameter identifies the algorithm intended for use with the key.
+          type: string
+          x-cds-type: ExternalRef
+        e:
+          description: The _e_ RSA public exponent parameter.
+          type: string
+          x-cds-type: ExternalRef
+        key_ops:
+          description: The _key_ops_ (key operations) parameter identifies the operation(s) for which the key is intended to be used.
+          items:
+            type: string
+            x-cds-type: ExternalRef
+          type: array
+        kid:
+          description: The _kid_ (key ID) parameter is partially used to match a specific key. Note the _kid_ parameter is not guaranteed to be unique and additional parameters should be used to progressively identify a key within a set.
+          type: string
+          x-cds-type: ExternalRef
+        kty:
+          description: The _kty_ (key type) parameter identifies the cryptographic algorithm family used with the key.
+          type: string
+          x-cds-type: ExternalRef
+        n:
+          description: The _n_ RSA public modulus parameter.
+          type: string
+          x-cds-type: ExternalRef
+      required:
+      - alg
+      - e
+      - key_ops
+      - kid
+      - kty
+      - n
+      type: object
+    ResponseJWKS:
+      description: Response containing the JSON Web Key Set.
+      properties:
+        keys:
+          description: The value of the _keys_ parameter is an array of JWK values.
+          items:
+            $ref: '#/components/schemas/JWK'
+          type: array
+      required:
+      - keys
+      type: object
