@@ -11,8 +11,66 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 1
+edge_count: 8
 edges:
+- tag: Energy Accounts
+  spec_file: cdr-energy-energy-accounts-api-openapi.yml
+  capability_id: BC-3910.10
+  capability_id_l1: BC-3910
+  capability_name: Utility Customer Account Management
+  confidence: 0.8
+  evidence: GET /energy/accounts/{accountId}  Get Energy Account Detail; GET /energy/accounts/{accountId}/concessions  Get
+    Concessions; EnergyAccountDetailV4_allOf_planDetail
+  reason: Operations return energy supply account records with plan/tariff detail, agreed payment schedules
+    and concessions — the utility customer account lifecycle including tariff assignment, matching Utility
+    Customer Account Management.
+  recovered_from: vertical-power-water-utilities-edges.json
+- tag: Electricity Usage
+  spec_file: cdr-energy-electricity-usage-api-openapi.yml
+  capability_id: BC-3910.40
+  capability_id_l1: BC-3910
+  capability_name: Meter Reading & Validation
+  confidence: 0.75
+  evidence: GET /energy/electricity/servicepoints/{servicePointId}/usage  Get Usage For Service Point;
+    schemas EnergyUsageRead_intervalRead, EnergyUsageRead_basicRead, EnergyUsageRead_intervalRead_readQualities
+  reason: Serves metered consumption data as basic and interval reads with read-quality flags (actual/estimated/substituted),
+    which is precisely meter reading and read validation/estimation data for a supply point.
+  recovered_from: vertical-power-water-utilities-edges.json
+- tag: Electricity Usage (SR)
+  spec_file: cdr-energy-electricity-usage-sr-api-openapi.yml
+  capability_id: BC-3910.40
+  capability_id_l1: BC-3910
+  capability_name: Meter Reading & Validation
+  confidence: 0.75
+  evidence: GET /secondary/energy/electricity/servicepoints/{servicePointId}/usage  Get Usage For Service
+    Point (SR); schemas EnergyUsageRead_intervalRead_readQualities, EnergyUsageRead_basicRead
+  reason: Secondary data holder serving the same interval and basic meter reads with read qualities —
+    meter reading and validated consumption data for the supply point.
+  recovered_from: vertical-power-water-utilities-edges.json
+- tag: Distributed Energy Resources
+  spec_file: cdr-energy-distributed-energy-resources-api-openapi.yml
+  capability_id: BC-3840.10
+  capability_id_l1: BC-3840
+  capability_name: DER Registration & Onboarding
+  confidence: 0.72
+  evidence: GET /energy/electricity/servicepoints/{servicePointId}/der  Get DER For Service Point; schemas
+    EnergyDerRecord_derDevices, EnergyDerRecord_acConnections, EnergyDerRecord_protectionMode
+  reason: Returns the registered distributed-energy-resource record for a service point — inverter/AC
+    connection details, DER devices and protection mode — i.e. the DER registration and technical-qualification
+    dataset held by the network business.
+  recovered_from: vertical-power-water-utilities-edges.json
+- tag: Distributed Energy Resources (SR)
+  spec_file: cdr-energy-distributed-energy-resources-sr-api-openapi.yml
+  capability_id: BC-3840.10
+  capability_id_l1: BC-3840
+  capability_name: DER Registration & Onboarding
+  confidence: 0.72
+  evidence: GET /secondary/energy/electricity/servicepoints/{servicePointId}/der  Get DER For Service
+    Point (SR); schemas EnergyDerRecord_derDevices, EnergyDerRecord_protectionMode
+  reason: Same DER registration record served by the secondary data holder (the distributor). Content
+    is DER device, AC connection and protection-mode registration data, which is DER registration/onboarding
+    information.
+  recovered_from: vertical-power-water-utilities-edges.json
 - tag: Data Holder Customers
   spec_file: cdr-energy-data-holder-customers-api-openapi.yml
   capability_id: BC-420.10
@@ -24,3 +82,27 @@ edges:
   reason: Operations expose the customer master record (person or organisation, addresses, phone, email)
     held by the energy retailer — customer data/golden-record retrieval. Some ambiguity as it is a read-only
     regulatory disclosure of customer data rather than active master-data stewardship.
+- tag: Electricity Service Points
+  spec_file: cdr-energy-electricity-service-points-api-openapi.yml
+  capability_id: BC-3910
+  capability_id_l1: BC-3910
+  capability_name: Utility Customer & Metering Management
+  confidence: 0.7
+  evidence: GET /energy/electricity/servicepoints  Get Service Points; schemas EnergyServicePointDetailV2_allOf_registers,
+    EnergyServicePointDetailV2_allOf_specifications, EnergyServicePointV2_consumerProfile
+  reason: Exposes supply-point (NMI) identifiers with meter registers, technical specifications, related
+    participants and consumer profile — the utility customer/metering supply-point dataset. Evidence spans
+    account-level identifiers and meter registers, so only the L1 is asserted.
+  recovered_from: vertical-power-water-utilities-edges.json
+- tag: Electricity Service Points (SR)
+  spec_file: cdr-energy-electricity-service-points-sr-api-openapi.yml
+  capability_id: BC-3910
+  capability_id_l1: BC-3910
+  capability_name: Utility Customer & Metering Management
+  confidence: 0.7
+  evidence: GET /secondary/energy/electricity/servicepoints/{servicePointId}  Get Service Point Detail
+    (SR); schemas EnergyServicePointDetailV2_allOf_registers, EnergyServicePointDetailV2_allOf_relatedParticipants
+  reason: 'Secondary-data-holder version of the same supply-point dataset: service point identifiers,
+    meter registers, specifications and related market participants. Utility customer & metering domain
+    at L1; L2 left open as it mixes supply-point and meter asset data.'
+  recovered_from: vertical-power-water-utilities-edges.json
