@@ -20,7 +20,7 @@ paths:
       description: 'Endpoint used by participants to discover the statuses for software products from the CDR Register.
 
 
-        Obsolete versions: [v1](includes/obsolete/get-software-product-statuses-v1.html), [v2](includes/obsolete/get-software-product-statuses-v2.html).'
+        Obsolete versions: v1, v2.'
       operationId: getSoftwareProductsStatuses
       parameters:
       - description: Filters the response to participants associated with an industry.
@@ -94,7 +94,7 @@ paths:
       description: 'Endpoint used by participants to discover the statuses for Data Recipients from the CDR Register.
 
 
-        Obsolete versions: [v1](includes/obsolete/get-data-recipient-statuses-v1.html), [v2](includes/obsolete/get-data-recipient-statuses-v2.html).'
+        Obsolete versions: v1, v2.'
       operationId: getDataRecipientsStatuses
       parameters:
       - description: Filters the response to participants associated with an industry.
@@ -168,7 +168,7 @@ paths:
       description: 'Endpoint used by participants to discover data recipients and associated brands and software products, available in the CDR ecosystem.
 
 
-        Obsolete versions: [v2](includes/obsolete/get-data-recipients-v2.html), [v3](includes/obsolete/get-data-recipients-v3.html).'
+        Obsolete versions: v2, v3.'
       operationId: getDataRecipients
       parameters:
       - description: Filters the response to participants associated with an industry.
@@ -248,15 +248,6 @@ components:
       required:
       - self
       type: object
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
-          type: string
-      type: object
-      x-conditional:
-      - urn
     DataRecipientStatus:
       properties:
         legalEntityId:
@@ -275,74 +266,56 @@ components:
       - legalEntityId
       - status
       type: object
-    ResponseErrorListV2:
+    RegisterDataRecipient:
       properties:
-        errors:
-          description: List of errors.
+        legalEntityId:
+          description: Unique id of the Data Recipient Legal Entity issued by the CDR Register.
+          maxLength: 36
+          type: string
+        legalEntityName:
+          description: Legal name of the Data Recipient.
+          maxLength: 200
+          type: string
+        accreditationNumber:
+          description: CDR Register issued human readable unique number given to Data Recipients upon accreditation.
+          maxLength: 100
+          type: string
+        accreditationLevel:
+          description: Accreditation level of the Data Recipient in the CDR Register.
+          enum:
+          - UNRESTRICTED
+          - SPONSORED
+          type: string
+        logoUri:
+          description: Legal Entity logo URI.
+          maxLength: 1000
+          type: string
+          x-cds-type: URIString
+        dataRecipientBrands:
           items:
-            $ref: '#/components/schemas/ErrorV2'
-          type: array
-      required:
-      - errors
-      type: object
-    ErrorV2:
-      properties:
-        code:
-          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
-          type: string
-        title:
-          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-        meta:
-          $ref: '#/components/schemas/ErrorV2_meta'
-      required:
-      - code
-      - detail
-      - title
-      type: object
-      x-conditional:
-      - meta
-    IndustryEnumRecipients:
-      enum:
-      - all
-      type: string
-    SoftwareProductsStatusList:
-      properties:
-        data:
-          description: Response data for the query.
-          items:
-            $ref: '#/components/schemas/SoftwareProductStatus'
+            $ref: '#/components/schemas/DataRecipientBrandMetaData'
           type: array
           uniqueItems: true
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
+        status:
+          description: Data Recipient status in the CDR Register.
+          enum:
+          - ACTIVE
+          - SUSPENDED
+          - REVOKED
+          - SURRENDERED
+          type: string
+        lastUpdated:
+          description: The date/time that the Legal Entity was last updated in the CDR Register.
+          type: string
+          x-cds-type: DateTimeString
       required:
-      - data
-      - links
-      - meta
-      type: object
-    ResponseRegisterDataRecipientList:
-      description: Response containing a list of Data Recipients in the CDR Register.
-      properties:
-        data:
-          description: Response data for the query.
-          items:
-            $ref: '#/components/schemas/RegisterDataRecipient'
-          type: array
-          uniqueItems: true
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
-      - meta
+      - accreditationLevel
+      - accreditationNumber
+      - lastUpdated
+      - legalEntityId
+      - legalEntityName
+      - logoUri
+      - status
       type: object
     DataRecipientBrandMetaData:
       description: Metadata related to Data Recipient Brand.
@@ -412,57 +385,101 @@ components:
       - softwareProductName
       - status
       type: object
-    RegisterDataRecipient:
+    DataRecipientsStatusList:
       properties:
-        legalEntityId:
-          description: Unique id of the Data Recipient Legal Entity issued by the CDR Register.
-          maxLength: 36
-          type: string
-        legalEntityName:
-          description: Legal name of the Data Recipient.
-          maxLength: 200
-          type: string
-        accreditationNumber:
-          description: CDR Register issued human readable unique number given to Data Recipients upon accreditation.
-          maxLength: 100
-          type: string
-        accreditationLevel:
-          description: Accreditation level of the Data Recipient in the CDR Register.
-          enum:
-          - UNRESTRICTED
-          - SPONSORED
-          type: string
-        logoUri:
-          description: Legal Entity logo URI.
-          maxLength: 1000
-          type: string
-          x-cds-type: URIString
-        dataRecipientBrands:
+        data:
+          description: Response data for the query.
           items:
-            $ref: '#/components/schemas/DataRecipientBrandMetaData'
+            $ref: '#/components/schemas/DataRecipientStatus'
           type: array
           uniqueItems: true
-        status:
-          description: Data Recipient status in the CDR Register.
-          enum:
-          - ACTIVE
-          - SUSPENDED
-          - REVOKED
-          - SURRENDERED
-          type: string
-        lastUpdated:
-          description: The date/time that the Legal Entity was last updated in the CDR Register.
-          type: string
-          x-cds-type: DateTimeString
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
       required:
-      - accreditationLevel
-      - accreditationNumber
-      - lastUpdated
-      - legalEntityId
-      - legalEntityName
-      - logoUri
-      - status
+      - data
+      - links
+      - meta
       type: object
+    ResponseRegisterDataRecipientList:
+      description: Response containing a list of Data Recipients in the CDR Register.
+      properties:
+        data:
+          description: Response data for the query.
+          items:
+            $ref: '#/components/schemas/RegisterDataRecipient'
+          type: array
+          uniqueItems: true
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      - links
+      - meta
+      type: object
+    IndustryEnumRecipients:
+      enum:
+      - all
+      type: string
+    SoftwareProductsStatusList:
+      properties:
+        data:
+          description: Response data for the query.
+          items:
+            $ref: '#/components/schemas/SoftwareProductStatus'
+          type: array
+          uniqueItems: true
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      - links
+      - meta
+      type: object
+    ResponseErrorListV2:
+      properties:
+        errors:
+          description: List of errors.
+          items:
+            $ref: '#/components/schemas/ErrorV2'
+          type: array
+      required:
+      - errors
+      type: object
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
+      properties:
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+          type: string
+      type: object
+      x-conditional:
+      - urn
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
     SoftwareProductStatus:
       properties:
         softwareProductId:
@@ -482,31 +499,7 @@ components:
       type: object
     Meta:
       type: object
-    DataRecipientsStatusList:
-      properties:
-        data:
-          description: Response data for the query.
-          items:
-            $ref: '#/components/schemas/DataRecipientStatus'
-          type: array
-          uniqueItems: true
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
-      - meta
-      type: object
   headers:
-    Etag:
-      description: Entity tag that uniquely represents the requested resource.
-      explode: false
-      schema:
-        type: string
-      style: simple
-      x-cds-type: ASCIIString
     XV:
       description: The [payload version](#response-headers) that the endpoint has responded with.
       explode: false
@@ -514,3 +507,10 @@ components:
       schema:
         type: string
       style: simple
+    Etag:
+      description: Entity tag that uniquely represents the requested resource.
+      explode: false
+      schema:
+        type: string
+      style: simple
+      x-cds-type: ASCIIString

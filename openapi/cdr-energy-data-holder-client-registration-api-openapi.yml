@@ -5,7 +5,7 @@ info:
     name: Data Standards Body
     url: https://dsb.gov.au/
   description: Specifications for Dynamic Client Registration endpoints applicable to all data holders (except secondary data holders).
-  title: CDR Dynamic Client Registration Data Holder Client Registration API
+  title: CDR Dynamic Client Registration Data Holder Client…
   version: 1.36.0
 servers:
 - description: MTLS
@@ -17,7 +17,10 @@ tags:
 paths:
   /register:
     post:
-      description: "Register a client using a CDR Register issued Software Statement Assertion. \n\nThis endpoint does not require [CORS](#cors)."
+      description: 'Register a client using a CDR Register issued Software Statement Assertion.
+
+
+        This endpoint does not require CORS.'
       operationId: postClientRegistration
       requestBody:
         $ref: '#/components/requestBodies/RequestClientRegistration'
@@ -180,12 +183,15 @@ paths:
       x-scopes:
       - cdr:registration
 components:
+  requestBodies:
+    RequestClientRegistration:
+      content:
+        application/jwt:
+          schema:
+            $ref: '#/components/schemas/ClientRegistrationRequestV1'
+      description: The registration request JWT to be used to register with a Data Holder.
+      required: true
   schemas:
-    ClientRegistrationRequestV1:
-      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      format: JWT
-      type: string
     RegistrationError:
       properties:
         error:
@@ -203,6 +209,11 @@ components:
       required:
       - error
       type: object
+    ClientRegistrationRequestV1:
+      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      format: JWT
+      type: string
     RegistrationProperties:
       properties:
         client_id:
@@ -414,11 +425,3 @@ components:
       - id_token_encrypted_response_enc
       - authorization_signed_response_alg
       - authorization_encrypted_response_alg
-  requestBodies:
-    RequestClientRegistration:
-      content:
-        application/jwt:
-          schema:
-            $ref: '#/components/schemas/ClientRegistrationRequestV1'
-      description: The registration request JWT to be used to register with a Data Holder.
-      required: true

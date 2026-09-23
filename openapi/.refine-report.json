@@ -1,0 +1,62 @@
+{
+  "provider": "cdr-energy",
+  "sources": [
+    "_original/cdr-admin-openapi.json",
+    "_original/cdr-common-openapi.json",
+    "_original/cdr-dcr-openapi.json",
+    "_original/cdr-energy-openapi.json",
+    "_original/cdr-energy-sdh-openapi.json",
+    "_original/cdr-register-openapi.json"
+  ],
+  "outputs": [
+    "cdr-energy-data-holder-admin-api-openapi.yml",
+    "cdr-energy-data-holder-customers-api-openapi.yml",
+    "cdr-energy-data-holder-operations-api-openapi.yml",
+    "cdr-energy-data-holder-client-registration-api-openapi.yml",
+    "cdr-energy-distributed-energy-resources-api-openapi.yml",
+    "cdr-energy-electricity-service-points-api-openapi.yml",
+    "cdr-energy-electricity-usage-api-openapi.yml",
+    "cdr-energy-energy-account-balances-api-openapi.yml",
+    "cdr-energy-energy-account-billing-api-openapi.yml",
+    "cdr-energy-energy-accounts-api-openapi.yml",
+    "cdr-energy-energy-plans-api-openapi.yml",
+    "cdr-energy-distributed-energy-resources-sr-api-openapi.yml",
+    "cdr-energy-electricity-service-points-sr-api-openapi.yml",
+    "cdr-energy-electricity-usage-sr-api-openapi.yml",
+    "cdr-energy-register-data-holder-discovery-api-openapi.yml",
+    "cdr-energy-register-data-recipient-discovery-api-openapi.yml",
+    "cdr-energy-register-operations-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (6 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "cdr-admin-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cdr-common-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cdr-dcr-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cdr-energy-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cdr-energy-sdh-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "cdr-register-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "cdr-energy-data-holder-admin-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-data-holder-client-registration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-data-holder-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-data-holder-operations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-distributed-energy-resources-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-distributed-energy-resources-sr-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-electricity-service-points-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-electricity-service-points-sr-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-electricity-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-electricity-usage-sr-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-energy-account-balances-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-energy-account-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-energy-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-energy-plans-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-register-data-holder-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-register-data-recipient-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "cdr-energy-register-operations-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
