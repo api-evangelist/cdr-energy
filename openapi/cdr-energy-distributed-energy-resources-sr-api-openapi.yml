@@ -207,24 +207,19 @@ paths:
       x-version: '1'
 components:
   schemas:
-    Links:
+    MetaPaginated:
       properties:
-        self:
-          description: Fully qualified link that generated the current response document.
-          type: string
-          x-cds-type: URIString
+        totalRecords:
+          description: The total number of records in the full set. See [pagination](#pagination).
+          type: integer
+          x-cds-type: NaturalNumber
+        totalPages:
+          description: The total number of pages in the full set. See [pagination](#pagination).
+          type: integer
+          x-cds-type: NaturalNumber
       required:
-      - self
-      type: object
-    EnergyDerListResponse_data:
-      properties:
-        derRecords:
-          description: Array of meter reads.
-          items:
-            $ref: '#/components/schemas/EnergyDerRecord'
-          type: array
-      required:
-      - derRecords
+      - totalPages
+      - totalRecords
       type: object
     ResponseErrorListV2:
       properties:
@@ -236,60 +231,64 @@ components:
       required:
       - errors
       type: object
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
+    EnergyDerRecord_protectionMode:
+      description: Required only when the _hasCentralProtectionControl_ flag is set to `true`. One or more of the object fields will be provided to describe the protection modes in place.
       properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+        exportLimitKva:
+          description: Maximum amount of power (kVA) that may be exported from a connection point to the grid, as monitored by a control/relay function. An absent value indicates no limit.
+          type: number
+        underFrequencyProtection:
+          description: Protective function limit in Hz.
+          type: number
+        underFrequencyProtectionDelay:
+          description: Trip delay time in seconds.
+          type: number
+        overFrequencyProtection:
+          description: Protective function limit in Hz.
+          type: number
+        overFrequencyProtectionDelay:
+          description: Trip delay time in seconds.
+          type: number
+        underVoltageProtection:
+          description: Protective function limit in V.
+          type: number
+        underVoltageProtectionDelay:
+          description: Trip delay time in seconds.
+          type: number
+        overVoltageProtection:
+          description: Protective function limit in V.
+          type: number
+        overVoltageProtectionDelay:
+          description: Trip delay time in seconds.
+          type: number
+        sustainedOverVoltage:
+          description: Sustained over voltage.
+          type: number
+        sustainedOverVoltageDelay:
+          description: Sustained Over voltage protection delay in seconds.
+          type: number
+        frequencyRateOfChange:
+          description: Rate of change of frequency trip point (Hz/s).
+          type: number
+        voltageVectorShift:
+          description: Trip angle in degrees.
+          type: number
+        interTripScheme:
+          description: Description of the form of inter-trip (e.g., 'from local substation').
           type: string
+        neutralVoltageDisplacement:
+          description: Trip voltage.
+          type: number
       type: object
-      x-conditional:
-      - urn
-    LinksPaginated:
+    EnergyDerListResponse_data:
       properties:
-        self:
-          description: Fully qualified link that generated the current response document.
-          type: string
-          x-cds-type: URIString
-        first:
-          description: URI to the first page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        prev:
-          description: URI to the previous page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        next:
-          description: URI to the next page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
-        last:
-          description: URI to the last page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
+        derRecords:
+          description: Array of meter reads.
+          items:
+            $ref: '#/components/schemas/EnergyDerRecord'
+          type: array
       required:
-      - self
-      type: object
-      x-conditional:
-      - first
-      - prev
-      - next
-      - last
-    EnergySDHServicePointId:
-      description: The independent ID of the service point, known in the industry as the National Meter Identifier (NMI). Note that the _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO.
-      type: string
-      x-cds-type: ASCIIString
-    EnergyDerDetailResponse:
-      properties:
-        data:
-          $ref: '#/components/schemas/EnergyDerRecord'
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
+      - derRecords
       type: object
     EnergyDerRecord_derDevices:
       properties:
@@ -342,28 +341,6 @@ components:
       type: object
       x-conditional:
       - nominalStorageCapacity
-    ErrorV2:
-      properties:
-        code:
-          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
-          type: string
-        title:
-          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-        meta:
-          $ref: '#/components/schemas/ErrorV2_meta'
-      required:
-      - code
-      - detail
-      - title
-      type: object
-      x-conditional:
-      - meta
-    Meta:
-      type: object
     EnergyDerRecord:
       properties:
         servicePointId:
@@ -406,74 +383,6 @@ components:
       type: object
       x-conditional:
       - protectionMode
-    RequestSDHServicePointIdListV1:
-      properties:
-        data:
-          $ref: '#/components/schemas/RequestSDHServicePointIdListV1_data'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      type: object
-    RequestSDHServicePointIdListV1_data:
-      properties:
-        servicePointIds:
-          description: Array of _servicePointId_ values to obtain data for.
-          items:
-            $ref: '#/components/schemas/EnergySDHServicePointId'
-          type: array
-      required:
-      - servicePointIds
-      type: object
-    EnergyDerRecord_protectionMode:
-      description: Required only when the _hasCentralProtectionControl_ flag is set to `true`. One or more of the object fields will be provided to describe the protection modes in place.
-      properties:
-        exportLimitKva:
-          description: Maximum amount of power (kVA) that may be exported from a connection point to the grid, as monitored by a control/relay function. An absent value indicates no limit.
-          type: number
-        underFrequencyProtection:
-          description: Protective function limit in Hz.
-          type: number
-        underFrequencyProtectionDelay:
-          description: Trip delay time in seconds.
-          type: number
-        overFrequencyProtection:
-          description: Protective function limit in Hz.
-          type: number
-        overFrequencyProtectionDelay:
-          description: Trip delay time in seconds.
-          type: number
-        underVoltageProtection:
-          description: Protective function limit in V.
-          type: number
-        underVoltageProtectionDelay:
-          description: Trip delay time in seconds.
-          type: number
-        overVoltageProtection:
-          description: Protective function limit in V.
-          type: number
-        overVoltageProtectionDelay:
-          description: Trip delay time in seconds.
-          type: number
-        sustainedOverVoltage:
-          description: Sustained over voltage.
-          type: number
-        sustainedOverVoltageDelay:
-          description: Sustained Over voltage protection delay in seconds.
-          type: number
-        frequencyRateOfChange:
-          description: Rate of change of frequency trip point (Hz/s).
-          type: number
-        voltageVectorShift:
-          description: Trip angle in degrees.
-          type: number
-        interTripScheme:
-          description: Description of the form of inter-trip (e.g., 'from local substation').
-          type: string
-        neutralVoltageDisplacement:
-          description: Trip voltage.
-          type: number
-      type: object
     EnergyDerRecord_acConnections:
       properties:
         connectionIdentifier:
@@ -529,20 +438,111 @@ components:
       - inverterSeries
       - inverterModelNumber
       - inverterDeviceCapacity
-    MetaPaginated:
+    EnergyDerDetailResponse:
       properties:
-        totalRecords:
-          description: The total number of records in the full set. See [pagination](#pagination).
-          type: integer
-          x-cds-type: NaturalNumber
-        totalPages:
-          description: The total number of pages in the full set. See [pagination](#pagination).
-          type: integer
-          x-cds-type: NaturalNumber
+        data:
+          $ref: '#/components/schemas/EnergyDerRecord'
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
       required:
-      - totalPages
-      - totalRecords
+      - data
+      - links
       type: object
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
+      properties:
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+          type: string
+      type: object
+      x-conditional:
+      - urn
+    RequestSDHServicePointIdListV1_data:
+      properties:
+        servicePointIds:
+          description: Array of _servicePointId_ values to obtain data for.
+          items:
+            $ref: '#/components/schemas/EnergySDHServicePointId'
+          type: array
+      required:
+      - servicePointIds
+      type: object
+    RequestSDHServicePointIdListV1:
+      properties:
+        data:
+          $ref: '#/components/schemas/RequestSDHServicePointIdListV1_data'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      type: object
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
+    Meta:
+      type: object
+    Links:
+      properties:
+        self:
+          description: Fully qualified link that generated the current response document.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
+    LinksPaginated:
+      properties:
+        self:
+          description: Fully qualified link that generated the current response document.
+          type: string
+          x-cds-type: URIString
+        first:
+          description: URI to the first page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        prev:
+          description: URI to the previous page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        next:
+          description: URI to the next page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+        last:
+          description: URI to the last page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
+      x-conditional:
+      - first
+      - prev
+      - next
+      - last
+    EnergySDHServicePointId:
+      description: The independent ID of the service point, known in the industry as the National Meter Identifier (NMI). Note that the _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO.
+      type: string
+      x-cds-type: ASCIIString
     EnergyDerListResponse:
       properties:
         data:

@@ -18,6 +18,10 @@ description: 'The Consumer Data Right (CDR) is Australia''s statutory consumer d
   consent. Home market Australia.'
 deliveryModel:
   model: unknown
+  license_evidence:
+    not_product:
+    - consumerdatastandardsaustralia/register
+    - consumerdatastandardsaustralia/standards
   open_source: unknown
   commercial: false
   callable_host: true
@@ -25,8 +29,8 @@ deliveryModel:
   confidence: low
   source:
   - openapi
-  - repository-unlicensed
-  generated: '2026-08-28'
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: unknown

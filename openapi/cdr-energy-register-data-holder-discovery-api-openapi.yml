@@ -282,31 +282,47 @@ paths:
       x-version: '2'
 components:
   schemas:
-    Links:
-      properties:
-        self:
-          description: Fully qualified link to this API call.
-          type: string
-          x-cds-type: URIString
-      required:
-      - self
-      type: object
-    DataHoldersStatusList:
+    ResponseRegisterDataHolderBrandListV2:
+      description: Response containing a list of CDR Register Data Holder Brand objects.
       properties:
         data:
           description: Response data for the query.
           items:
-            $ref: '#/components/schemas/DataHolderStatus'
+            $ref: '#/components/schemas/RegisterDataHolderBrandV2'
           type: array
           uniqueItems: true
         links:
-          $ref: '#/components/schemas/Links'
+          $ref: '#/components/schemas/LinksPaginated'
         meta:
-          $ref: '#/components/schemas/Meta'
+          $ref: '#/components/schemas/MetaPaginated'
       required:
       - data
       - links
       - meta
+      type: object
+    MetaPaginated:
+      properties:
+        totalPages:
+          description: The total number of pages in the full set.
+          type: integer
+          x-cds-type: NaturalNumber
+        totalRecords:
+          description: The total number of records in the full set.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - totalPages
+      - totalRecords
+      type: object
+    ResponseErrorListV2:
+      properties:
+        errors:
+          description: List of errors.
+          items:
+            $ref: '#/components/schemas/ErrorV2'
+          type: array
+      required:
+      - errors
       type: object
     DataHolderBrandSummaryV2:
       properties:
@@ -373,83 +389,6 @@ components:
       - logoUri
       - publicBaseUri
       type: object
-    ResponseDataHoldersBrandSummaryListV2:
-      properties:
-        data:
-          description: Response data for the query.
-          items:
-            $ref: '#/components/schemas/DataHolderBrandSummaryV2'
-          type: array
-          uniqueItems: true
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
-      - meta
-      type: object
-    ResponseErrorListV2:
-      properties:
-        errors:
-          description: List of errors.
-          items:
-            $ref: '#/components/schemas/ErrorV2'
-          type: array
-      required:
-      - errors
-      type: object
-    LinksPaginated:
-      properties:
-        first:
-          description: URI to the first page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        last:
-          description: URI to the last page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
-        next:
-          description: URI to the next page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
-        prev:
-          description: URI to the previous page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        self:
-          description: Fully qualified link to this API call.
-          type: string
-          x-cds-type: URIString
-      required:
-      - self
-      type: object
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
-          type: string
-      type: object
-      x-conditional:
-      - urn
-    DataHolderStatus:
-      properties:
-        legalEntityId:
-          description: Unique id of the Data Holder Legal Entity issued by the CDR Register.
-          maxLength: 36
-          type: string
-        status:
-          description: Data Holder status in the CDR Register.
-          enum:
-          - ACTIVE
-          - REMOVED
-          type: string
-      required:
-      - legalEntityId
-      - status
-      type: object
     RegisterDataHolderBrandV2:
       properties:
         dataHolderBrandId:
@@ -506,6 +445,29 @@ components:
       - logoUri
       - status
       type: object
+    DataHolderStatus:
+      properties:
+        legalEntityId:
+          description: Unique id of the Data Holder Legal Entity issued by the CDR Register.
+          maxLength: 36
+          type: string
+        status:
+          description: Data Holder status in the CDR Register.
+          enum:
+          - ACTIVE
+          - REMOVED
+          type: string
+      required:
+      - legalEntityId
+      - status
+      type: object
+    IndustriesEnumV2:
+      enum:
+      - banking
+      - energy
+      - non-bank-lending
+      - telco
+      type: string
     LegalEntityDetail:
       description: The data that is common to all organisations, regardless of the type (e.g., company, trust, partnership, government).
       properties:
@@ -571,35 +533,15 @@ components:
       - logoUri
       - status
       type: object
-    ErrorV2:
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
       properties:
-        code:
-          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
           type: string
-        title:
-          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-        meta:
-          $ref: '#/components/schemas/ErrorV2_meta'
-      required:
-      - code
-      - detail
-      - title
       type: object
       x-conditional:
-      - meta
-    IndustriesEnumV2:
-      enum:
-      - banking
-      - energy
-      - non-bank-lending
-      - telco
-      type: string
-    Meta:
-      type: object
+      - urn
     RegisterDataHolderBrandServiceEndpointV2:
       description: Endpoints related to Data Holder Brand services.
       properties:
@@ -643,6 +585,87 @@ components:
       - version
       - websiteUri
       type: object
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
+    ResponseDataHoldersBrandSummaryListV2:
+      properties:
+        data:
+          description: Response data for the query.
+          items:
+            $ref: '#/components/schemas/DataHolderBrandSummaryV2'
+          type: array
+          uniqueItems: true
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      - links
+      - meta
+      type: object
+    Meta:
+      type: object
+    IndustryEnumV2:
+      enum:
+      - banking
+      - energy
+      - non-bank-lending
+      - telco
+      - all
+      type: string
+    Links:
+      properties:
+        self:
+          description: Fully qualified link to this API call.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
+    LinksPaginated:
+      properties:
+        first:
+          description: URI to the first page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        last:
+          description: URI to the last page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+        next:
+          description: URI to the next page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+        prev:
+          description: URI to the previous page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        self:
+          description: Fully qualified link to this API call.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
     RegisterDataHolderAuth:
       description: Defines the mechanism used and associated endpoints for Data Holder to Data Recipient authentication.
       properties:
@@ -660,54 +683,24 @@ components:
       - jwksEndpoint
       - registerUType
       type: object
-    ResponseRegisterDataHolderBrandListV2:
-      description: Response containing a list of CDR Register Data Holder Brand objects.
+    DataHoldersStatusList:
       properties:
         data:
           description: Response data for the query.
           items:
-            $ref: '#/components/schemas/RegisterDataHolderBrandV2'
+            $ref: '#/components/schemas/DataHolderStatus'
           type: array
           uniqueItems: true
         links:
-          $ref: '#/components/schemas/LinksPaginated'
+          $ref: '#/components/schemas/Links'
         meta:
-          $ref: '#/components/schemas/MetaPaginated'
+          $ref: '#/components/schemas/Meta'
       required:
       - data
       - links
       - meta
       type: object
-    MetaPaginated:
-      properties:
-        totalPages:
-          description: The total number of pages in the full set.
-          type: integer
-          x-cds-type: NaturalNumber
-        totalRecords:
-          description: The total number of records in the full set.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - totalPages
-      - totalRecords
-      type: object
-    IndustryEnumV2:
-      enum:
-      - banking
-      - energy
-      - non-bank-lending
-      - telco
-      - all
-      type: string
   headers:
-    XV:
-      description: The [payload version](#response-headers) that the endpoint has responded with.
-      explode: false
-      required: true
-      schema:
-        type: string
-      style: simple
     Etag:
       description: Entity tag that uniquely represents the requested resource.
       explode: false
@@ -715,3 +708,10 @@ components:
         type: string
       style: simple
       x-cds-type: ASCIIString
+    XV:
+      description: The [payload version](#response-headers) that the endpoint has responded with.
+      explode: false
+      required: true
+      schema:
+        type: string
+      style: simple
