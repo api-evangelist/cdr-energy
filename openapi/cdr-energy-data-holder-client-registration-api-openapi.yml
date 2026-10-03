@@ -192,11 +192,6 @@ components:
       description: The registration request JWT to be used to register with a Data Holder.
       required: true
   schemas:
-    ClientRegistrationRequestV1:
-      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      format: JWT
-      type: string
     RegistrationProperties:
       properties:
         client_id:
@@ -425,3 +420,8 @@ components:
       required:
       - error
       type: object
+    ClientRegistrationRequestV1:
+      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      format: JWT
+      type: string

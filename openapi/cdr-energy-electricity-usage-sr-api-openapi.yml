@@ -296,38 +296,58 @@ paths:
       x-version: '1'
 components:
   schemas:
-    MetaPaginated:
+    LinksPaginated:
       properties:
-        totalRecords:
-          description: The total number of records in the full set. See [pagination](#pagination).
-          type: integer
-          x-cds-type: NaturalNumber
-        totalPages:
-          description: The total number of pages in the full set. See [pagination](#pagination).
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - totalPages
-      - totalRecords
-      type: object
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+        self:
+          description: Fully qualified link that generated the current response document.
           type: string
+          x-cds-type: URIString
+        first:
+          description: URI to the first page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        prev:
+          description: URI to the previous page of this set. Mandatory if this response is not the first page.
+          type: string
+          x-cds-type: URIString
+        next:
+          description: URI to the next page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+        last:
+          description: URI to the last page of this set. Mandatory if this response is not the last page.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
       type: object
       x-conditional:
-      - urn
-    RequestSDHServicePointIdListV1_data:
+      - first
+      - prev
+      - next
+      - last
+    EnergyUsageRead_intervalRead_readQualities:
       properties:
-        servicePointIds:
-          description: Array of _servicePointId_ values to obtain data for.
-          items:
-            $ref: '#/components/schemas/EnergySDHServicePointId'
-          type: array
+        startInterval:
+          description: Start interval for read quality flag. First read begins at `1`.
+          example: 1
+          type: integer
+          x-cds-type: PositiveInteger
+        endInterval:
+          description: End interval for read quality flag.
+          example: 1
+          type: integer
+          x-cds-type: PositiveInteger
+        quality:
+          description: The quality of the read taken.
+          enum:
+          - SUBSTITUTE
+          - FINAL_SUBSTITUTE
+          type: string
       required:
-      - servicePointIds
+      - endInterval
+      - quality
+      - startInterval
       type: object
     EnergyUsageListResponse:
       properties:
@@ -342,71 +362,12 @@ components:
       - links
       - meta
       type: object
-    EnergyUsageRead_basicRead:
-      description: Mandatory if _readUType_ is set to `basicRead`.
-      properties:
-        quality:
-          default: ACTUAL
-          description: The quality of the read taken. If absent then assumed to be `ACTUAL`.
-          enum:
-          - ACTUAL
-          - SUBSTITUTE
-          - FINAL_SUBSTITUTE
-          type: string
-        value:
-          description: Meter read value. If positive then it means consumption, if negative it means export.
-          type: number
-      required:
-      - value
-      type: object
-    ResponseErrorListV2:
-      properties:
-        errors:
-          description: List of errors.
-          items:
-            $ref: '#/components/schemas/ErrorV2'
-          type: array
-      required:
-      - errors
-      type: object
-    RequestSDHServicePointIdListV1:
-      properties:
-        data:
-          $ref: '#/components/schemas/RequestSDHServicePointIdListV1_data'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      type: object
+    EnergySDHServicePointId:
+      description: The independent ID of the service point, known in the industry as the National Meter Identifier (NMI). Note that the _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO.
+      type: string
+      x-cds-type: ASCIIString
     Meta:
       type: object
-    EnergyUsageRead_intervalRead:
-      description: Mandatory if _readUType_ is set to `intervalRead`.
-      properties:
-        readIntervalLength:
-          description: Read interval length in minutes. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.
-          type: integer
-          x-cds-type: PositiveInteger
-        aggregateValue:
-          description: The aggregate sum of the interval read values. If positive then it means net consumption, if negative it means net export.
-          type: number
-        intervalReads:
-          description: Array of Interval read values. If positive then it means consumption, if negative it means export. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.<br>Each read value indicates the read for the interval specified by _readIntervalLength_ beginning at midnight of _readStartDate_ (for example 00:00 to 00:30 would be the first reading in a 30 minute Interval).
-          items:
-            type: number
-          type: array
-        readQualities:
-          description: Specifies quality of reads that are not `ACTUAL`. For read indices that are not specified, quality is assumed to be `ACTUAL`. If not present, all quality of all reads are assumed to be actual. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.
-          items:
-            $ref: '#/components/schemas/EnergyUsageRead_intervalRead_readQualities'
-          type: array
-      required:
-      - aggregateValue
-      type: object
-      x-conditional:
-      - readIntervalLength
-      - intervalReads
-      - readQualities
     EnergyUsageRead:
       properties:
         servicePointId:
@@ -454,49 +415,69 @@ components:
       x-conditional:
       - basicRead
       - intervalRead
-    LinksPaginated:
+    ResponseErrorListV2:
       properties:
-        self:
-          description: Fully qualified link that generated the current response document.
-          type: string
-          x-cds-type: URIString
-        first:
-          description: URI to the first page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        prev:
-          description: URI to the previous page of this set. Mandatory if this response is not the first page.
-          type: string
-          x-cds-type: URIString
-        next:
-          description: URI to the next page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
-        last:
-          description: URI to the last page of this set. Mandatory if this response is not the last page.
-          type: string
-          x-cds-type: URIString
-      required:
-      - self
-      type: object
-      x-conditional:
-      - first
-      - prev
-      - next
-      - last
-    EnergySDHServicePointId:
-      description: The independent ID of the service point, known in the industry as the National Meter Identifier (NMI). Note that the _servicePointId_ will be replaced with NMI for all interactions between Data Holder and AEMO.
-      type: string
-      x-cds-type: ASCIIString
-    EnergyUsageListResponse_data:
-      properties:
-        reads:
-          description: Array of meter reads sorted by NMI in ascending order followed by _readStartDate_ in descending order.
+        errors:
+          description: List of errors.
           items:
-            $ref: '#/components/schemas/EnergyUsageRead'
+            $ref: '#/components/schemas/ErrorV2'
           type: array
       required:
-      - reads
+      - errors
+      type: object
+    RequestSDHServicePointIdListV1_data:
+      properties:
+        servicePointIds:
+          description: Array of _servicePointId_ values to obtain data for.
+          items:
+            $ref: '#/components/schemas/EnergySDHServicePointId'
+          type: array
+      required:
+      - servicePointIds
+      type: object
+    EnergyUsageRead_intervalRead:
+      description: Mandatory if _readUType_ is set to `intervalRead`.
+      properties:
+        readIntervalLength:
+          description: Read interval length in minutes. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.
+          type: integer
+          x-cds-type: PositiveInteger
+        aggregateValue:
+          description: The aggregate sum of the interval read values. If positive then it means net consumption, if negative it means net export.
+          type: number
+        intervalReads:
+          description: Array of Interval read values. If positive then it means consumption, if negative it means export. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.<br>Each read value indicates the read for the interval specified by _readIntervalLength_ beginning at midnight of _readStartDate_ (for example 00:00 to 00:30 would be the first reading in a 30 minute Interval).
+          items:
+            type: number
+          type: array
+        readQualities:
+          description: Specifies quality of reads that are not `ACTUAL`. For read indices that are not specified, quality is assumed to be `ACTUAL`. If not present, all quality of all reads are assumed to be actual. Required when _interval-reads_ query parameter equals `FULL` or `MIN_30`.
+          items:
+            $ref: '#/components/schemas/EnergyUsageRead_intervalRead_readQualities'
+          type: array
+      required:
+      - aggregateValue
+      type: object
+      x-conditional:
+      - readIntervalLength
+      - intervalReads
+      - readQualities
+    EnergyUsageRead_basicRead:
+      description: Mandatory if _readUType_ is set to `basicRead`.
+      properties:
+        quality:
+          default: ACTUAL
+          description: The quality of the read taken. If absent then assumed to be `ACTUAL`.
+          enum:
+          - ACTUAL
+          - SUBSTITUTE
+          - FINAL_SUBSTITUTE
+          type: string
+        value:
+          description: Meter read value. If positive then it means consumption, if negative it means export.
+          type: number
+      required:
+      - value
       type: object
     ErrorV2:
       properties:
@@ -518,29 +499,63 @@ components:
       type: object
       x-conditional:
       - meta
-    EnergyUsageRead_intervalRead_readQualities:
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
       properties:
-        startInterval:
-          description: Start interval for read quality flag. First read begins at `1`.
-          example: 1
-          type: integer
-          x-cds-type: PositiveInteger
-        endInterval:
-          description: End interval for read quality flag.
-          example: 1
-          type: integer
-          x-cds-type: PositiveInteger
-        quality:
-          description: The quality of the read taken.
-          enum:
-          - SUBSTITUTE
-          - FINAL_SUBSTITUTE
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
           type: string
-      required:
-      - endInterval
-      - quality
-      - startInterval
       type: object
+      x-conditional:
+      - urn
+    EnergyUsageListResponse_data:
+      properties:
+        reads:
+          description: Array of meter reads sorted by NMI in ascending order followed by _readStartDate_ in descending order.
+          items:
+            $ref: '#/components/schemas/EnergyUsageRead'
+          type: array
+      required:
+      - reads
+      type: object
+    MetaPaginated:
+      properties:
+        totalRecords:
+          description: The total number of records in the full set. See [pagination](#pagination).
+          type: integer
+          x-cds-type: NaturalNumber
+        totalPages:
+          description: The total number of pages in the full set. See [pagination](#pagination).
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - totalPages
+      - totalRecords
+      type: object
+    RequestSDHServicePointIdListV1:
+      properties:
+        data:
+          $ref: '#/components/schemas/RequestSDHServicePointIdListV1_data'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      type: object
+  headers:
+    XFAPIInteractionId:
+      description: An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.
+      explode: false
+      required: true
+      schema:
+        type: string
+      style: simple
+    XV:
+      description: The [payload version](#response-headers) that the endpoint has responded with.
+      explode: false
+      required: true
+      schema:
+        type: string
+      style: simple
   requestBodies:
     RequestSDHServicePointIds:
       content:
@@ -549,18 +564,3 @@ components:
             $ref: '#/components/schemas/RequestSDHServicePointIdListV1'
       description: Request payload containing a list of _servicePointId_ values to obtain data for.
       required: true
-  headers:
-    XV:
-      description: The [payload version](#response-headers) that the endpoint has responded with.
-      explode: false
-      required: true
-      schema:
-        type: string
-      style: simple
-    XFAPIInteractionId:
-      description: An **[[RFC4122]](#nref-RFC4122)** UUID used as a correlation id. If provided, the data holder **MUST** play back this value in the _x-fapi-interaction-id_ response header. If not provided a **[[RFC4122]](#nref-RFC4122)** UUID value is required to be provided in the response header to track the interaction.
-      explode: false
-      required: true
-      schema:
-        type: string
-      style: simple

@@ -172,15 +172,6 @@ paths:
       - cdr-register:read
 components:
   schemas:
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
-          type: string
-      type: object
-      x-conditional:
-      - urn
     ResponseErrorListV2:
       properties:
         errors:
@@ -191,6 +182,10 @@ components:
       required:
       - errors
       type: object
+    IndustryEnumRecipients:
+      enum:
+      - all
+      type: string
     ResponseJWKS:
       description: Response containing the JSON Web Key Set.
       properties:
@@ -201,6 +196,43 @@ components:
           type: array
       required:
       - keys
+      type: object
+    JWK:
+      description: Object representing a JSON Web Key.
+      properties:
+        alg:
+          description: The _alg_ (algorithm) parameter identifies the algorithm intended for use with the key.
+          type: string
+          x-cds-type: ExternalRef
+        e:
+          description: The _e_ RSA public exponent parameter.
+          type: string
+          x-cds-type: ExternalRef
+        key_ops:
+          description: The _key_ops_ (key operations) parameter identifies the operation(s) for which the key is intended to be used.
+          items:
+            type: string
+            x-cds-type: ExternalRef
+          type: array
+        kid:
+          description: The _kid_ (key ID) parameter is partially used to match a specific key. Note the _kid_ parameter is not guaranteed to be unique and additional parameters should be used to progressively identify a key within a set.
+          type: string
+          x-cds-type: ExternalRef
+        kty:
+          description: The _kty_ (key type) parameter identifies the cryptographic algorithm family used with the key.
+          type: string
+          x-cds-type: ExternalRef
+        n:
+          description: The _n_ RSA public modulus parameter.
+          type: string
+          x-cds-type: ExternalRef
+      required:
+      - alg
+      - e
+      - key_ops
+      - kid
+      - kty
+      - n
       type: object
     ErrorV2:
       properties:
@@ -222,10 +254,6 @@ components:
       type: object
       x-conditional:
       - meta
-    IndustryEnumRecipients:
-      enum:
-      - all
-      type: string
     ResponseOpenIDProviderConfigMetadata:
       description: Response containing the Open ID Provider Configuration Metadata.
       properties:
@@ -304,40 +332,12 @@ components:
       - token_endpoint_auth_methods_supported
       - token_endpoint_auth_signing_alg_values_supported
       type: object
-    JWK:
-      description: Object representing a JSON Web Key.
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
       properties:
-        alg:
-          description: The _alg_ (algorithm) parameter identifies the algorithm intended for use with the key.
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
           type: string
-          x-cds-type: ExternalRef
-        e:
-          description: The _e_ RSA public exponent parameter.
-          type: string
-          x-cds-type: ExternalRef
-        key_ops:
-          description: The _key_ops_ (key operations) parameter identifies the operation(s) for which the key is intended to be used.
-          items:
-            type: string
-            x-cds-type: ExternalRef
-          type: array
-        kid:
-          description: The _kid_ (key ID) parameter is partially used to match a specific key. Note the _kid_ parameter is not guaranteed to be unique and additional parameters should be used to progressively identify a key within a set.
-          type: string
-          x-cds-type: ExternalRef
-        kty:
-          description: The _kty_ (key type) parameter identifies the cryptographic algorithm family used with the key.
-          type: string
-          x-cds-type: ExternalRef
-        n:
-          description: The _n_ RSA public modulus parameter.
-          type: string
-          x-cds-type: ExternalRef
-      required:
-      - alg
-      - e
-      - key_ops
-      - kid
-      - kty
-      - n
       type: object
+      x-conditional:
+      - urn
