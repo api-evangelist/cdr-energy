@@ -1,21 +1,19 @@
-# Kin Score artifact — cdr-energy — 2026-08-29T213958
+# Kin Score artifact — cdr-energy — 2026-10-03T024842
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: cdr-energy
-  schema_version: 0.16.0
-  scored_at: '2026-08-29'
-  run_ts: 2026-08-29T213958
-  composite: 61.1
+  schema_version: 0.23.0
+  scored_at: '2026-10-03'
+  run_ts: 2026-10-03T024842
+  composite: 57.1
   band: strong
   facets:
-    discoverability: 68.5
-    contract_quality: 62.5
-    governance: 18.2
-    operational_transparency: 97.4
-    developer_ergonomics: 80.4
-    commercial_clarity: 7.9
+    discoverability: 71.4
+    contract_quality: 56.7
     contract_governance: 18.2
+    operational_transparency: 97.4
+    developer_ergonomics: 82.7
     access_clarity: 7.9
   agent_readiness:
     score: 34.2
@@ -44,14 +42,14 @@ kin_score:
     applies: true
     regime: Energy & Utilities
     regime_id: energy_utilities
-    score: 60.1
+    score: 36.5
     matched_via: tags
   provenance:
     mcp: derived
     skills: derived
     conformance: first-party
     contracts:
-      total: 6
+      total: 17
       derived: 0
       coverage: 0.0
-      callable: 16.7
+      callable: 17.6
