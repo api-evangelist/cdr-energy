@@ -239,8 +239,36 @@ paths:
       x-version: '4'
 components:
   schemas:
-    Meta:
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
+      properties:
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+          type: string
       type: object
+      x-conditional:
+      - urn
+    SoftwareProductsStatusList:
+      properties:
+        data:
+          description: Response data for the query.
+          items:
+            $ref: '#/components/schemas/SoftwareProductStatus'
+          type: array
+          uniqueItems: true
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      - links
+      - meta
+      type: object
+    IndustryEnumRecipients:
+      enum:
+      - all
+      type: string
     DataRecipientStatus:
       properties:
         legalEntityId:
@@ -258,16 +286,6 @@ components:
       required:
       - legalEntityId
       - status
-      type: object
-    ResponseErrorListV2:
-      properties:
-        errors:
-          description: List of errors.
-          items:
-            $ref: '#/components/schemas/ErrorV2'
-          type: array
-      required:
-      - errors
       type: object
     SoftwareProductMetaData:
       description: Data Recipient Brand Software Products.
@@ -303,36 +321,43 @@ components:
       - softwareProductName
       - status
       type: object
-    IndustryEnumRecipients:
-      enum:
-      - all
-      type: string
-    SoftwareProductsStatusList:
+    SoftwareProductStatus:
       properties:
-        data:
-          description: Response data for the query.
-          items:
-            $ref: '#/components/schemas/SoftwareProductStatus'
-          type: array
-          uniqueItems: true
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
-      - meta
-      type: object
-    Links:
-      properties:
-        self:
-          description: Fully qualified link to this API call.
+        softwareProductId:
+          description: Unique id of the software product issued by the CDR Register.
+          maxLength: 36
           type: string
-          x-cds-type: URIString
+        status:
+          description: Software product status in the CDR Register.
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - REMOVED
+          type: string
       required:
-      - self
+      - softwareProductId
+      - status
       type: object
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
     RegisterDataRecipient:
       properties:
         legalEntityId:
@@ -384,35 +409,6 @@ components:
       - logoUri
       - status
       type: object
-    ErrorV2:
-      properties:
-        code:
-          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
-          type: string
-        title:
-          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-        meta:
-          $ref: '#/components/schemas/ErrorV2_meta'
-      required:
-      - code
-      - detail
-      - title
-      type: object
-      x-conditional:
-      - meta
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
-          type: string
-      type: object
-      x-conditional:
-      - urn
     DataRecipientBrandMetaData:
       description: Metadata related to Data Recipient Brand.
       properties:
@@ -447,6 +443,15 @@ components:
       - logoUri
       - status
       type: object
+    Links:
+      properties:
+        self:
+          description: Fully qualified link to this API call.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
     ResponseRegisterDataRecipientList:
       description: Response containing a list of Data Recipients in the CDR Register.
       properties:
@@ -465,23 +470,6 @@ components:
       - links
       - meta
       type: object
-    SoftwareProductStatus:
-      properties:
-        softwareProductId:
-          description: Unique id of the software product issued by the CDR Register.
-          maxLength: 36
-          type: string
-        status:
-          description: Software product status in the CDR Register.
-          enum:
-          - ACTIVE
-          - INACTIVE
-          - REMOVED
-          type: string
-      required:
-      - softwareProductId
-      - status
-      type: object
     DataRecipientsStatusList:
       properties:
         data:
@@ -498,6 +486,18 @@ components:
       - data
       - links
       - meta
+      type: object
+    Meta:
+      type: object
+    ResponseErrorListV2:
+      properties:
+        errors:
+          description: List of errors.
+          items:
+            $ref: '#/components/schemas/ErrorV2'
+          type: array
+      required:
+      - errors
       type: object
   headers:
     XV:
