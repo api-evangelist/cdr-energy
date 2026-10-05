@@ -1,0 +1,12 @@
+{
+ "url": "https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_register.json",
+ "requested_url": "https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_register.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 79254,
+ "sha256": "88276a5ee16304d3a5e9725864b399612f5d924c321e5b15baf6ff1bc2c8249f",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
