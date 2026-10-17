@@ -154,23 +154,22 @@ paths:
       x-version: '5'
 components:
   schemas:
-    AverageTPSMetricsV2_authenticated:
-      description: Average transactions per second, over time, for authenticated endpoints.
+    AuthorisationMetricsV2_expiredAuthorisationCount:
+      description: The number of expired ongoing authorisations.
       properties:
         currentDay:
-          description: Average TPS for current day. Must be a positive value or zero.
-          type: number
+          $ref: '#/components/schemas/AuthorisationMetricsV2_expiredAuthorisationCount_currentDay'
         previousDays:
-          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          description: Number of expired authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
-            type: number
+            $ref: '#/components/schemas/AuthorisationMetricsV2_expiredAuthorisationCount_previousDays'
           type: array
       type: object
       x-conditional:
       - currentDay
       - previousDays
-    AverageResponseMetricsV2_lowPriority:
-      description: Average response time for the low priority tier.
+    AverageResponseMetricsV2_unauthenticated:
+      description: Average response time for the unauthenticated tier.
       properties:
         currentDay:
           description: Average response time for current day.
@@ -184,17 +183,145 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    RejectionMetricsV3:
-      description: Number of calls rejected due to traffic thresholds, over time.
+    PerformanceMetricsV3_lowPriority:
+      description: Percentage of low priority calls within the performance thresholds.
       properties:
-        authenticated:
-          $ref: '#/components/schemas/RejectionMetricsV3_authenticated'
+        currentDay:
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AverageTPSMetricsV2:
+      description: Average transactions per second, over time.
+      properties:
+        aggregate:
+          $ref: '#/components/schemas/AverageTPSMetricsV2_aggregate'
         unauthenticated:
-          $ref: '#/components/schemas/RejectionMetricsV3_unauthenticated'
+          $ref: '#/components/schemas/AverageTPSMetricsV2_unauthenticated'
+        authenticated:
+          $ref: '#/components/schemas/AverageTPSMetricsV2_authenticated'
       required:
+      - aggregate
       - authenticated
       - unauthenticated
       type: object
+    AuthorisationMetricsV2_abandonmentsByStage_preIdentification:
+      description: The number of authorisations that commenced with the data holder but the customer did not successfully identify their profile or user ID.
+      properties:
+        currentDay:
+          description: Number of abandoned consent flows for this stage for the current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AverageResponseMetricsV2_unattended:
+      description: Average response time for the unattended tier.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_abandonmentsByStage_preAuthentication:
+      description: The number of authorisations where the customer identified themselves (i.e. they successfully identify the customer profile to use for the authorisation) but failed to provide a valid OTP or equivalent.
+      properties:
+        currentDay:
+          description: Number of abandoned consent flows for this stage for the current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    PerformanceHours:
+      description: Percentage of calls within the performance threshold for the specified hour. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
+      type: string
+      x-cds-type: RateString
+    AverageResponseMetricsV2_largeSecondary:
+      description: Average response time for the large payload tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
+      properties:
+        primary:
+          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_primary'
+        secondary:
+          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_secondary'
+      required:
+      - primary
+      - secondary
+      type: object
+    AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing:
+      description: New authorisation count for ongoing authorisations.
+      properties:
+        individual:
+          description: New authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: New authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    ErrorMetricsV2:
+      description: Number of calls resulting in error, over time.
+      properties:
+        aggregate:
+          $ref: '#/components/schemas/ErrorMetricsV2_aggregate'
+        unauthenticated:
+          $ref: '#/components/schemas/ErrorMetricsV2_unauthenticated'
+        authenticated:
+          $ref: '#/components/schemas/ErrorMetricsV2_authenticated'
+      required:
+      - aggregate
+      - authenticated
+      - unauthenticated
+      type: object
+    AverageTPSMetricsV2_aggregate:
+      description: Aggregate average transactions per second, over time, for all endpoints.
+      properties:
+        currentDay:
+          description: Average TPS for current day. Must be a positive value or zero.
+          type: number
+        previousDays:
+          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
     AverageResponseMetricsV2:
       description: Average response time in seconds, at millisecond resolution, within each performance tier.
       properties:
@@ -222,14 +349,14 @@ components:
       x-conditional:
       - secondary
       - largeSecondary
-    AverageTPSMetricsV2_aggregate:
-      description: Aggregate average transactions per second, over time, for all endpoints.
+    PeakTPSMetricsV2_aggregate:
+      description: Aggregate peak transactions per second, over time, for all endpoints.
       properties:
         currentDay:
-          description: Average TPS for current day. Must be a positive value or zero.
+          description: Peak TPS for current day. Must be a positive value or zero.
           type: number
         previousDays:
-          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
           items:
             type: number
           type: array
@@ -237,275 +364,18 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    PerformanceMetricsV3_lowPriority:
-      description: Percentage of low priority calls within the performance thresholds.
+    SessionCountMetricsV2:
+      description: Session counts, over time. Note that a session is defined as the provisioning of an Access Token.
       properties:
         currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    ErrorMetricsV2_unauthenticated:
-      description: Number of calls resulting in error for unauthenticated endpoints.
-      properties:
-        currentDay:
-          additionalProperties:
-            description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
-            type: integer
-            x-cds-type: NaturalNumber
-          description: Error counts, by HTTP error code, for current day.
-          properties:
-            '500':
-              description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
-              type: integer
-              x-cds-type: NaturalNumber
-          type: object
-        previousDays:
-          description: Error counts, by HTTP error code, for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            additionalProperties:
-              description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
-              type: integer
-              x-cds-type: NaturalNumber
-            properties:
-              '500':
-                description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
-                type: integer
-                x-cds-type: NaturalNumber
-            type: object
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_amendedAuthorisationCount_previousDays:
-      properties:
-        individual:
-          description: Amended authorisation count for individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-        nonIndividual:
-          description: Amended authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    SecondaryHolderMetricsV2_errors:
-      description: Number of calls resulting in error due to server execution, over time.
-      properties:
-        currentDay:
-          description: Number of errors for current day.
+          description: Session count for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: Number of errors for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: Session count for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    RejectionMetricsV3_authenticated:
-      description: Rejection counts for all authenticated endpoints.
-      properties:
-        currentDay:
-          description: Number of calls rejected for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_highPriority:
-      description: Percentage of high priority calls within the performance thresholds.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_secondary:
-      description: Percentage of Shared Responsibility calls within the performance thresholds. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
-      properties:
-        primary:
-          $ref: '#/components/schemas/PerformanceMetricsV3_secondary_primary'
-        secondary:
-          $ref: '#/components/schemas/PerformanceMetricsV3_secondary_secondary'
-      required:
-      - primary
-      - secondary
-      type: object
-    AverageTPSMetricsV2_unauthenticated:
-      description: Average transactions per second, over time, for unauthenticated endpoints.
-      properties:
-        currentDay:
-          description: Average TPS for current day. Must be a positive value or zero.
-          type: number
-        previousDays:
-          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceHours:
-      description: Percentage of calls within the performance threshold for the specified hour. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
-      type: string
-      x-cds-type: RateString
-    ResponseErrorListV2:
-      properties:
-        errors:
-          description: List of errors.
-          items:
-            $ref: '#/components/schemas/ErrorV2'
-          type: array
-      required:
-      - errors
-      type: object
-    ErrorV2_meta:
-      description: Additional data for customised error codes.
-      properties:
-        urn:
-          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
-          type: string
-      type: object
-      x-conditional:
-      - urn
-    ErrorMetricsV2:
-      description: Number of calls resulting in error, over time.
-      properties:
-        aggregate:
-          $ref: '#/components/schemas/ErrorMetricsV2_aggregate'
-        unauthenticated:
-          $ref: '#/components/schemas/ErrorMetricsV2_unauthenticated'
-        authenticated:
-          $ref: '#/components/schemas/ErrorMetricsV2_authenticated'
-      required:
-      - aggregate
-      - authenticated
-      - unauthenticated
-      type: object
-    SecondaryHolderMetricsV2_rejections:
-      description: Number of calls rejected due to traffic thresholds, over time.
-      properties:
-        currentDay:
-          description: Number of rejections for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: Number of rejections for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AverageTPSMetricsV2:
-      description: Average transactions per second, over time.
-      properties:
-        aggregate:
-          $ref: '#/components/schemas/AverageTPSMetricsV2_aggregate'
-        unauthenticated:
-          $ref: '#/components/schemas/AverageTPSMetricsV2_unauthenticated'
-        authenticated:
-          $ref: '#/components/schemas/AverageTPSMetricsV2_authenticated'
-      required:
-      - aggregate
-      - authenticated
-      - unauthenticated
-      type: object
-    AvailabilityMetricsV2_authenticated:
-      description: Availability metrics for the authenticated aspects of the CDR regime.
-      properties:
-        currentMonth:
-          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
-          type: string
-          x-cds-type: RateString
-        previousMonths:
-          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            type: string
-            x-cds-type: RateString
-          type: array
-      type: object
-      x-conditional:
-      - currentMonth
-      - previousMonths
-    AuthorisationMetricsV2_revokedAuthorisationCount:
-      description: The number of revoked authorisations.
-      properties:
-        currentDay:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_revokedAuthorisationCount_currentDay'
-        previousDays:
-          description: Number of revoked authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            $ref: '#/components/schemas/AuthorisationMetricsV2_revokedAuthorisationCount_previousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AvailabilityMetricsV2_aggregate:
-      description: Aggregated availability metrics.
-      properties:
-        currentMonth:
-          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
-          type: string
-          x-cds-type: RateString
-        previousMonths:
-          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            type: string
-            x-cds-type: RateString
-          type: array
-      type: object
-      x-conditional:
-      - currentMonth
-      - previousMonths
-    PerformanceMetricsV3_aggregate:
-      description: Percentage of calls within Primary Data Holder performance thresholds. Note that Secondary Data Holder performance **MUST** be excluded from this metric.
-      properties:
-        currentDay:
-          description: Percentage of calls within the performance threshold for the current day. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
-          type: string
-          x-cds-type: RateString
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            type: string
-            x-cds-type: RateString
           type: array
       type: object
       x-conditional:
@@ -528,70 +398,25 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    ErrorV2:
-      properties:
-        code:
-          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
-          type: string
-        title:
-          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          type: string
-        meta:
-          $ref: '#/components/schemas/ErrorV2_meta'
-      required:
-      - code
-      - detail
-      - title
-      type: object
-      x-conditional:
-      - meta
-    InvocationMetricsV3:
-      description: Number of API calls in each performance tier, over time.
-      properties:
-        unauthenticated:
-          $ref: '#/components/schemas/InvocationMetricsV3_unauthenticated'
-        highPriority:
-          $ref: '#/components/schemas/InvocationMetricsV3_highPriority'
-        lowPriority:
-          $ref: '#/components/schemas/InvocationMetricsV3_lowPriority'
-        unattended:
-          $ref: '#/components/schemas/InvocationMetricsV3_unattended'
-        largePayload:
-          $ref: '#/components/schemas/InvocationMetricsV3_largePayload'
-        secondary:
-          $ref: '#/components/schemas/InvocationMetricsV3_secondary'
-        largeSecondary:
-          $ref: '#/components/schemas/InvocationMetricsV3_largeSecondary'
-      required:
-      - highPriority
-      - largePayload
-      - lowPriority
-      - unattended
-      - unauthenticated
-      type: object
-      x-conditional:
-      - secondary
-      - largeSecondary
-    AverageResponseMetricsV2_unattended:
-      description: Average response time for the unattended tier.
+    PerformanceMetricsV3_unattended:
+      description: Percentage of unattended calls within the performance thresholds.
       properties:
         currentDay:
-          description: Average response time for current day.
-          type: number
-        previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
           items:
-            type: number
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
           type: array
       type: object
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_abandonmentsByStage_preIdentification:
-      description: The number of authorisations that commenced with the data holder but the customer did not successfully identify their profile or user ID.
+    AuthorisationMetricsV2_abandonmentsByStage_preAuthorisation:
+      description: The number of authorisations where the customer has passed the account selection step but abandoned the process before approving or rejecting the consent being requested.
       properties:
         currentDay:
           description: Number of abandoned consent flows for this stage for the current day.
@@ -607,14 +432,120 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AverageResponseMetricsV2_unauthenticated:
-      description: Average response time for the unauthenticated tier.
+    AuthorisationMetricsV2_amendedAuthorisationCount_currentDay:
+      description: Number of amended authorisations for the current day.
+      properties:
+        individual:
+          description: Amended authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: Amended authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    AverageTPSMetricsV2_authenticated:
+      description: Average transactions per second, over time, for authenticated endpoints.
       properties:
         currentDay:
-          description: Average response time for current day.
+          description: Average TPS for current day. Must be a positive value or zero.
           type: number
         previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_abandonmentsByStage_rejected:
+      description: The number of authorisations where the customer actively rejected the authorisation rather than abandoning the process.
+      properties:
+        currentDay:
+          description: Number of abandoned consent flows for this stage for the current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_amendedAuthorisationCount:
+      description: The number of amended ongoing authorisations.
+      properties:
+        currentDay:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_amendedAuthorisationCount_currentDay'
+        previousDays:
+          description: Number of amended authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            $ref: '#/components/schemas/AuthorisationMetricsV2_amendedAuthorisationCount_previousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_revokedAuthorisationCount:
+      description: The number of revoked authorisations.
+      properties:
+        currentDay:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_revokedAuthorisationCount_currentDay'
+        previousDays:
+          description: Number of revoked authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            $ref: '#/components/schemas/AuthorisationMetricsV2_revokedAuthorisationCount_previousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AvailabilityMetricsV2_unauthenticated:
+      description: Availability metrics for the unauthenticated aspects of the CDR regime.
+      properties:
+        currentMonth:
+          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
+          type: string
+          x-cds-type: RateString
+        previousMonths:
+          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            type: string
+            x-cds-type: RateString
+          type: array
+      type: object
+      x-conditional:
+      - currentMonth
+      - previousMonths
+    AuthorisationMetricsV2_amendedAuthorisationCount_previousDays:
+      properties:
+        individual:
+          description: Amended authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: Amended authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    PeakTPSMetricsV2_authenticated:
+      description: Peak transactions per second, over time, for authenticated endpoints.
+      properties:
+        currentDay:
+          description: Peak TPS for current day. Must be a positive value or zero.
+          type: number
+        previousDays:
+          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
           items:
             type: number
           type: array
@@ -633,59 +564,6 @@ components:
       - errors
       - rejections
       type: object
-    AuthorisationMetricsV2_newAuthorisationCount_previousDays:
-      properties:
-        onceOff:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff'
-        ongoing:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing'
-      required:
-      - onceOff
-      - ongoing
-      type: object
-    SessionCountMetricsV2:
-      description: Session counts, over time. Note that a session is defined as the provisioning of an Access Token.
-      properties:
-        currentDay:
-          description: Session count for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: Session count for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_revokedAuthorisationCount_currentDay:
-      description: Number of revoked authorisations for the current day.
-      properties:
-        individual:
-          description: Revoked authorisation count for individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-        nonIndividual:
-          description: Revoked authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    AuthorisationMetricsV2_newAuthorisationCount_currentDay:
-      description: Number of new authorisations for the current day.
-      properties:
-        onceOff:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff'
-        ongoing:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing'
-      required:
-      - onceOff
-      - ongoing
-      type: object
     AuthorisationMetricsV2_expiredAuthorisationCount_currentDay:
       description: Number of expired authorisations for the current day.
       properties:
@@ -701,56 +579,8 @@ components:
       - individual
       - nonIndividual
       type: object
-    AuthorisationMetricsV2_amendedAuthorisationCount:
-      description: The number of amended ongoing authorisations.
-      properties:
-        currentDay:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_amendedAuthorisationCount_currentDay'
-        previousDays:
-          description: Number of amended authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            $ref: '#/components/schemas/AuthorisationMetricsV2_amendedAuthorisationCount_previousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_largePayload:
-      description: Percentage of large payload calls within the performance thresholds.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_unauthenticated:
-      description: Percentage of unauthenticated calls within the performance thresholds.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_abandonmentsByStage_preAccountSelection:
-      description: The number of authorisations where the customer successfully authenticated with a valid OTP or equivalent but abandoned the process before selecting accounts.
+    AuthorisationMetricsV2_abandonmentsByStage_failedTokenExchange:
+      description: The number of authorisations that completed the interactive flow with the consumer authorising the consent, but the ADR failed to - or was unable to - obtain a refresh or access token using the authorisation code.
       properties:
         currentDay:
           description: Number of abandoned consent flows for this stage for the current day.
@@ -766,41 +596,17 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    PerformanceMetricsV3_largeSecondary:
-      description: Percentage of large Shared Responsibility calls within the performance thresholds. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
-      properties:
-        primary:
-          $ref: '#/components/schemas/PerformanceMetricsV3_largeSecondary_primary'
-        secondary:
-          $ref: '#/components/schemas/PerformanceMetricsV3_largeSecondary_primary'
-      required:
-      - primary
-      - secondary
+    Meta:
       type: object
-    PeakTPSMetricsV2_authenticated:
-      description: Peak transactions per second, over time, for authenticated endpoints.
+    RejectionMetricsV3_unauthenticated:
+      description: Rejection counts for all unauthenticated endpoints.
       properties:
         currentDay:
-          description: Peak TPS for current day. Must be a positive value or zero.
-          type: number
-        previousDays:
-          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    InvocationMetricsV3_unattended:
-      description: API call counts for the unattended tier.
-      properties:
-        currentDay:
-          description: API call counts for current day.
+          description: Number of calls rejected for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
@@ -809,20 +615,37 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_newAuthorisationCount:
-      description: The number of new authorisations.
+    ResponseMetricsListV5:
       properties:
-        currentDay:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay'
-        previousDays:
-          description: Number of new authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_previousDays'
-          type: array
+        data:
+          $ref: '#/components/schemas/ResponseMetricsListV5_data'
+        links:
+          $ref: '#/components/schemas/Links'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      - links
       type: object
-      x-conditional:
-      - currentDay
-      - previousDays
+    Links:
+      properties:
+        self:
+          description: Fully qualified link to this API call.
+          type: string
+          x-cds-type: URIString
+      required:
+      - self
+      type: object
+    AuthorisationMetricsV2_newAuthorisationCount_previousDays:
+      properties:
+        onceOff:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff'
+        ongoing:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing'
+      required:
+      - onceOff
+      - ongoing
+      type: object
     PerformanceMetricsV3:
       description: Percentage of calls within the performance thresholds in each performance tier, over time.
       properties:
@@ -852,15 +675,47 @@ components:
       x-conditional:
       - secondary
       - largeSecondary
-    AuthorisationMetricsV2_abandonmentsByStage_preAuthorisation:
-      description: The number of authorisations where the customer has passed the account selection step but abandoned the process before approving or rejecting the consent being requested.
+    PeakTPSMetricsV2_unauthenticated:
+      description: Peak transactions per second, over time, for unauthenticated endpoints.
       properties:
         currentDay:
-          description: Number of abandoned consent flows for this stage for the current day.
+          description: Peak TPS for current day. Must be a positive value or zero.
+          type: number
+        previousDays:
+          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    InvocationMetricsV3_secondary:
+      description: API call counts for the Shared Responsibility Data Requests tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
+      properties:
+        currentDay:
+          description: API call counts for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    RejectionMetricsV3_authenticated:
+      description: Rejection counts for all authenticated endpoints.
+      properties:
+        currentDay:
+          description: Number of calls rejected for current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
@@ -886,15 +741,70 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    RequestMetaDataUpdateV1:
+    PeakTPSMetricsV2:
+      description: Peak transactions per second, over time.
       properties:
-        data:
-          $ref: '#/components/schemas/RequestMetaDataUpdateV1_data'
-        meta:
-          $ref: '#/components/schemas/Meta'
+        aggregate:
+          $ref: '#/components/schemas/PeakTPSMetricsV2_aggregate'
+        unauthenticated:
+          $ref: '#/components/schemas/PeakTPSMetricsV2_unauthenticated'
+        authenticated:
+          $ref: '#/components/schemas/PeakTPSMetricsV2_authenticated'
       required:
-      - data
+      - aggregate
+      - authenticated
+      - unauthenticated
       type: object
+    AverageResponseMetricsV2_lowPriority:
+      description: Average response time for the low priority tier.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_newAuthorisationCount_currentDay:
+      description: Number of new authorisations for the current day.
+      properties:
+        onceOff:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff'
+        ongoing:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing'
+      required:
+      - onceOff
+      - ongoing
+      type: object
+    AverageResponseMetricsV2_largePayload:
+      description: Average response time for the large payload tier.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    ErrorV2_meta:
+      description: Additional data for customised error codes.
+      properties:
+        urn:
+          description: The CDR error code URN which the application-specific error code extends. Mandatory if the error _code_ is an application-specific error rather than a standardised error code.
+          type: string
+      type: object
+      x-conditional:
+      - urn
     AuthorisationMetricsV2_abandonedConsentFlowCount:
       description: The number of consents flows that were not successfully authorised.
       properties:
@@ -912,21 +822,116 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_amendedAuthorisationCount_currentDay:
-      description: Number of amended authorisations for the current day.
+    PerformanceMetricsV3_secondary:
+      description: Percentage of Shared Responsibility calls within the performance thresholds. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
+      properties:
+        primary:
+          $ref: '#/components/schemas/PerformanceMetricsV3_secondary_primary'
+        secondary:
+          $ref: '#/components/schemas/PerformanceMetricsV3_secondary_secondary'
+      required:
+      - primary
+      - secondary
+      type: object
+    PerformanceMetricsV3_unauthenticated:
+      description: Percentage of unauthenticated calls within the performance thresholds.
+      properties:
+        currentDay:
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    InvocationMetricsV3:
+      description: Number of API calls in each performance tier, over time.
+      properties:
+        unauthenticated:
+          $ref: '#/components/schemas/InvocationMetricsV3_unauthenticated'
+        highPriority:
+          $ref: '#/components/schemas/InvocationMetricsV3_highPriority'
+        lowPriority:
+          $ref: '#/components/schemas/InvocationMetricsV3_lowPriority'
+        unattended:
+          $ref: '#/components/schemas/InvocationMetricsV3_unattended'
+        largePayload:
+          $ref: '#/components/schemas/InvocationMetricsV3_largePayload'
+        secondary:
+          $ref: '#/components/schemas/InvocationMetricsV3_secondary'
+        largeSecondary:
+          $ref: '#/components/schemas/InvocationMetricsV3_largeSecondary'
+      required:
+      - highPriority
+      - largePayload
+      - lowPriority
+      - unattended
+      - unauthenticated
+      type: object
+      x-conditional:
+      - secondary
+      - largeSecondary
+    ErrorMetricsV2_aggregate:
+      description: Aggregate number of calls resulting in error due to server execution, over time, for all endpoints.
+      properties:
+        currentDay:
+          description: Error counts for current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: Error counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    RequestMetaDataUpdateV1:
+      properties:
+        data:
+          $ref: '#/components/schemas/RequestMetaDataUpdateV1_data'
+        meta:
+          $ref: '#/components/schemas/Meta'
+      required:
+      - data
+      type: object
+    AuthorisationMetricsV2_expiredAuthorisationCount_previousDays:
       properties:
         individual:
-          description: Amended authorisation count for individual customers.
+          description: Expired authorisation count for individual customers.
           type: integer
           x-cds-type: NaturalNumber
         nonIndividual:
-          description: Amended authorisation count for non-individual customers.
+          description: Expired authorisation count for non-individual customers.
           type: integer
           x-cds-type: NaturalNumber
       required:
       - individual
       - nonIndividual
       type: object
+    AverageTPSMetricsV2_unauthenticated:
+      description: Average transactions per second, over time, for unauthenticated endpoints.
+      properties:
+        currentDay:
+          description: Average TPS for current day. Must be a positive value or zero.
+          type: number
+        previousDays:
+          description: Average TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
     ResponseMetricsListV5_data:
       properties:
         requestTime:
@@ -980,26 +985,82 @@ components:
       type: object
       x-conditional:
       - secondaryHolder
-    AverageResponseMetricsV2_largeSecondary:
-      description: Average response time for the large payload tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
-      properties:
-        primary:
-          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_primary'
-        secondary:
-          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_secondary'
-      required:
-      - primary
-      - secondary
-      type: object
-    ErrorMetricsV2_aggregate:
-      description: Aggregate number of calls resulting in error due to server execution, over time, for all endpoints.
+    PerformanceMetricsV3_largePayload:
+      description: Percentage of large payload calls within the performance thresholds.
       properties:
         currentDay:
-          description: Error counts for current day.
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    PerformancePreviousDays:
+      description: Array of contiguous hourly metrics for the specified day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+      items:
+        $ref: '#/components/schemas/PerformanceHours'
+      type: array
+    AvailabilityMetricsV2:
+      description: Availability metrics.
+      properties:
+        aggregate:
+          $ref: '#/components/schemas/AvailabilityMetricsV2_aggregate'
+        unauthenticated:
+          $ref: '#/components/schemas/AvailabilityMetricsV2_unauthenticated'
+        authenticated:
+          $ref: '#/components/schemas/AvailabilityMetricsV2_authenticated'
+      required:
+      - aggregate
+      - authenticated
+      - unauthenticated
+      type: object
+    AuthorisationMetricsV2_revokedAuthorisationCount_previousDays:
+      properties:
+        individual:
+          description: Revoked authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: Revoked authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    InvocationMetricsV3_unattended:
+      description: API call counts for the unattended tier.
+      properties:
+        currentDay:
+          description: API call counts for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: Error counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    InvocationMetricsV3_largePayload:
+      description: API call counts for the large payload tier.
+      properties:
+        currentDay:
+          description: API call counts for current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
@@ -1025,15 +1086,15 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_abandonmentsByStage_failedTokenExchange:
-      description: The number of authorisations that completed the interactive flow with the consumer authorising the consent, but the ADR failed to - or was unable to - obtain a refresh or access token using the authorisation code.
+    InvocationMetricsV3_highPriority:
+      description: API call counts for the high priority tier.
       properties:
         currentDay:
-          description: Number of abandoned consent flows for this stage for the current day.
+          description: API call counts for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
@@ -1042,29 +1103,384 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_expiredAuthorisationCount_previousDays:
+    PerformanceMetricsV3_largeSecondary_primary:
+      description: Percentage of large Shared Responsibility calls within the performance thresholds for the secondary data holder.
+      properties:
+        currentDay:
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AverageResponseMetricsV2_highPriority:
+      description: Average response time for the high priority tier.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AverageResponseMetricsV2_secondary:
+      description: Average response time for the secondary tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
+      properties:
+        primary:
+          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_primary'
+        secondary:
+          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_secondary'
+      required:
+      - primary
+      - secondary
+      type: object
+    AverageResponseMetricsV2_secondary_primary:
+      description: Average response time as measured for the primary data holder.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    RejectionMetricsV3:
+      description: Number of calls rejected due to traffic thresholds, over time.
+      properties:
+        authenticated:
+          $ref: '#/components/schemas/RejectionMetricsV3_authenticated'
+        unauthenticated:
+          $ref: '#/components/schemas/RejectionMetricsV3_unauthenticated'
+      required:
+      - authenticated
+      - unauthenticated
+      type: object
+    AuthorisationMetricsV2_abandonmentsByStage:
+      description: Customer abandonment count per stage of the consent flow. Note that the aggregated abandonment count for all stages for a period should equal the count in _abandonedConsentFlowCount_ for the same period (i.e. each abandoned consent should assigned to one, and only one, stage).
+      properties:
+        preIdentification:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preIdentification'
+        preAuthentication:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAuthentication'
+        preAccountSelection:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAccountSelection'
+        preAuthorisation:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAuthorisation'
+        rejected:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_rejected'
+        failedTokenExchange:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_failedTokenExchange'
+      required:
+      - failedTokenExchange
+      - preAccountSelection
+      - preAuthentication
+      - preAuthorisation
+      - preIdentification
+      - rejected
+      type: object
+    ResponseErrorListV2:
+      properties:
+        errors:
+          description: List of errors.
+          items:
+            $ref: '#/components/schemas/ErrorV2'
+          type: array
+      required:
+      - errors
+      type: object
+    RequestMetaDataUpdateV1_data:
+      properties:
+        action:
+          default: REFRESH
+          description: The action to take for the meta data. At the moment the only option is `REFRESH` which requires the data holder to call the ACCC to refresh meta data as soon as practicable.
+          enum:
+          - REFRESH
+          type: string
+      required:
+      - action
+      type: object
+    PerformanceMetricsV3_highPriority:
+      description: Percentage of high priority calls within the performance thresholds.
+      properties:
+        currentDay:
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    ErrorMetricsV2_unauthenticated:
+      description: Number of calls resulting in error for unauthenticated endpoints.
+      properties:
+        currentDay:
+          additionalProperties:
+            description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
+            type: integer
+            x-cds-type: NaturalNumber
+          description: Error counts, by HTTP error code, for current day.
+          properties:
+            '500':
+              description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
+              type: integer
+              x-cds-type: NaturalNumber
+          type: object
+        previousDays:
+          description: Error counts, by HTTP error code, for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            additionalProperties:
+              description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
+              type: integer
+              x-cds-type: NaturalNumber
+            properties:
+              '500':
+                description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
+                type: integer
+                x-cds-type: NaturalNumber
+            type: object
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    ErrorMetricsV2_authenticated:
+      description: Number of calls resulting in error for authenticated endpoints.
+      properties:
+        currentDay:
+          additionalProperties:
+            description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 401, 403, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
+            type: integer
+            x-cds-type: NaturalNumber
+          description: Error counts, by HTTP error code, for current day.
+          properties:
+            '500':
+              description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
+              type: integer
+              x-cds-type: NaturalNumber
+          type: object
+        previousDays:
+          description: Error counts, by HTTP error code, for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            additionalProperties:
+              description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 401, 403, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
+              type: integer
+              x-cds-type: NaturalNumber
+            properties:
+              '500':
+                description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
+                type: integer
+                x-cds-type: NaturalNumber
+            type: object
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_revokedAuthorisationCount_currentDay:
+      description: Number of revoked authorisations for the current day.
       properties:
         individual:
-          description: Expired authorisation count for individual customers.
+          description: Revoked authorisation count for individual customers.
           type: integer
           x-cds-type: NaturalNumber
         nonIndividual:
-          description: Expired authorisation count for non-individual customers.
+          description: Revoked authorisation count for non-individual customers.
           type: integer
           x-cds-type: NaturalNumber
       required:
       - individual
       - nonIndividual
       type: object
-    AuthorisationMetricsV2_abandonmentsByStage_preAuthentication:
-      description: The number of authorisations where the customer identified themselves (i.e. they successfully identify the customer profile to use for the authorisation) but failed to provide a valid OTP or equivalent.
+    PerformanceMetricsV3_largeSecondary:
+      description: Percentage of large Shared Responsibility calls within the performance thresholds. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
+      properties:
+        primary:
+          $ref: '#/components/schemas/PerformanceMetricsV3_largeSecondary_primary'
+        secondary:
+          $ref: '#/components/schemas/PerformanceMetricsV3_largeSecondary_primary'
+      required:
+      - primary
+      - secondary
+      type: object
+    SecondaryHolderMetricsV2_rejections:
+      description: Number of calls rejected due to traffic thresholds, over time.
       properties:
         currentDay:
-          description: Number of abandoned consent flows for this stage for the current day.
+          description: Number of rejections for current day.
           type: integer
           x-cds-type: NaturalNumber
         previousDays:
-          description: Number of abandoned consent flows for this stage for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          description: Number of rejections for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: integer
+            x-cds-type: NaturalNumber
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AverageResponseMetricsV2_secondary_secondary:
+      description: Average response time as measured for the secondary data holder.
+      properties:
+        currentDay:
+          description: Average response time for current day.
+          type: number
+        previousDays:
+          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            type: number
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    PerformanceMetricsV3_secondary_primary:
+      description: Percentage of Shared Responsibility calls within the performance thresholds for the primary data holder.
+      properties:
+        currentDay:
+          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          items:
+            $ref: '#/components/schemas/PerformanceHours'
+          type: array
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            $ref: '#/components/schemas/PerformancePreviousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff:
+      description: New authorisation count for once-off authorisations.
+      properties:
+        individual:
+          description: New authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: New authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    AuthorisationMetricsV2_newAuthorisationCount:
+      description: The number of new authorisations.
+      properties:
+        currentDay:
+          $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_currentDay'
+        previousDays:
+          description: Number of new authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+          items:
+            $ref: '#/components/schemas/AuthorisationMetricsV2_newAuthorisationCount_previousDays'
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    AvailabilityMetricsV2_authenticated:
+      description: Availability metrics for the authenticated aspects of the CDR regime.
+      properties:
+        currentMonth:
+          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
+          type: string
+          x-cds-type: RateString
+        previousMonths:
+          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            type: string
+            x-cds-type: RateString
+          type: array
+      type: object
+      x-conditional:
+      - currentMonth
+      - previousMonths
+    AuthorisationMetricsV2_activeAuthorisationCount:
+      description: The number of active ongoing authorisations.
+      properties:
+        individual:
+          description: Active ongoing authorisation count for individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+        nonIndividual:
+          description: Active ongoing authorisation count for non-individual customers.
+          type: integer
+          x-cds-type: NaturalNumber
+      required:
+      - individual
+      - nonIndividual
+      type: object
+    ErrorV2:
+      properties:
+        code:
+          description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the _meta_ object. Otherwise, the value is the error code URN.
+          type: string
+        title:
+          description: A short, human-readable summary of the problem that **MUST NOT** change from occurrence to occurrence of the problem represented by the error code.
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        meta:
+          $ref: '#/components/schemas/ErrorV2_meta'
+      required:
+      - code
+      - detail
+      - title
+      type: object
+      x-conditional:
+      - meta
+    PerformanceMetricsV3_aggregate:
+      description: Percentage of calls within Primary Data Holder performance thresholds. Note that Secondary Data Holder performance **MUST** be excluded from this metric.
+      properties:
+        currentDay:
+          description: Percentage of calls within the performance threshold for the current day. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
+          type: string
+          x-cds-type: RateString
+        previousDays:
+          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
+          items:
+            type: string
+            x-cds-type: RateString
+          type: array
+      type: object
+      x-conditional:
+      - currentDay
+      - previousDays
+    InvocationMetricsV3_unauthenticated:
+      description: API call counts for the unauthenticated tier.
+      properties:
+        currentDay:
+          description: API call counts for current day.
+          type: integer
+          x-cds-type: NaturalNumber
+        previousDays:
+          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
             type: integer
             x-cds-type: NaturalNumber
@@ -1099,121 +1515,25 @@ components:
       - newAuthorisationCount
       - revokedAuthorisationCount
       type: object
-    AvailabilityMetricsV2_unauthenticated:
-      description: Availability metrics for the unauthenticated aspects of the CDR regime.
+    SecondaryHolderMetricsV2_errors:
+      description: Number of calls resulting in error due to server execution, over time.
       properties:
-        currentMonth:
-          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
-          type: string
-          x-cds-type: RateString
-        previousMonths:
-          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            type: string
-            x-cds-type: RateString
-          type: array
-      type: object
-      x-conditional:
-      - currentMonth
-      - previousMonths
-    AverageResponseMetricsV2_secondary:
-      description: Average response time for the secondary tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
-      properties:
-        primary:
-          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_primary'
-        secondary:
-          $ref: '#/components/schemas/AverageResponseMetricsV2_secondary_secondary'
-      required:
-      - primary
-      - secondary
-      type: object
-    AvailabilityMetricsV2:
-      description: Availability metrics.
-      properties:
-        aggregate:
-          $ref: '#/components/schemas/AvailabilityMetricsV2_aggregate'
-        unauthenticated:
-          $ref: '#/components/schemas/AvailabilityMetricsV2_unauthenticated'
-        authenticated:
-          $ref: '#/components/schemas/AvailabilityMetricsV2_authenticated'
-      required:
-      - aggregate
-      - authenticated
-      - unauthenticated
-      type: object
-    ResponseMetricsListV5:
-      properties:
-        data:
-          $ref: '#/components/schemas/ResponseMetricsListV5_data'
-        links:
-          $ref: '#/components/schemas/Links'
-        meta:
-          $ref: '#/components/schemas/Meta'
-      required:
-      - data
-      - links
-      type: object
-    AuthorisationMetricsV2_newAuthorisationCount_currentDay_ongoing:
-      description: New authorisation count for ongoing authorisations.
-      properties:
-        individual:
-          description: New authorisation count for individual customers.
+        currentDay:
+          description: Number of errors for current day.
           type: integer
           x-cds-type: NaturalNumber
-        nonIndividual:
-          description: New authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    PeakTPSMetricsV2_unauthenticated:
-      description: Peak transactions per second, over time, for unauthenticated endpoints.
-      properties:
-        currentDay:
-          description: Peak TPS for current day. Must be a positive value or zero.
-          type: number
         previousDays:
-          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
+          description: Number of errors for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
           items:
-            type: number
+            type: integer
+            x-cds-type: NaturalNumber
           type: array
       type: object
       x-conditional:
       - currentDay
       - previousDays
-    AverageResponseMetricsV2_secondary_primary:
-      description: Average response time as measured for the primary data holder.
-      properties:
-        currentDay:
-          description: Average response time for current day.
-          type: number
-        previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_expiredAuthorisationCount:
-      description: The number of expired ongoing authorisations.
-      properties:
-        currentDay:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_expiredAuthorisationCount_currentDay'
-        previousDays:
-          description: Number of expired authorisations for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            $ref: '#/components/schemas/AuthorisationMetricsV2_expiredAuthorisationCount_previousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_abandonmentsByStage_rejected:
-      description: The number of authorisations where the customer actively rejected the authorisation rather than abandoning the process.
+    AuthorisationMetricsV2_abandonmentsByStage_preAccountSelection:
+      description: The number of authorisations where the customer successfully authenticated with a valid OTP or equivalent but abandoned the process before selecting accounts.
       properties:
         currentDay:
           description: Number of abandoned consent flows for this stage for the current day.
@@ -1229,343 +1549,23 @@ components:
       x-conditional:
       - currentDay
       - previousDays
-    AuthorisationMetricsV2_newAuthorisationCount_currentDay_onceOff:
-      description: New authorisation count for once-off authorisations.
+    AvailabilityMetricsV2_aggregate:
+      description: Aggregated availability metrics.
       properties:
-        individual:
-          description: New authorisation count for individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-        nonIndividual:
-          description: New authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    AverageResponseMetricsV2_highPriority:
-      description: Average response time for the high priority tier.
-      properties:
-        currentDay:
-          description: Average response time for current day.
-          type: number
-        previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_unattended:
-      description: Percentage of unattended calls within the performance thresholds.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PeakTPSMetricsV2:
-      description: Peak transactions per second, over time.
-      properties:
-        aggregate:
-          $ref: '#/components/schemas/PeakTPSMetricsV2_aggregate'
-        unauthenticated:
-          $ref: '#/components/schemas/PeakTPSMetricsV2_unauthenticated'
-        authenticated:
-          $ref: '#/components/schemas/PeakTPSMetricsV2_authenticated'
-      required:
-      - aggregate
-      - authenticated
-      - unauthenticated
-      type: object
-    Meta:
-      type: object
-    AuthorisationMetricsV2_activeAuthorisationCount:
-      description: The number of active ongoing authorisations.
-      properties:
-        individual:
-          description: Active ongoing authorisation count for individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-        nonIndividual:
-          description: Active ongoing authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    AverageResponseMetricsV2_largePayload:
-      description: Average response time for the large payload tier.
-      properties:
-        currentDay:
-          description: Average response time for current day.
-          type: number
-        previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PeakTPSMetricsV2_aggregate:
-      description: Aggregate peak transactions per second, over time, for all endpoints.
-      properties:
-        currentDay:
-          description: Peak TPS for current day. Must be a positive value or zero.
-          type: number
-        previousDays:
-          description: Peak TPS for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. Values must be a positive or zero.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    RejectionMetricsV3_unauthenticated:
-      description: Rejection counts for all unauthenticated endpoints.
-      properties:
-        currentDay:
-          description: Number of calls rejected for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformanceMetricsV3_secondary_primary:
-      description: Percentage of Shared Responsibility calls within the performance thresholds for the primary data holder.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-          items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    PerformancePreviousDays:
-      description: Array of contiguous hourly metrics for the specified day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
-      items:
-        $ref: '#/components/schemas/PerformanceHours'
-      type: array
-    InvocationMetricsV3_highPriority:
-      description: API call counts for the high priority tier.
-      properties:
-        currentDay:
-          description: API call counts for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    InvocationMetricsV3_secondary:
-      description: API call counts for the Shared Responsibility Data Requests tier. Mandatory for data holders designated for a Shared Responsibility Data Request data cluster.
-      properties:
-        currentDay:
-          description: API call counts for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AverageResponseMetricsV2_secondary_secondary:
-      description: Average response time as measured for the secondary data holder.
-      properties:
-        currentDay:
-          description: Average response time for current day.
-          type: number
-        previousDays:
-          description: Average response time for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: number
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    RequestMetaDataUpdateV1_data:
-      properties:
-        action:
-          default: REFRESH
-          description: The action to take for the meta data. At the moment the only option is `REFRESH` which requires the data holder to call the ACCC to refresh meta data as soon as practicable.
-          enum:
-          - REFRESH
+        currentMonth:
+          description: Percentage availability of the CDR platform so far for the current calendar month. `0.0` means 0%. `1.0` means 100%. Must be a positive value or zero.
           type: string
-      required:
-      - action
-      type: object
-    PerformanceMetricsV3_largeSecondary_primary:
-      description: Percentage of large Shared Responsibility calls within the performance thresholds for the secondary data holder.
-      properties:
-        currentDay:
-          description: Array of contiguous hourly metrics for the current day. Each element represents a 1 hour period starting from 12am-1am. Timezone for determining 12am must be consistent but is at the discretion of the Data Holder.
+          x-cds-type: RateString
+        previousMonths:
+          description: Percentage availability of the CDR platform for previous calendar months. The first element indicates the last month and so on. A maximum of twelve entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
           items:
-            $ref: '#/components/schemas/PerformanceHours'
-          type: array
-        previousDays:
-          description: Percentage of calls within the performance threshold for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available. `0.0` means 0%. `1.0` means 100%. Values must be a positive or zero.
-          items:
-            $ref: '#/components/schemas/PerformancePreviousDays'
+            type: string
+            x-cds-type: RateString
           type: array
       type: object
       x-conditional:
-      - currentDay
-      - previousDays
-    Links:
-      properties:
-        self:
-          description: Fully qualified link to this API call.
-          type: string
-          x-cds-type: URIString
-      required:
-      - self
-      type: object
-    ErrorMetricsV2_authenticated:
-      description: Number of calls resulting in error for authenticated endpoints.
-      properties:
-        currentDay:
-          additionalProperties:
-            description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 401, 403, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
-            type: integer
-            x-cds-type: NaturalNumber
-          description: Error counts, by HTTP error code, for current day.
-          properties:
-            '500':
-              description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
-              type: integer
-              x-cds-type: NaturalNumber
-          type: object
-        previousDays:
-          description: Error counts, by HTTP error code, for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            additionalProperties:
-              description: 'This is a placeholder field to be substituted with each respective HTTP error code in the 4xx and 5xx range recorded by the Data Holder. It is represented by _property1_ and _property2_ in the _Non-normative Examples_ section. Note that the property name **MUST** be the three-digit HTTP error code as per the adjacent _500_ example. All possible property names have not been defined as the range is expected to vary across participants. Examples would include, but are not limited to: _400, 401, 403, 404, 405, 406, 415, 422, 429, 500, 503, 504_.'
-              type: integer
-              x-cds-type: NaturalNumber
-            properties:
-              '500':
-                description: Reflecting the description provided in the adjacent _additionalProperties_ field, this is an example demonstrating the structure for reporting the number of calls resulting in HTTP error code `500`. Each error code recorded by the Data Holder in the 4xx and 5xx range **MUST** be provided in this format against the respective property name.
-                type: integer
-                x-cds-type: NaturalNumber
-            type: object
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    InvocationMetricsV3_largePayload:
-      description: API call counts for the large payload tier.
-      properties:
-        currentDay:
-          description: API call counts for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_revokedAuthorisationCount_previousDays:
-      properties:
-        individual:
-          description: Revoked authorisation count for individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-        nonIndividual:
-          description: Revoked authorisation count for non-individual customers.
-          type: integer
-          x-cds-type: NaturalNumber
-      required:
-      - individual
-      - nonIndividual
-      type: object
-    InvocationMetricsV3_unauthenticated:
-      description: API call counts for the unauthenticated tier.
-      properties:
-        currentDay:
-          description: API call counts for current day.
-          type: integer
-          x-cds-type: NaturalNumber
-        previousDays:
-          description: API call counts for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-          items:
-            type: integer
-            x-cds-type: NaturalNumber
-          type: array
-      type: object
-      x-conditional:
-      - currentDay
-      - previousDays
-    AuthorisationMetricsV2_abandonmentsByStage:
-      description: Customer abandonment count per stage of the consent flow. Note that the aggregated abandonment count for all stages for a period should equal the count in _abandonedConsentFlowCount_ for the same period (i.e. each abandoned consent should assigned to one, and only one, stage).
-      properties:
-        preIdentification:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preIdentification'
-        preAuthentication:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAuthentication'
-        preAccountSelection:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAccountSelection'
-        preAuthorisation:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_preAuthorisation'
-        rejected:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_rejected'
-        failedTokenExchange:
-          $ref: '#/components/schemas/AuthorisationMetricsV2_abandonmentsByStage_failedTokenExchange'
-      required:
-      - failedTokenExchange
-      - preAccountSelection
-      - preAuthentication
-      - preAuthorisation
-      - preIdentification
-      - rejected
-      type: object
+      - currentMonth
+      - previousMonths
   headers:
     XV:
       description: The [payload version](#response-headers) that the endpoint has responded with.

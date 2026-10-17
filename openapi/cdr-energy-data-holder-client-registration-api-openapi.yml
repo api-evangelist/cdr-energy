@@ -184,28 +184,6 @@ paths:
       - cdr:registration
 components:
   schemas:
-    RegistrationError:
-      properties:
-        error:
-          description: Predefined error code as described in [section 3.3 OIDC Dynamic Client Registration](https://openid.net/specs/openid-connect-registration-1_0.html).
-          enum:
-          - invalid_redirect_uri
-          - invalid_client_metadata
-          - invalid_software_statement
-          - unapproved_software_statement
-          type: string
-        error_description:
-          description: Additional text description of the error for debugging.
-          type: string
-          x-cds-type: ASCIIString
-      required:
-      - error
-      type: object
-    ClientRegistrationRequestV1:
-      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
-      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-      format: JWT
-      type: string
     RegistrationProperties:
       properties:
         client_id:
@@ -417,6 +395,28 @@ components:
       - id_token_encrypted_response_enc
       - authorization_signed_response_alg
       - authorization_encrypted_response_alg
+    ClientRegistrationRequestV1:
+      description: The registration request JWT to be used to register with a Data Holder. The schema of the payload section of the decoded string(JWT) is defined in [ClientRegistration](#cdr-dynamic-client-registration-api_schemas_tocSclientregistration).
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      format: JWT
+      type: string
+    RegistrationError:
+      properties:
+        error:
+          description: Predefined error code as described in [section 3.3 OIDC Dynamic Client Registration](https://openid.net/specs/openid-connect-registration-1_0.html).
+          enum:
+          - invalid_redirect_uri
+          - invalid_client_metadata
+          - invalid_software_statement
+          - unapproved_software_statement
+          type: string
+        error_description:
+          description: Additional text description of the error for debugging.
+          type: string
+          x-cds-type: ASCIIString
+      required:
+      - error
+      type: object
   requestBodies:
     RequestClientRegistration:
       content:
