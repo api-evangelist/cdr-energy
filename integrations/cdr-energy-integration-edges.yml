@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/cdr-energy/integrations
 - https://zapier.com/apps/consumer-data-right-energy/integrations
@@ -7,12 +7,49 @@ source:
 - https://composio.dev/toolkits/cdr-energy
 - https://monid.ai/tools/cdr-energy
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/cdr-energy
+- https://crates.io/api/v1
 - https://monid.ai/tools/cdr-energy
 - https://n8n.io/integrations/cdr-energy/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/apps/cdr-energy/integrations
 - https://zapier.com/apps/consumer-data-right-energy/integrations
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: NuGet Gallery
+  partner: nuget
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (.NET)
+  evidence: https://www.nuget.org/packages/ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: NuGet Gallery (public registry JSON)
+    spec_file: null
+    language: .NET
+    packages:
+    - name: ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+      version: 3.2.0
+      released: '2026-10-07'
+      released_field: published
+      lapsed: false
+      page: https://www.nuget.org/packages/ConsumerDataRight.ParticipantTooling.MockSolution.TestAutomation
+      repo_leg: github-org:consumerdataright
+      publisher_leg: org:consumerdataright
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
