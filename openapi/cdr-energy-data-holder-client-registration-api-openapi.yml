@@ -425,3 +425,9 @@ components:
             $ref: '#/components/schemas/ClientRegistrationRequestV1'
       description: The registration request JWT to be used to register with a Data Holder.
       required: true
+x-provenance:
+  method: harvested
+  publisher: Consumer Data Right (Energy)
+  source: https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_dcr.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
